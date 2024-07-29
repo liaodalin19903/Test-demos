@@ -948,160 +948,161 @@ describe("Query", () => {
   });
 
   describe("max start depth", () => {
+    
     it("will not explore child nodes beyond the given depth", () => {
       const source = `
-if (a1 && a2) {
-    if (b1 && b2) { }
-    if (c) { }
-}
-if (d) {
-    if (e1 && e2) { }
-    if (f) { }
-}
-`;
+        if (a1 && a2) {
+            if (b1 && b2) { }
+            if (c) { }
+        }
+        if (d) {
+            if (e1 && e2) { }
+            if (f) { }
+        }
+        `;
 
-      const rows = [
-        {
-          description: "depth 0: match translation unit",
-          depth: 0,
-          pattern: `
-              (translation_unit) @capture
-          `,
-          matches: [
-            [0, [["capture", "if (a1 && a2) {\n    if (b1 && b2) { }\n    if (c) { }\n}\nif (d) {\n    if (e1 && e2) { }\n    if (f) { }\n}\n"]]],
-          ]
-        },
-        {
-          description: "depth 0: match none",
-          depth: 0,
-          pattern: `
-              (if_statement) @capture
-          `,
-          matches: []
-        },
-        {
-          description: "depth 1: match 2 if statements at the top level",
-          depth: 1,
-          pattern: `
-              (if_statement) @capture
-          `,
-          matches: [
-            [0, [["capture", "if (a1 && a2) {\n    if (b1 && b2) { }\n    if (c) { }\n}"]]],
-            [0, [["capture", "if (d) {\n    if (e1 && e2) { }\n    if (f) { }\n}"]]],
-          ]
-        },
-        {
-          description: "depth 1 with deep pattern: match the only the first if statement",
-          depth: 1,
-          pattern: `
-              (if_statement
-                  condition: (parenthesized_expression
-                      (binary_expression)
-                  )
-              ) @capture
-          `,
-          matches: [
-            [0, [["capture", "if (a1 && a2) {\n    if (b1 && b2) { }\n    if (c) { }\n}"]]],
-          ]
-        },
-        {
-          description: "depth 3 with deep pattern: match all if statements with a binexpr condition",
-          depth: 3,
-          pattern: `
-              (if_statement
-                  condition: (parenthesized_expression
-                      (binary_expression)
-                  )
-              ) @capture
-          `,
-          matches: [
-            [0, [["capture", "if (a1 && a2) {\n    if (b1 && b2) { }\n    if (c) { }\n}"]]],
-            [0, [["capture", "if (b1 && b2) { }"]]],
-            [0, [["capture", "if (e1 && e2) { }"]]],
-          ]
-        },
-      ];
+              const rows = [
+                {
+                  description: "depth 0: match translation unit",
+                  depth: 0,
+                  pattern: `
+                      (translation_unit) @capture
+                  `,
+                  matches: [
+                    [0, [["capture", "if (a1 && a2) {\n    if (b1 && b2) { }\n    if (c) { }\n}\nif (d) {\n    if (e1 && e2) { }\n    if (f) { }\n}\n"]]],
+                  ]
+                },
+                {
+                  description: "depth 0: match none",
+                  depth: 0,
+                  pattern: `
+                      (if_statement) @capture
+                  `,
+                  matches: []
+                },
+                {
+                  description: "depth 1: match 2 if statements at the top level",
+                  depth: 1,
+                  pattern: `
+                      (if_statement) @capture
+                  `,
+                  matches: [
+                    [0, [["capture", "if (a1 && a2) {\n    if (b1 && b2) { }\n    if (c) { }\n}"]]],
+                    [0, [["capture", "if (d) {\n    if (e1 && e2) { }\n    if (f) { }\n}"]]],
+                  ]
+                },
+                {
+                  description: "depth 1 with deep pattern: match the only the first if statement",
+                  depth: 1,
+                  pattern: `
+                      (if_statement
+                          condition: (parenthesized_expression
+                              (binary_expression)
+                          )
+                      ) @capture
+                  `,
+                  matches: [
+                    [0, [["capture", "if (a1 && a2) {\n    if (b1 && b2) { }\n    if (c) { }\n}"]]],
+                  ]
+                },
+                {
+                  description: "depth 3 with deep pattern: match all if statements with a binexpr condition",
+                  depth: 3,
+                  pattern: `
+                      (if_statement
+                          condition: (parenthesized_expression
+                              (binary_expression)
+                          )
+                      ) @capture
+                  `,
+                  matches: [
+                    [0, [["capture", "if (a1 && a2) {\n    if (b1 && b2) { }\n    if (c) { }\n}"]]],
+                    [0, [["capture", "if (b1 && b2) { }"]]],
+                    [0, [["capture", "if (e1 && e2) { }"]]],
+                  ]
+                },
+              ];
 
-      parser.setLanguage(C);
-      const tree = parser.parse(source);
+              parser.setLanguage(C);
+              const tree = parser.parse(source);
 
-      for (const row of rows) {
-        const query = new Query(C, row.pattern);
-        const matches = query.matches(tree.rootNode, { maxStartDepth: row.depth });
-        const expected = row.matches.map(([pattern, captures]) => ({
+              for (const row of rows) {
+                const query = new Query(C, row.pattern);
+                const matches = query.matches(tree.rootNode, { maxStartDepth: row.depth });
+                const expected = row.matches.map(([pattern, captures]) => ({
+                  pattern,
+                  captures: captures.map(([name, text]) => ({ name, text })),
+                }));
+                assert.deepEqual(formatMatches(tree, matches), expected, row.description);
+              }
+            });
+
+            it("tests more", () => {
+              const source = `
+        {
+            { }
+            {
+                { }
+            }
+        }
+        `
+              const rows = [
+                {
+                  depth: 0,
+                  matches: [
+                    [0, [["capture", "{\n    { }\n    {\n        { }\n    }\n}"]]],
+                  ]
+                },
+                {
+                  depth: 1,
+                  matches: [
+                    [0, [["capture", "{\n    { }\n    {\n        { }\n    }\n}"]]],
+                    [0, [["capture", "{ }"]]],
+                    [0, [["capture", "{\n        { }\n    }"]]],
+                  ]
+                },
+                {
+                  depth: 2,
+                  matches: [
+                    [0, [["capture", "{\n    { }\n    {\n        { }\n    }\n}"]]],
+                    [0, [["capture", "{ }"]]],
+                    [0, [["capture", "{\n        { }\n    }"]]],
+                    [0, [["capture", "{ }"]]],
+                  ]
+                },
+              ];
+
+              parser.setLanguage(C);
+              const tree = parser.parse(source);
+              const query = new Query(C, "(compound_statement) @capture");
+              const matches = query.matches(tree.rootNode);
+              const node = matches[0].captures[0].node;
+              assert.equal(node.type, "compound_statement");
+
+              for (const row of rows) {
+                const matches = query.matches(node, { maxStartDepth: row.depth });
+                const expected = row.matches.map(([pattern, captures]) => ({
+                  pattern,
+                  captures: captures.map(([name, text]) => ({ name, text })),
+                }));
+                assert.deepEqual(formatMatches(tree, matches), expected);
+              }
+            });
+          });
+        });
+
+      function formatMatches(tree, matches) {
+        return matches.map(({ pattern, captures }) => ({
           pattern,
-          captures: captures.map(([name, text]) => ({ name, text })),
+          captures: formatCaptures(tree, captures),
         }));
-        assert.deepEqual(formatMatches(tree, matches), expected, row.description);
       }
-    });
 
-    it("tests more", () => {
-      const source = `
-{
-    { }
-    {
-        { }
-    }
-}
-`
-      const rows = [
-        {
-          depth: 0,
-          matches: [
-            [0, [["capture", "{\n    { }\n    {\n        { }\n    }\n}"]]],
-          ]
-        },
-        {
-          depth: 1,
-          matches: [
-            [0, [["capture", "{\n    { }\n    {\n        { }\n    }\n}"]]],
-            [0, [["capture", "{ }"]]],
-            [0, [["capture", "{\n        { }\n    }"]]],
-          ]
-        },
-        {
-          depth: 2,
-          matches: [
-            [0, [["capture", "{\n    { }\n    {\n        { }\n    }\n}"]]],
-            [0, [["capture", "{ }"]]],
-            [0, [["capture", "{\n        { }\n    }"]]],
-            [0, [["capture", "{ }"]]],
-          ]
-        },
-      ];
-
-      parser.setLanguage(C);
-      const tree = parser.parse(source);
-      const query = new Query(C, "(compound_statement) @capture");
-      const matches = query.matches(tree.rootNode);
-      const node = matches[0].captures[0].node;
-      assert.equal(node.type, "compound_statement");
-
-      for (const row of rows) {
-        const matches = query.matches(node, { maxStartDepth: row.depth });
-        const expected = row.matches.map(([pattern, captures]) => ({
-          pattern,
-          captures: captures.map(([name, text]) => ({ name, text })),
-        }));
-        assert.deepEqual(formatMatches(tree, matches), expected);
+      function formatCaptures(tree, captures) {
+        return captures.map((c) => {
+          const node = c.node;
+          delete c.node;
+          c.text = tree.getText(node);
+          return c;
+        });
       }
-    });
-  });
-});
-
-function formatMatches(tree, matches) {
-  return matches.map(({ pattern, captures }) => ({
-    pattern,
-    captures: formatCaptures(tree, captures),
-  }));
-}
-
-function formatCaptures(tree, captures) {
-  return captures.map((c) => {
-    const node = c.node;
-    delete c.node;
-    c.text = tree.getText(node);
-    return c;
-  });
-}
