@@ -18,11 +18,18 @@ function App() {
     (editor: monaco.editor.IStandaloneCodeEditor, monacoIns: typeof monaco) => {
       editorRef.current = editor;
       monacoRef.current = monacoIns;
+
+      // 添加监听事件：cursor改变
+      editorRef.current.onDidChangeCursorSelection(e => {
+        console.log(e)
+      })
+
     },[]);
 
+  
   const clickButton = () => {
     if(monacoRef.current) {
-      console.log(monacoRef.current.editor.getModel)
+      console.log(monacoRef.current.editor)
     }
 
   }
@@ -43,6 +50,7 @@ function App() {
         wordWrap: "on",
       }}
       editorDidMount={editorDidMountHandle}
+      
     />
 
       <button onClick={clickButton}>点击</button>
