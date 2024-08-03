@@ -1,7 +1,9 @@
 import React from 'react'
 
+import SubContainer from './subContainer'
+
 type CodeBlockContainerProps = {
-  data1: string,
+  data1: number,
   cb1: () => void 
 }
 
@@ -15,6 +17,7 @@ export default function index(props: CodeBlockContainerProps) {
   
   return (
     <div>
+
       <button onClick={clickButton} >点击按钮</button>
     </div>
   )

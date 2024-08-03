@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Green Squares with Spacing</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+  .green-square {
+      width: 9px;
+      height: 9px;
+      background-color: green;
+      display: inline-block;
+      margin: 1px;
+    }
+  </style>
+</head>
+
+<body>
+  <script>
+    function createSquares() {
+      const container = document.body;
+      for (let i = 0; i < 10000; i++) {
+        const square = document.createElement('div');
+        square.classList.add('green-square');
+        container.appendChild(square);
+      }
+    }
+
+    createSquares();
+  </script>
+</body>
+
+</html>
