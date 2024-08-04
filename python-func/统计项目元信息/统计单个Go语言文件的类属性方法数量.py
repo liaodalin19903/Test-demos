@@ -18,7 +18,7 @@ def count_go_elements(file_path):
         field_count = len(fields)
 
         # 统计方法
-        method_pattern = re.compile(r'func\s+\((.*?)\)\s+(\w+)\s*\((.*?)\)\s*{')
+        method_pattern = re.compile(r'func\s+\((.*?)\)\s+(\w+)\s*\((.*?)\)\s+(.*?)\s*{')
         methods = method_pattern.findall(content)
         method_count = len(methods)
 

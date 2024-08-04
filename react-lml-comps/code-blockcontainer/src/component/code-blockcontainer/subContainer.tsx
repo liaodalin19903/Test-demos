@@ -12,15 +12,46 @@ export type SubContainerProps = {
     height?: number,
     title: string,
     data: ItemType[], // 这个是items
+    scrollToIdx?: number // 滚动到具体的index的data数组元素
+    selected?: boolean // class是否被选中
+    
 }
 
 export default function SubContainer (props: SubContainerProps){ 
 
     const [data, setData] = useState<ItemType[]>([])
 
+    // 滚动
+    useEffect(() => {
+        if(props.scrollToIdx) {
+
+            const scrollToIdx = props.scrollToIdx 
+            
+            console.log("滚动ID：", '#item-' + scrollToIdx!.toString())
+
+            scrollTo(scrollToIdx)
+        }
+    }, [props.scrollToIdx])
+
+    const scrollTo = (scrollToIdx: number) => {
+        const container = document.querySelector("#container")
+        const div: HTMLDivElement | null = document.querySelector('#item-' + scrollToIdx!.toString())
+    
+        console.log(container, div)
+        if(container) {
+            container.scrollTo({
+                top: div!.offsetTop,
+                behavior: 'smooth'
+            });
+        }
+    }
+
+
     useEffect(() => {
         setData(props.data)
     }, [props.data])
+
+    
 
     const itemClick = (item: ItemType, index: number) => {
         console.log(item, index)
@@ -39,11 +70,13 @@ export default function SubContainer (props: SubContainerProps){
         setData(filteredData)
     }
 
+
+
     return (
         <div style={{
             borderRadius: '8px',  
             border: '2px dashed #333', 
-            height: props.height ? props.height : '120px'
+            height: props.height ? props.height : ''
             }}>
             <div style={{
                 textAlign: 'left',
@@ -51,7 +84,12 @@ export default function SubContainer (props: SubContainerProps){
                 display: 'flex',
                 alignItems: 'center'
                 }}>
-                <label style={{float: 'left'}}>{props.title}</label>
+                <label style={{
+                    float: 'left',
+                    color: props.selected ? 'green' : '',
+                    fontWeight: props.selected ? 'bold' : ''
+                    }}>{props.title}
+                </label>
                 <input 
                 style={{float: 'right', marginLeft: 'auto'}} 
                 placeholder='搜索:'
@@ -59,6 +97,7 @@ export default function SubContainer (props: SubContainerProps){
                 ></input>
             </div>
             <div
+                id="container"
                 style={{
                     overflow: 'auto',
                     height: props.height? props.height - 40 : ''
@@ -66,6 +105,7 @@ export default function SubContainer (props: SubContainerProps){
                 >
                 {data.map((item, index) => (
                     <div 
+                        id={ `item-${index}` }
                         key={`${index}-${item.type}-${item.value} `} 
                         style={{ 
                             float: 'left', 

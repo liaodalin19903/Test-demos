@@ -22,7 +22,7 @@ def count_go_classes_properties_methods(directory):
                     property_count += len(field_matches)
 
                     # 统计方法
-                    method_matches = re.findall(r'func\s+\((.*?)\)\s+(\w+)\s*\((.*?)\)\s*{', content)
+                    method_matches = re.findall(r'func\s+\((.*?)\)\s+(\w+)\s*\((.*?)\)\s+(.*?)\s*{', content)
                     method_count += len(method_matches)
 
     return class_count, property_count, method_count

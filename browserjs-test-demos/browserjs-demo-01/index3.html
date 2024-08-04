@@ -1,0 +1,40 @@
+<!--
+overflow 滑动
+定位：
+-->
+
+<!DOCTYPE html>
+
+<div style="height: 600px; width: 400px; overflow: auto;" class="container">
+  
+  <div style="height: 300px; background-color: antiquewhite;">
+    div1
+  </div>
+  <div style="height: 300px; background-color: red;">
+    div2
+  </div>
+  <div style="height: 300px; background-color: antiquewhite;" id="div3">
+    div3
+  </div>
+  <div style="height: 300px; background-color: green;">
+    div4
+  </div>
+</div>
+
+<button onclick="onClick()">点击：定位到div3</button>
+
+<script>
+  const onClick = () => {
+    console.log('定位div3')
+    const container = document.querySelector('.container');
+    const div3 = document.querySelector('#div3');
+
+    console.log(container, div3)
+    container.scrollTo({
+        top: div3.offsetTop,
+        behavior: 'smooth'
+      });
+  }
+</script>
+</html>
+
