@@ -19,7 +19,7 @@ export type SubContainerProps = {
 
 export default function SubContainer (props: SubContainerProps){ 
 
-    const [data, setData] = useState<ItemType[]>([])
+    const [data, setData] = useState<ItemType[]>(props.data)
 
     // 滚动
     useEffect(() => {
@@ -47,9 +47,9 @@ export default function SubContainer (props: SubContainerProps){
     }
 
 
-    useEffect(() => {
-        setData(props.data)
-    }, [props.data])
+    // useEffect(() => {
+    //     setData(props.data)
+    // }, [props.data])
 
     
 
