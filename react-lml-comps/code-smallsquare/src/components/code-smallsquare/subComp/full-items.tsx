@@ -180,7 +180,7 @@ export default function FullItems(props: FullItemsProps) {
                   <div id='flow-controls'>
                     <Cascader
                       placeholder="请输入流名称"
-                      showSearch={{ flowFilter }}  // 过滤的方法
+                      showSearch={{  }}  // 过滤的方法 TODO: 需要参考 react-test-demos/react-demo-04-antdfilter  配置参数Type
                       onSearch={(value) => {
                         console.log(value)
                       }}

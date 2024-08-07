@@ -10,7 +10,7 @@ export type ItemType = {
 
 export type SubContainerProps = {
     height?: number,
-    title: string,
+    className: string,
     data: ItemType[], // 这个是items
     scrollToIdx?: number // 滚动到具体的index的data数组元素
     selected?: boolean // class是否被选中
@@ -88,7 +88,7 @@ export default function SubContainer (props: SubContainerProps){
                     float: 'left',
                     color: props.selected ? 'green' : '',
                     fontWeight: props.selected ? 'bold' : ''
-                    }}>{props.title}
+                    }}>{props.className}
                 </label>
                 <input 
                 style={{float: 'right', marginLeft: 'auto'}} 

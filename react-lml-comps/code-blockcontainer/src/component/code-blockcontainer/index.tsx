@@ -1,32 +1,47 @@
 import React from 'react'
-
+import { Space, Typography } from 'antd';
 import SubContainer, { SubContainerProps }  from './subContainer'
 
+const { Text, Link } = Typography;
 
 export type CodeBlockContainerProps = {
   data: SubContainerProps[],  // ①用于存放代码文件根属性和根方法，②用于存放类和类的属性和方法
-  title: string,  // 文件名
+  fileName: string,  // 文件名
   width?: number,  // 组件宽度
 }
 
 export default function index(props: CodeBlockContainerProps) {
 
-  // const clickButton = () => {
-  //   console.log('输出父组件传入的数据：data1 = ', props.data)
-
-  // }
+  const classNames: string[] = props.data.map(item => item.className)
   
+  const classClickHandler = (item: string, index:number) => {
+    console.log(item, index)
+  }
+
   return (
     <div>
 
       <div id="container" style={{ 
         width: props.width ? props.width : '' 
         }}>
-        <div style={{backgroundColor: '#eee'}}>
-          <label id='title'>{props.title}</label>
+        <div>
+          <label id='title'>{props.fileName}</label>
         </div>
         
-        <div id='classContainer'>
+        <div id='classContainer' 
+          style={{ textAlign: 'left' }}
+        >
+          {
+            classNames.map((item, index) => (
+              <div
+                style={{ display: 'inline-block' }}
+                key = {index} 
+                onClick={() => {
+                  classClickHandler(item, index)
+                }}
+              ><Text code>{item}</Text></div>
+            ))
+          }
         </div>
 
         <div>
