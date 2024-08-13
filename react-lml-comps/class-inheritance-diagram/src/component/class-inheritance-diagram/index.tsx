@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {forwardRef, useImperativeHandle} from 'react'
 
 
 //#region 定义Props的Type
@@ -59,10 +59,17 @@ export type ClassInheritanceDiagramProps = {
 
 //#endregion
 
-export default function index(props: ClassInheritanceDiagramProps) {
+const ClassInheritanceDiagram = forwardRef((props: ClassInheritanceDiagramProps, ref) => {
+
+  useImperativeHandle(ref, () => ({
+    // TODO：还未想到需要哪些方法
+  }))
+
   return (
-    <div>index</div>
+    <div>ClassInheritanceDiagram</div>
   )
-}
+})
+
+export default ClassInheritanceDiagram
 
 
