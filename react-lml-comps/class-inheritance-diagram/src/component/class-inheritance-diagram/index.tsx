@@ -52,7 +52,7 @@ export type ItemDataType = {
   relations: RelationType[]  // 与其他ItemDataType的关系
 }
 
-export type ClassInheritanceDiagramProps = {
+export interface ClassInheritanceDiagramProps {
   classDisplayType: 'Simple' | 'Full',  // 显示简单类 / 全量类
   data: ItemDataType[]  // 单个的数据（类/抽象类/接口）
 }
