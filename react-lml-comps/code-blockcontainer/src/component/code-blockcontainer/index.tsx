@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { Ref, useRef } from 'react'
 import { Space, Typography } from 'antd';
 import SubContainer, { SubContainerProps }  from './subContainer'
+
+import { SubContainerImperativeRef } from './subContainer'
 
 const { Text, Link } = Typography;
 
@@ -10,12 +12,26 @@ export type CodeBlockContainerProps = {
   width?: number,  // 组件宽度
 }
 
-export default function index(props: CodeBlockContainerProps) {
+export default function Index(props: CodeBlockContainerProps) {
+
+  const ctlChildRefs = useRef<SubContainerImperativeRef[]>([]); // 多个子组件用数组装
 
   const classNames: string[] = props.data.map(item => item.className)
   
   const classClickHandler = (item: string, index:number) => {
     console.log(item, index)
+  }
+
+  // 滚动到指定的class
+  const scrollToClass = () => {
+    
+  }
+
+  // 在特定的class内，滚动到指定的item
+  const scrollToItemInClass = (index: number) => {
+    if(ctlChildRefs  && ctlChildRefs.current) {
+      ctlChildRefs.current[index].scrollToItem(index)  // 滚动到特定的子组件容器的item
+    }
   }
 
   return (
@@ -48,7 +64,7 @@ export default function index(props: CodeBlockContainerProps) {
           {
             props.data.map((item, index) => (
               <div  key={index}>
-                <SubContainer {...item}>
+                <SubContainer {...item}  ref={ctlChildRefs[index]}>
                 </SubContainer>
               </div>
             ))

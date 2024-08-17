@@ -1,0 +1,21 @@
+
+.App {
+    font-family: sans-serif;
+    text-align: center;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .left-box {
+    position: absolute;
+    left: 0;
+    top: 0;
+  
+    width: 19px;
+    overflow: hidden;
+  }
+  
+  .right-box {
+    margin-left: 19px;
+  }
+  

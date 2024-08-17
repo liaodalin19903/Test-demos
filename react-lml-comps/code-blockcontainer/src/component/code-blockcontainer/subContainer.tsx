@@ -1,3 +1,4 @@
+import {Ref, forwardRef, LegacyRef, useImperativeHandle, useRef } from 'react';
 
 import React, { useEffect, useState } from 'react'
 import { ChangeEvent } from'react';
@@ -12,45 +13,52 @@ export type SubContainerProps = {
     height?: number,
     className: string,
     data: ItemType[], // 这个是items
-    scrollToIdx?: number // 滚动到具体的index的data数组元素
+    //scrollToIdx?: number // 滚动到具体的index的data数组元素
     selected?: boolean // class是否被选中
     
 }
 
-export default function SubContainer (props: SubContainerProps){ 
+export interface SubContainerImperativeRef {
+    testConsole: () => void,
+    scrollToItem: (scrollToIdx: number) => void 
+}
+
+const SubContainer = forwardRef((props: SubContainerProps, ref: Ref<SubContainerImperativeRef>) => { 
 
     const [data, setData] = useState<ItemType[]>(props.data)
 
     // 滚动
-    useEffect(() => {
-        if(props.scrollToIdx) {
-
-            const scrollToIdx = props.scrollToIdx 
-            
-            console.log("滚动ID：", '#item-' + scrollToIdx!.toString())
-
-            scrollTo(scrollToIdx)
-        }
-    }, [props.scrollToIdx])
-
-    const scrollTo = (scrollToIdx: number) => {
-        const container = document.querySelector("#container")
-        const div: HTMLDivElement | null = document.querySelector('#item-' + scrollToIdx!.toString())
-    
-        console.log(container, div)
-        if(container) {
-            container.scrollTo({
-                top: div!.offsetTop,
-                behavior: 'smooth'
-            });
-        }
-    }
-
-
     // useEffect(() => {
-    //     setData(props.data)
-    // }, [props.data])
+    //     if(props.scrollToIdx) {
 
+    //         const scrollToIdx = props.scrollToIdx 
+            
+    //         console.log("滚动ID：", '#item-' + scrollToIdx!.toString())
+
+    //         scrollTo(scrollToIdx)
+    //     }
+    // }, [props.scrollToIdx])
+
+
+    useImperativeHandle(ref, () => ({
+        
+        testConsole: () => {
+          console.log('子组件打印')
+        },
+
+        scrollToItem:  (scrollToIdx: number) => {
+            const container = document.querySelector("#container")
+            const div: HTMLDivElement | null = document.querySelector('#item-' + scrollToIdx!.toString())
+        
+            console.log(container, div)
+            if(container) {
+                container.scrollTo({
+                    top: div!.offsetTop,
+                    behavior: 'smooth'
+                });
+            }
+        }
+    }));
     
 
     const itemClick = (item: ItemType, index: number) => {
@@ -69,8 +77,6 @@ export default function SubContainer (props: SubContainerProps){
 
         setData(filteredData)
     }
-
-
 
     return (
         <div style={{
@@ -124,4 +130,6 @@ export default function SubContainer (props: SubContainerProps){
             </div>
         </div>
     )
-}
+})
+
+export default SubContainer

@@ -1,9 +1,9 @@
 const fs = require("fs")
 const Parser = require("tree-sitter")
+const JavaScript = require("tree-sitter-javascript");
 
 const C = require("tree-sitter-c")
 const Java = require("tree-sitter-java");
-const JavaScript = require("tree-sitter-javascript");
 const JSON = require("tree-sitter-json");
 const Python = require("tree-sitter-python");
 const Ruby = require("tree-sitter-ruby");
@@ -42,7 +42,13 @@ const query = new Query(
 
 
 const tree = parser.parse(`
-abstract class Animal {
+
+class AnimalBase {
+  readonly skeleton: number
+  readonly blood: 'red' | 'blue' | 'transparent'
+}
+
+abstract class Animal extends AnimalBase {
 
   readonly age: number = 0
   abstract shout (): void  
@@ -51,31 +57,26 @@ abstract class Animal {
 
 class Cat extends Animal {
   shout() {
-      console.log('喵喵')
+      console.log('mew mew')
   }
 }
 
 class Dog extends Animal {
   shout() {
-      console.log('汪汪')
+      console.log('bark bark')
   }
 }
 
-class Person {}
- 
-const TestPerson = class {}
-
-class Person2 {}
- 
-const TestPerson2 = class {}
   `);
 const matches = query.matches(tree.rootNode);
 
 //console.log(matches.toString())
 
-matches.forEach(item => {
-  console.log(item.captures[0].node.text)
-})
+// matches.forEach(item => {
+//   console.log(item.captures[0].node.text)
+// })
+
+console.log(matches[3].captures[0].node.text)  // Dog 
 
 
 //#endregion
