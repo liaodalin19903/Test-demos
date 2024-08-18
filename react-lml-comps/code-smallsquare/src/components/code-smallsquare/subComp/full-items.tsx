@@ -3,7 +3,7 @@ import React, {useState} from 'react'
 import { Allotment } from "allotment";
 import "allotment/dist/style.css";
 import { ItemType } from 'antd/es/menu/interface';
-import { Card, Divider, Radio, Checkbox, Cascader } from 'antd'
+import { Card, Divider, Radio, Checkbox, Cascader, Button } from 'antd'
 import type { RadioChangeEvent } from 'antd';
 import type { CheckboxProps } from 'antd';
 import type { CascaderProps, GetProp } from 'antd';
@@ -31,6 +31,7 @@ type DefaultOptionType = GetProp<CascaderProps, 'options'>[number];
 export default function FullItems(props: FullItemsProps) {
   
   const [itemData, setItemData] = useState<FileItemType[]>(props.items)
+
   const [selectedIndex, setSelectedIndex] = useState<number>()
 
   const [mouseOverItemData, setMouseOverItemData] = useState<FileItemType|null>()
@@ -96,7 +97,12 @@ export default function FullItems(props: FullItemsProps) {
     }}>
     <Allotment defaultSizes={[200, 100]}>
       <Allotment.Pane>
-        <Card bordered={false}>
+        <Card 
+          bordered={false}
+          style={{
+            height: '100%'
+          }}
+        >
           <div id="left" style={{ 
           width: 'calc(100% - 200px)',
           height: '100%',
@@ -107,9 +113,9 @@ export default function FullItems(props: FullItemsProps) {
           <Allotment.Pane>
             <div>
               <Radio.Group onChange={onRadioChange} value={radioValue}>
-                <Radio value={0}>无功能</Radio>
+                <Radio value={0}>清空</Radio>
                 <Radio value={1}>流经过</Radio>
-                <Radio value={2}>本描述</Radio>
+                <Radio value={2}>自描述</Radio>
               </Radio.Group>
             </div>
             <div>
@@ -122,27 +128,68 @@ export default function FullItems(props: FullItemsProps) {
           
           <Allotment.Pane>
           
-            { itemData.map((item, index) => (
-              <div key={index} style={{ 
-                display: 'inline-block',
-                width: '9px', 
-                height: '9px', 
-                margin: '2px',
-                backgroundColor: item.selected ? 'green' : 'lightgreen'
-              }}
-                onMouseOver={() => {
-                  itemMouseOverHandler(item, index)
-                }}
+            <div style={{ overflow: 'hidden' }}>
+              <div 
+                id="left-linenumber"
+                style={{ 
+                  position: 'absolute',
+                  // left: 0,
+                  // top: 0,
+                  width: '25px',
+                  marginTop: '-2px',
+                  overflow: 'hidden'
+                 }}
+              >
+                {
+                  Array.from({length: Math.ceil(itemData.length/5)}).map((_, index) => (
+                    <div 
+                      key={index}
+                      style={{
+                        fontSize: "6px",
+                        width: "26px",
+                        height: "9px",
+                        margin: "4px",
+                        // backgroundColor: 'red',
+                        textAlign: 'center',
+                      }}
+                    >
+                      {index + 1}
+                    </div>
+                  ))
+                }
 
-                onMouseLeave={() => {
-                  itemMouseOverHandler(null, undefined)
-                }}
+              </div>
+              <div 
+                id="right-itemcontainer"
+                 style={{
+                  marginLeft: '24px'
+                 }}
+                >
 
-                onClick={() => {
-                  itemClickHandler(item, index)
-                }}
-              ></div>
-            )) }
+              { itemData.map((item, index) => (
+                  <div key={index} style={{ 
+                    display: 'inline-block',
+                    width: '9px', 
+                    height: '9px', 
+                    margin: '2px',
+                    float: 'left',
+                    backgroundColor: item.selected ? 'green' : 'lightgreen'
+                  }}
+                    onMouseOver={() => {
+                      itemMouseOverHandler(item, index)
+                    }}
+
+                    onMouseLeave={() => {
+                      itemMouseOverHandler(null, undefined)
+                    }}
+
+                    onClick={() => {
+                      itemClickHandler(item, index)
+                    }}
+                  ></div>
+                )) }
+              </div>
+            </div>
 
           </Allotment.Pane>
           </div>
@@ -157,8 +204,14 @@ export default function FullItems(props: FullItemsProps) {
             float: 'right'  
             }}>
               {/* 展示mouseover的 item的信息 */}
-              <div id="displayinfo" style={{ backgroundColor: '#green' }}>
-                {/* <Space style={{ backgroundColor: '#green', width: '100%' }} direction="vertical" align='start'>
+              <div 
+                id="displayinfo" 
+                style={{ 
+                  height: '60px',
+                  backgroundColor: '#green', 
+                }}
+                >
+                <Space style={{ backgroundColor: '#green', width: '100%' }} direction="vertical" align='start'>
                   
                   { selectedIndex ?
                     <>
@@ -173,11 +226,16 @@ export default function FullItems(props: FullItemsProps) {
                     <Text >属性/方法名: {mouseOverItemData?.itemName}</Text>
                     </>
                   }
-                </Space> */}
+                </Space>
               </div>
               <Divider></Divider>
               <div id="flowcontainer">
-                  <div id='flow-controls'>
+                  <div 
+                    id='flow-controls'
+                    style={{
+                      float: 'left'
+                    }}
+                  >
                     <Cascader
                       placeholder="请输入流名称"
                       showSearch={{  }}  // 过滤的方法 TODO: 需要参考 react-test-demos/react-demo-04-antdfilter  配置参数Type
@@ -185,6 +243,14 @@ export default function FullItems(props: FullItemsProps) {
                         console.log(value)
                       }}
                     />
+                    <div style={{
+                      display: 'inline-block',
+                      marginLeft: '20px'
+                    }}>
+                      <Button onClick={() => {
+                        
+                      }}>查看流描述说明</Button>
+                    </div>
                   </div>
                   <div id='flow-diagram'></div>
               </div>

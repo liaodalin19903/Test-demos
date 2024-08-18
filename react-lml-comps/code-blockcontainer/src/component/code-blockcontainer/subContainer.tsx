@@ -25,6 +25,8 @@ export interface SubContainerImperativeRef {
 
 const SubContainer = forwardRef((props: SubContainerProps, ref: Ref<SubContainerImperativeRef>) => { 
 
+    const containerRef = useRef<HTMLDivElement>(null);
+
     const [data, setData] = useState<ItemType[]>(props.data)
 
     // 滚动
@@ -104,6 +106,7 @@ const SubContainer = forwardRef((props: SubContainerProps, ref: Ref<SubContainer
             </div>
             <div
                 id="container"
+                ref={containerRef}
                 style={{
                     overflow: 'auto',
                     height: props.height? props.height - 40 : ''

@@ -21,6 +21,16 @@ type FileItemType = {
   const props: FullItemsProps = {
     width: 400,
     items: [
+      { fileName: 'src/aaa/bbb/ccc1.ts', className: 'Person', itemName: 'firstName' },
+      { fileName: 'src/aaa/bbb/ccc2.ts', itemName: 'firstName' },
+      { fileName: 'src/aaa/bbb/ccc3.ts', itemName: 'firstName' },
+      { fileName: 'src/aaa/bbb/ccc4.ts', itemName: 'firstName' },
+      { fileName: 'src/aaa/bbb/ccc5.ts', itemName: 'firstName' },
+      { fileName: 'src/aaa/bbb/ccc.ts', itemName: 'firstName' },
+      { fileName: 'src/aaa/bbb/ccc.ts', itemName: 'firstName' },
+      { fileName: 'src/aaa/bbb/ccc.ts', itemName: 'firstName' },
+      { fileName: 'src/aaa/bbb/ccc.ts', itemName: 'firstName' },
+      { fileName: 'src/aaa/bbb/ccc.ts', itemName: 'firstName' },
       { fileName: 'src/aaa/bbb/ccc.ts', itemName: 'firstName' },
       { fileName: 'src/aaa/bbb/ccc.ts', itemName: 'firstName' },
       { fileName: 'src/aaa/bbb/ccc.ts', itemName: 'firstName' },
