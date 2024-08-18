@@ -1,5 +1,4 @@
 
+import { langRegistry } from './LangRegistry'
 
-import { registry } from "./registry";
-
-console.log(registry.getAllLanguages())
+console.log(langRegistry.getAllLanguages())  
