@@ -16,14 +16,17 @@ const App = () => {
               fontSize: "8px",
               width: "9px",
               height: "9px",
-              margin: "2px",
+              margin: "4px",
+              backgroundColor: 'red'
             }}
           >
             {index}
           </div>
         ))}
       </div>
-      <div className="right-box">
+      <div 
+        style={{ marginTop: '2px' }}
+        className="right-box">
         {itemData.map((item, index) => (
           <div
             key={index}

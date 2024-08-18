@@ -1,15 +1,8 @@
-const fs = require("fs")
 const Parser = require("tree-sitter")
 const JavaScript = require("tree-sitter-javascript");
 
-const C = require("tree-sitter-c")
-const Java = require("tree-sitter-java");
-const JSON = require("tree-sitter-json");
-const Python = require("tree-sitter-python");
-const Ruby = require("tree-sitter-ruby");
-const Rust = require("tree-sitter-rust");
 
-const { Query, QueryCursor } = Parser 
+const { Query } = Parser 
 
 //#region 【JavaScript】
 
