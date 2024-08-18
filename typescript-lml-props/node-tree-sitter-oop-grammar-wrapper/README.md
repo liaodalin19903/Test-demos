@@ -18,6 +18,16 @@ https://boardmix.cn/app/share?token=CAE.CMbf_wsgASoQIdqGNXt1G3U1E_ARzAMfQjAFQAE&
 	本方法调用了哪些子方法（如果没有调用其他子方法，那么自己就是基元方法）
 
   
+###### 项目说明
+1）src/OOPAstProsor.ts 
+面向对象语言的AST处理器. oop languages ast processor
+
+2）support_languages
+支持的语言
+
+###### 依赖
+编程语言识别库
+
 
 
 
