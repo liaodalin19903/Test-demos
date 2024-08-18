@@ -1,0 +1,19 @@
+{
+  "name": "@nodejs-demo-04-npmpackage/person",
+  "private": false,  
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Person的类",
+  "main": "dist/person.cjs",
+  "module": "dist/person.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "tsx": "^4.17.0",
+    "typescript": "^5.5.3",
+    "vite": "^5.4.1"
+  }
+}
