@@ -1,8 +1,8 @@
 // NTSGWType = node-tree-sitter-grammar-wrapper-type
+// CID = class-inheritiance-diagram
 
 export = NTSWrapTypes
 
-// CID = class-inheritiance-diagram
 declare namespace NTSWrapTypes {
   //#region 
   // eg. { age: 35 }
@@ -58,6 +58,8 @@ declare namespace NTSWrapTypes {
   
   //#endregion
 }
+
+
 
 
 

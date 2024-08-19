@@ -8,9 +8,9 @@ export interface ClassInheritanceDiagramProps {
 // 数据处理器
 class DataProcessor {
 
-    readonly itemList = <ItemDataType[]>[]
+    readonly itemList = <CAIDataType[]>[]
 
-    constructor(itemList: ItemDataType[] ) {
+    constructor(itemList: CAIDataType[] ) {
         this.itemList = itemList
     }
 
