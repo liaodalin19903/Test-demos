@@ -1,0 +1,20 @@
+{
+  "name": "@nts-wrap/types",
+  "private": false,
+  "version": "0.0.1",
+  "type": "module",
+  "description": "the @node-tree-sitter-grammar-wrapper project types",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@nts-wrapper/types": "workspace:.",
+    "typescript": "^5.5.3",
+    "vite": "^5.4.1"
+  },
+  "dependencies": {
+    "tsx": "^4.17.0"
+  }
+}
