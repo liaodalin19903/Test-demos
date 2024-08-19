@@ -1,9 +1,24 @@
+// import path from 'path'
+// import fs from 'fs'
+
+
+/**
+ * 定义类型interface
+ */
+interface ClassType {
+  classname: string, 
+  method
+}
+
 
 interface OOPLanguageFuncInterface {
 
-  // 获取项目下：所有类名
-  
-  // 获取文件下：所有类名
+  /**
+   * 获取项目下/获取文件下：所有类
+   * @param path 可能是目录，也可能是文件
+   */
+  getClasses(path: string): 
+
 
   // 获取指定类下面：所有属性和方法
 
