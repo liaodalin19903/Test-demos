@@ -1,4 +1,7 @@
 
 
-依赖：antvis/X6
+###### 依赖：
+antvis/X6
+@nts-wrap/types
+
 
