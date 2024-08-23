@@ -19,5 +19,9 @@
     "tree-sitter-ruby": "^0.21.0",
     "tree-sitter-rust": "^0.21.0",
     "tree-sitter-typescript": "^0.21.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.0",
+    "tsx": "^4.17.0"
   }
 }

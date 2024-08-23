@@ -22,7 +22,11 @@ const query = new Query(
 const query = new Query(
   TypeScript,
   `
-    (class_declaration name: (identifier) @class-name)
+    (class_declaration 
+      name: (type_identifier) @class-name
+      body: (class_body
+        (method_definition
+          name: (property_identifier) @the-method-name)))
   `
 );
 
@@ -50,9 +54,14 @@ class Dog extends Animal {
   shout() {
       console.log('bark bark')
   }
+  shout2() {
+      console.log('bark bark')
+  }
 }
     `);
 
 const matches = query.matches(tree.rootNode);
-console.log(matches[3].captures[0].node.text)  // Dog 
 
+//console.log(matches[1].captures[0].node.text)  // Dog 
+
+console.log(matches[1].captures)
