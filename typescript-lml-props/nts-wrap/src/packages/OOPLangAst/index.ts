@@ -1,1 +1,1 @@
-export * from './OOPAstInterfaces'
+export * from './interfaces'

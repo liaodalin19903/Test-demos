@@ -1,4 +1,4 @@
-import { OOPLang } from './OOPLangFeatsInterface';
+import { OOPLang } from './interfaces';
 
 class LanguageRegistry {
   private registeredLanguages: Map<string, OOPLang.OOPLangFeats> = new Map();

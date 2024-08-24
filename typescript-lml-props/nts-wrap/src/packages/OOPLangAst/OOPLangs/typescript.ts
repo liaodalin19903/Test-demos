@@ -1,6 +1,6 @@
-import { propertyType, methodType, CAIBase, CAIInheritChainData, callMethodOnEarth, OOPLanAstCommonFunc } from '../OOPAstInterfaces'
+import { propertyType, methodType, CAIBase, CAIInheritChainData, callMethodOnEarth, OOPLanAstCommonFunc } from '../interfaces'
 
-class TypeScriptASTWrap implements OOPLanAstCommonFunc {
+export class TypeScriptASTWrap implements OOPLanAstCommonFunc {
   langName: string | undefined = undefined
 
   constructor(langName: string | undefined) {
