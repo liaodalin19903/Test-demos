@@ -13,6 +13,6 @@ export function registerPython(registry: LanguageRegistry) {
       'interface:interface-inheritance': false,
       'mixins:class': false
     },
-    specialFeats: []  // https://segmentfault.com/q/1010000045203600
+    specialFeats: ['MagicMethods', 'Metaclasses', 'Decorators', 'DuckTyping']  // https://segmentfault.com/q/1010000045203600
   });
 }

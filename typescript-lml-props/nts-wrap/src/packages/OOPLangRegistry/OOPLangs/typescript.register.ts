@@ -13,6 +13,7 @@ export function registerTypeScript(registry: LanguageRegistry) {
       'interface:interface-inheritance': false,
       'mixins:class': true
     },
-    specialFeats: []  // https://segmentfault.com/q/1010000045203600
+    specialFeats: ['Decorators', 'Generics']  // https://segmentfault.com/q/1010000045203600
   });
 }
+
