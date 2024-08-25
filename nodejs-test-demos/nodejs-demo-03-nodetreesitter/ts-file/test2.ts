@@ -11,9 +11,10 @@ const query = new Query(
     (class_declaration 
       name: (type_identifier) @class-name
       body: (class_body
-        ((public_field_definition name: (property_identifier) @property-name)
-        | (method_definition
-          name: (property_identifier) @method-name))))
+        ((public_field_definition 
+            name: (property_identifier) @property-name)
+        | (method_definition 
+            name: (property_identifier) @method-name))))
   `
 );
 
