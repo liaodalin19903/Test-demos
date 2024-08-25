@@ -17,7 +17,41 @@ export namespace OOPLang {
   export interface OOPLangFeats {
     langName: string, // eg. Java
     commonFeats: OOPLangCommonFeats,
-    specialFeats: string[]
+    specialFeats: string[],
+    qs: OOPLangQuerySyntaxs
   }
+  
+  // 可在playground探索出：https://tree-sitter.github.io/tree-sitter/playground 
+  export interface OOPLangQuerySyntaxs {
+    //#region CAI names
+    /**
+     * eg. TypeScript语言匹配出类名
+     * (class_declaration
+          name: (type_identifier) @class-name
+          )
+     */
+    classNameQS: string,
+    abstractClassNameQS: string,
+    interfaceNameQS: string,
+
+    //#endregion
+
+    //#region properties & methods 没有抽象属性
+    // 抽象方法sign （遍历Node的时候判断）
+    abstract_method_signature: string, 
+    abstract_method_name: string,  // eg. property_identifier
+    // 方法
+    method_definition: string,  // 整个方法定义
+    method_name: string,  // eg. property_identifier
+
+    // 属性
+    property_definition: string, // 整个属性定义. eg. public_field_definition
+    property_name: string // eg. property_identifier
+
+    //#endregion
+
+
+  }
+  
 }
 

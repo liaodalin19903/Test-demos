@@ -2,8 +2,6 @@
 /**
  * 
  */
-
-
 type PositionInFile = {
   filePath: string, // 源代码文件的path
   line: number,  // 所在文件行

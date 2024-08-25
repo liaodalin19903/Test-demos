@@ -1,4 +1,4 @@
-import { LanguageRegistry } from '../languageRegistry';
+import { LanguageRegistry } from '../../languageRegistry';
 
 export function registerJava(registry: LanguageRegistry) {
   registry.registerLanguage({

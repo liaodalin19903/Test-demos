@@ -1,7 +1,7 @@
 import { LanguageRegistry } from './languageRegistry';
-import { registerPython } from './OOPLangs/python.register';
-import { registerJava } from './OOPLangs/java.register';
-import { registerTypeScript } from './OOPLangs/typescript.register';
+import { registerPython } from './OOPLangs/python/python.register';
+import { registerJava } from './OOPLangs/java/java.register';
+import { registerTypeScript } from './OOPLangs/typescript/typescript.register';
 
 const langRegistry = new LanguageRegistry();
 

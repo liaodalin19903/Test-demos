@@ -1,4 +1,6 @@
-import { LanguageRegistry } from '../languageRegistry';
+import { LanguageRegistry } from '../../languageRegistry';
+
+import { typescriptQS } from './typescript.qs'
 
 export function registerTypeScript(registry: LanguageRegistry) {
   registry.registerLanguage({
@@ -13,7 +15,8 @@ export function registerTypeScript(registry: LanguageRegistry) {
       'interface:interface-inheritance': false,
       'mixins:class': true
     },
-    specialFeats: ['Decorators', 'Generics']  // https://segmentfault.com/q/1010000045203600
+    specialFeats: ['Decorators', 'Generics'],  // https://segmentfault.com/q/1010000045203600
+    qs: typescriptQS
   });
 }
 

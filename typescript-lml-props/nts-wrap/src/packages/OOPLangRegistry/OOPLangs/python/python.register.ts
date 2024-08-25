@@ -1,4 +1,4 @@
-import { LanguageRegistry } from '../languageRegistry';
+import { LanguageRegistry } from '../../languageRegistry';
 
 export function registerPython(registry: LanguageRegistry) {
   registry.registerLanguage({
@@ -13,6 +13,6 @@ export function registerPython(registry: LanguageRegistry) {
       'interface:interface-inheritance': false,
       'mixins:class': false
     },
-    specialFeats: ['MagicMethods', 'Metaclasses', 'Decorators', 'DuckTyping']  // https://segmentfault.com/q/1010000045203600
+    specialFeats: ['MagicMethods', 'Metaclasses', 'Decorators', 'DuckTyping', '@property decorator']  // https://segmentfault.com/q/1010000045203600
   });
 }
