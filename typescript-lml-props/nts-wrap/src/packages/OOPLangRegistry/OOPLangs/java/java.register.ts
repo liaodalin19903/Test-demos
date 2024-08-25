@@ -1,4 +1,5 @@
 import { LanguageRegistry } from '../../languageRegistry';
+import { javaQS } from './java.qs';
 
 export function registerJava(registry: LanguageRegistry) {
   registry.registerLanguage({
@@ -13,6 +14,7 @@ export function registerJava(registry: LanguageRegistry) {
       'interface:interface-inheritance': true,
       'mixins:class': false
     },
-    specialFeats: []  // https://segmentfault.com/q/1010000045203600
+    specialFeats: [],  // https://segmentfault.com/q/1010000045203600
+    qs: javaQS
   });
 }
