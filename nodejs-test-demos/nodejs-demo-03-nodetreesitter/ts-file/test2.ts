@@ -13,7 +13,7 @@ const query = new Query(
       body: (class_body
         ((public_field_definition 
             name: (property_identifier) @property-name)
-        | (method_definition 
+         (method_definition 
             name: (property_identifier) @method-name))))
   `
 );
@@ -48,6 +48,8 @@ class Dog extends Animal {
     `);
 
 const matches = query.matches(tree.rootNode);
+
+//console.log("matches:", matches)
 
 const classPropertiesAndMethods = {};
 
