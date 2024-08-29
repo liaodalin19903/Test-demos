@@ -1,5 +1,8 @@
 {
 	"dependencies": {
 		"typescript": "^5.5.4"
+	},
+	"devDependencies": {
+		"tsx": "^4.19.0"
 	}
 }
