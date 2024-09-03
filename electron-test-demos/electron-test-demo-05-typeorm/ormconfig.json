@@ -1,0 +1,15 @@
+{
+  "type": "sqlite",
+  "database": "src/main/db/electron_app_db.sqlite",
+  "synchronize": false,
+  "logging": false,
+  "entities": [
+    "src/main/db/entities/*.ts"
+  ],
+  "migrations": [
+    "src/main/db/migrations/*.ts"
+  ],
+  "subscribers": [
+    "src/main/db/subscribers/*.ts"
+  ]
+}

@@ -1,9 +1,11 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
+import icon from '../../resources/icon.png'
+import { to } from 'await-to-js'
 
-import { buildDatabasePath } from './test'
+import DataBase from './db'
+import { registerIpcMainHandlers } from './ipc/registerIpcMainHandlers'
 
 function createWindow(): void {
   // Create the browser window.
@@ -40,7 +42,7 @@ function createWindow(): void {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
@@ -52,10 +54,22 @@ app.whenReady().then(() => {
   })
 
   // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
+  ipcMain.handle('ping', () => console.log('pong'))
+  //registerIpcMainHandlers()
 
-  // db test
-  buildDatabasePath()
+  // 数据库初始化
+  if (!DataBase.isInitialized) {
+    const [err] = await to(DataBase.initialize())
+    if (err) {
+      console.log('数据库已初始化失败!')
+    } else {
+      console.log('数据库已初始化成功!')
+    }
+  } else {
+    console.log('数据库已初始化成功!')
+  }
+
+
 
   createWindow()
 
