@@ -1,38 +1,48 @@
-export function splitUnquotedString(
-    input: string,
-    delimiter: string,
-): string[] {
-    if (input.startsWith(delimiter)) {
-        return splitUnquotedString(
-            input.substring(delimiter.length),
-            delimiter,
-        );
-    }
-    if (input.startsWith('"')) {
-        // the part inside the quotes should not be split, the rest should
-        const closingQuoteIndex = input.indexOf('"', 1);
-        if (closingQuoteIndex === -1) {
-            // Unmatched quotes, just split it
-            return input.split(delimiter);
-        }
-        if (closingQuoteIndex === input.length - 1) {
-            return [input];
-        } else {
-            const remainder = input.substring(closingQuoteIndex + 1);
-            return [
-                input.substring(0, closingQuoteIndex + 1),
-                ...splitUnquotedString(remainder, delimiter),
-            ];
-        }
-    } else {
-        return input.split(delimiter);
-    }
+
+/**
+ * Defines the available reflection kinds.
+ * @category Reflections
+ */
+export enum ReflectionKind {
+  Project = 0x1,
+  Module = 0x2,
+  Namespace = 0x4,
+  Enum = 0x8,
+  EnumMember = 0x10,
+  Variable = 0x20,
+  Function = 0x40,
+  Class = 0x80,
+  Interface = 0x100,
+  Constructor = 0x200,
+  Property = 0x400,
+  Method = 0x800,
+  CallSignature = 0x1000,
+  IndexSignature = 0x2000,
+  ConstructorSignature = 0x4000,
+  Parameter = 0x8000,
+  TypeLiteral = 0x10000,
+  TypeParameter = 0x20000,
+  Accessor = 0x40000,
+  GetSignature = 0x80000,
+  SetSignature = 0x100000,
+  TypeAlias = 0x200000,
+  Reference = 0x400000,
+  /**
+   * Generic non-ts content to be included in the generated docs as its own page.
+   */
+  Document = 0x800000,
 }
 
 
 
-const inputString = '"Hello world, This is a test",Not quoted part';
-const delimiter = ',';
-const result = splitUnquotedString(inputString, delimiter);
-console.log(result);
+function getKindString(kind: ReflectionKind): string {
+  return ReflectionKind[kind].replace(
+      /(.)([A-Z])/g,
+      (_m, a: string, b: string) => a + " " + b.toLowerCase(),
+  );
+}
+
+const str = getKindString(ReflectionKind.Project)
+console.log(str)  // Project
+
 
