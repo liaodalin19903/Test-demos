@@ -3,7 +3,10 @@
       "jsx": "react",
       "lib": [
          "es5",
-         "es6"
+         "es6",
+         "dom",
+         "dom.iterable",
+         "scripthost"
       ],
       "target": "es5",
       "module": "commonjs",
