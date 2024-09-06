@@ -1,7 +1,7 @@
 
 //#region 1、test
 import { testHandlers } from './test/test.handlers'
-import { osHandlers } from './os/config.handlers'
+import { configHandlers } from './config/config.handlers'
 
 //#endregion
 
@@ -10,6 +10,6 @@ export const registerIpcMainHandlers = (): void => {
   // test handlers
   testHandlers()
 
-  osHandlers()
+  configHandlers()
   //#endregion
 }

@@ -28,15 +28,17 @@
       "@electron/rebuild": "^3.6.0",
       "await-to-js": "^3.0.0",
       "better-sqlite3": "^11.2.1",
+      "inversify": "^6.0.2",
       "pg": "^8.4.0",
       "reflect-metadata": "^0.1.13",
+      "rxjs": "^7.8.1",
       "typeorm": "0.3.20"
    },
    "devDependencies": {
       "@electron-toolkit/eslint-config-prettier": "^2.0.0",
       "@electron-toolkit/eslint-config-ts": "^2.0.0",
       "@electron-toolkit/tsconfig": "^1.0.1",
-      "@types/node": "^16.11.10",
+      "@types/node": "^16.18.107",
       "@types/react": "^18.3.3",
       "@types/react-dom": "^18.3.0",
       "@vitejs/plugin-react": "^4.3.1",

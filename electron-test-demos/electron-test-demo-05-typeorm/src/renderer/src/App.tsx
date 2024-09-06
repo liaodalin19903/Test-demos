@@ -1,6 +1,5 @@
 import { useEffect } from "react"
 
-
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const App = () => {
   //const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')

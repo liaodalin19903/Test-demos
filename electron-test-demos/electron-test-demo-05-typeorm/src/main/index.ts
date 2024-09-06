@@ -69,7 +69,8 @@ app.whenReady().then(async () => {
     console.log('数据库已初始化成功!')
   }
 
-
+  // 注册ipcMain
+  registerIpcMainHandlers()
 
   createWindow()
 
