@@ -2,7 +2,7 @@ import { ipcMain } from 'electron'
 //import { IpcMainEvent } from 'electron'
 
 import { container } from '../../ioc/ioc-container'
-import { IConfig } from '../../db/interfaces/interfaces'
+import { IConfig } from '../../db/interfaces'
 
 const ConfigService = container.get<IConfig>(IConfig)
 

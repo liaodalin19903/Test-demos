@@ -1,5 +1,10 @@
 {
    "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "@main/*": ["src/main/*"],
+        "@renderer/*": ["src/renderer/*"],
+      },
       "jsx": "react",
       "lib": [
          "es5",

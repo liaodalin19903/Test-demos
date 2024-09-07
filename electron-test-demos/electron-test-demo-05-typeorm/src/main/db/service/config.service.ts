@@ -3,7 +3,7 @@ import { ConfigEntities } from '../entities/Config'
 import { Repository } from 'typeorm'
 import { injectable, inject } from 'inversify'
 import 'reflect-metadata'
-import { IConfig } from '../interfaces/interfaces'
+import { IConfig } from '../interfaces'
 
 const getConfigQueryBuilder = async (): Promise<Repository<ConfigEntities>> => {
   return Database.getRepository(ConfigEntities)
