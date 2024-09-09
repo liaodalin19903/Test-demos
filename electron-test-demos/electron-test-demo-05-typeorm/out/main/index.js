@@ -44,7 +44,10 @@ __decorateClass$1([
 ConfigEntities = __decorateClass$1([
   typeorm.Entity("config")
 ], ConfigEntities);
-const dataBasePath = path.join(__dirname, "electron_app_db.sqlite");
+const dataBasePath = path.join(electron.app.getPath("appData"), electron.app.getName(), `./Data/electron_app_db.sqlite`);
+if (!fs.existsSync(dataBasePath)) {
+  fs.writeFileSync(dataBasePath, "");
+}
 console.log("DataBase init path: ", dataBasePath);
 const DataBase = new typeorm.DataSource({
   type: "better-sqlite3",
@@ -59,7 +62,11 @@ const DataBase = new typeorm.DataSource({
       1. 这里是 better-sqlite3 的 二进制文件，在 rebuild 后生成，然后指向该文件；
       2. 后续在打包也需要 copy 至打包后的文件夹中，并且路径访问需要跟以下一致
   */
-  nativeBinding: path.join(__dirname, "./better_sqlite3.node")
+  nativeBinding: path.join(
+    __dirname,
+    "../../node_modules/better-sqlite3/build/Release/better_sqlite3.node"
+  )
+  // better_sqlite3.node
 });
 const testHandlers = () => {
   electron.ipcMain.on("ping", () => console.log("pong"));

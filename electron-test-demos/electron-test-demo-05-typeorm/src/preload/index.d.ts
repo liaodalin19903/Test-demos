@@ -1,5 +1,5 @@
 import { ElectronAPI } from '@electron-toolkit/preload'
-import { IpcRendererEvent, Electron } from 'electron'
+import { IpcRendererEvent } from 'electron'
 
 declare global {
   interface Window {

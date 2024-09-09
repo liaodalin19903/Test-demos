@@ -13,6 +13,7 @@ class Cat extends Animal {
 }
 
 class Dog extends Animal {
+  name: string
   shout() {
       console.log('汪汪')
   }

@@ -1,11 +1,14 @@
 import { join } from 'path'
 import { DataSource } from 'typeorm'
+import { app } from 'electron'
 import { ConfigEntities } from './entities/Config'
+import fs from 'fs'
 
-// 生产环境：如果不存在还需要创建
-//const dataBasePath = join(app.getPath('appData'), app.getName(), `./Data/electron_app_db.sqlite`)
-// 开发环境：
-const dataBasePath = join(__dirname, 'electron_app_db.sqlite')
+// 直接是生产环境：如果不存在还需要创建
+const dataBasePath = join(app.getPath('appData'), app.getName(), `./Data/electron_app_db.sqlite`)
+if (!fs.existsSync(dataBasePath)) {
+  fs.writeFileSync(dataBasePath, '')
+}
 
 console.log('DataBase init path: ', dataBasePath)
 const DataBase = new DataSource({
@@ -18,7 +21,10 @@ const DataBase = new DataSource({
       1. 这里是 better-sqlite3 的 二进制文件，在 rebuild 后生成，然后指向该文件；
       2. 后续在打包也需要 copy 至打包后的文件夹中，并且路径访问需要跟以下一致
   */
-  nativeBinding: join(__dirname, './better_sqlite3.node')
+  nativeBinding: join(
+    __dirname,
+    '../../node_modules/better-sqlite3/build/Release/better_sqlite3.node'
+  ) // 运行时候，此文件是out/index.js，因此是对于此的相对路径到node_modules/better-sqlite3/build/Release/better_sqlite3.node
 })
 
 export default DataBase
