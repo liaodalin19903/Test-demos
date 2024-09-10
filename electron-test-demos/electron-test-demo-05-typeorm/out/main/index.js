@@ -66,7 +66,7 @@ const DataBase = new typeorm.DataSource({
     __dirname,
     "../../node_modules/better-sqlite3/build/Release/better_sqlite3.node"
   )
-  // better_sqlite3.node
+  // 运行时候，此文件是out/index.js，因此是对于此的相对路径到node_modules/better-sqlite3/build/Release/better_sqlite3.node
 });
 const testHandlers = () => {
   electron.ipcMain.on("ping", () => console.log("pong"));

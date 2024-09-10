@@ -6,7 +6,7 @@ const App = () => {
   //const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
 
   const ipcHandle = (): void => {
-    window.IPC.invoke('ping')
+    window.IPC.invoke('ping', [])
   }
 
   // useEffect(() => {
