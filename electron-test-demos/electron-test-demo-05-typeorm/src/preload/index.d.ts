@@ -12,6 +12,7 @@ declare global {
         fun: (event: IpcRendererEvent, data: unknown[]) => void
       ) => Electron.IpcRenderer
       removeAllListeners: (channel: string) => Electron.IpcRenderer
-    }
+    },
+
   }
 }

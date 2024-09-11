@@ -18,7 +18,9 @@ const ipcMainApiClient = __ELECTRON_EXPOSURE__.buildIpcMainClient({
 });
 
 // resolved methods
-const ipcMainPingMethod = ipcMainApiClient("ping"); // type-safe API method resolving
+//const ipcMainPingMethod = ipcMainApiClient("ping"); // type-safe API method resolving
+
+const ipcMainTestMethod = ipcMainApiClient("test")
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const App = () => {
@@ -26,20 +28,9 @@ const App = () => {
 
   const ipcHandle = async () => {
     console.log('clicked')
-    const res = await ipcMainApiClient("test")();
+    const res = await ipcMainTestMethod();
     console.log("res: ", res)
   }
-
-  // useEffect(() => {
-  //   // 这里是需要在 electron 中 preload 中设置 contextBridge
-  //   window.IPC.sendSync('os:config', 1)
-  //     .then((res) => {
-  //       console.log(res)
-  //     })
-  //     .catch((e) => {
-  //       console.log(e)
-  //     })
-  // }, [])
 
   return (
     <>
