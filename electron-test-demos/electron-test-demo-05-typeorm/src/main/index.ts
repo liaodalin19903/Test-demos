@@ -5,7 +5,9 @@ import icon from '../../resources/icon.png'
 import { to } from 'await-to-js'
 
 import DataBase from './db'
-import { registerIpcMainHandlers } from './ipc/registerIpcMainHandlers'
+//import { registerIpcMainHandlers } from './ipc/registerIpcMainHandlers'
+
+import { register as registerAPI } from './ipc/ipc-main-api'
 
 function createWindow(): void {
   // Create the browser window.
@@ -70,7 +72,9 @@ app.whenReady().then(async () => {
   }
 
   // 注册ipcMain
-  registerIpcMainHandlers()
+  //registerIpcMainHandlers()
+
+  registerAPI()
 
   createWindow()
 

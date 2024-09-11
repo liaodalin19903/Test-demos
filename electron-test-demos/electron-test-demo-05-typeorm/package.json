@@ -28,6 +28,7 @@
       "@electron/rebuild": "^3.6.0",
       "await-to-js": "^3.0.0",
       "better-sqlite3": "^11.2.1",
+      "electron-rpc-api": "^10.0.0",
       "inversify": "^6.0.2",
       "pg": "^8.4.0",
       "reflect-metadata": "^0.1.13",
