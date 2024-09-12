@@ -3,6 +3,8 @@ import { useEffect } from "react"
 
 import {subscribableLikeToObservable} from "electron-rpc-api";
 
+import { ConfigEntities } from "@shared/db-entities/Config";
+
 // the below code block is recommended for adding if you create/destroy
 // the renderer processes dynamically (multiple times)
 const cleanupPromise = new Promise<void>((resolve) => {
@@ -21,6 +23,7 @@ const ipcMainApiClient = __ELECTRON_EXPOSURE__.buildIpcMainClient({
 //const ipcMainPingMethod = ipcMainApiClient("ping"); // type-safe API method resolving
 
 const ipcMainTestMethod = ipcMainApiClient("test")
+const ipcMainTestDbMethod = ipcMainApiClient('testInsertDb')
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const App = () => {
@@ -28,7 +31,12 @@ const App = () => {
 
   const ipcHandle = async () => {
     console.log('clicked')
-    const res = await ipcMainTestMethod();
+    const entity = new ConfigEntities(
+      'en-US',
+      'light',
+      ''
+    )
+    const res: ConfigEntities = await ipcMainTestDbMethod(entity);
     console.log("res: ", res)
   }
 

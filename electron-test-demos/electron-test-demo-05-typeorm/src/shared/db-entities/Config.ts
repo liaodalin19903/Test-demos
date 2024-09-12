@@ -8,7 +8,7 @@ export class ConfigEntities {
 
   // 注意sqlite3中文本的存储没有varchar等,这里可以选择text存储
   @Column({ type: "text", default: "" })
-  locale?: string | undefined = "";
+  locale?: string;
 
   // default 设置默认值
   @Column({ type: "text", default: "light" })
@@ -19,5 +19,15 @@ export class ConfigEntities {
 
   // 创建数据条的时间，无需手动维护插入单条数据的时间
   @CreateDateColumn()
-  createDate?: Date | undefined;
+  createDate?: Date ;
+
+  constructor(
+    locale?: string,
+    theme?: string,
+    listMode?: string
+  ) {
+    this.locale = locale || this.locale;
+    this.theme = theme || this.theme;
+    this.listMode = listMode || this.listMode;
+  }
 }

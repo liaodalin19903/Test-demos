@@ -1,11 +1,14 @@
 import { join } from 'path'
 import { DataSource } from 'typeorm'
 import { app } from 'electron'
-import { ConfigEntities } from './entities/Config'
+import { ConfigEntities } from '../../shared/db-entities/Config'
 import fs from 'fs'
 
 // 直接是生产环境：如果不存在还需要创建
 const dataBasePath = join(app.getPath('appData'), app.getName(), `./Data/electron_app_db.sqlite`)
+
+console.log('数据量路径: ', dataBasePath)
+
 if (!fs.existsSync(dataBasePath)) {
   fs.writeFileSync(dataBasePath, '')
 }

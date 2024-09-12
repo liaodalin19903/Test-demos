@@ -5,6 +5,10 @@ import {map, mergeMap, take} from "rxjs/operators";
 import {observableToSubscribableLike} from "electron-rpc-api";
 import {promisify} from "util";
 
+import { ConfigEntities } from "../../shared/db-entities/Config";
+import { IConfig } from "../db/interfaces";
+import { container } from "../ioc/ioc-container";
+
 import {IPC_MAIN_API_SERVICE, ScannedIpcMainApiService} from "./ipc-main-api-definition";
 
 export function register(): ScannedIpcMainApiService["ApiClient"] {
@@ -28,8 +32,8 @@ export function register(): ScannedIpcMainApiService["ApiClient"] {
             app.quit();
         },
 
-        async test() {
-          const promise = new Promise((resolve, reject) => {
+        async test(): Promise<string> {
+          const promise = new Promise<string>((resolve, reject) => {
 
             console.log('get test call on backend')
 
@@ -39,7 +43,14 @@ export function register(): ScannedIpcMainApiService["ApiClient"] {
           })
 
           const result = await promise
-          return result 
+          return result
+        },
+
+        // 测试插入数据库
+        async testInsertDb(entity: ConfigEntities): Promise<ConfigEntities> {
+          const servive = container.get<IConfig>(IConfig)
+          const res = await servive.insertConfig(entity)
+          return res
         }
     };
 

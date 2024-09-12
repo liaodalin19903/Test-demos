@@ -3,10 +3,12 @@ const electron = require("electron");
 const preload = require("@electron-toolkit/preload");
 const electronRpcApi = require("electron-rpc-api");
 const apiDefinition = {
-  ping: electronRpcApi.ActionType.SubscribableLike(),
-  sanitizeHtml: electronRpcApi.ActionType.Promise(),
+  //ping: ActionType.SubscribableLike<{ domain: string, times: number }, { domain: string, value: number }>(),
+  //sanitizeHtml: ActionType.Promise<string, string>(),
   quitApp: electronRpcApi.ActionType.Promise(),
-  test: electronRpcApi.ActionType.Promise()
+  test: electronRpcApi.ActionType.Promise(),
+  // <void, string>: void: 指的是传入类型， string: 指的是返回类型
+  testInsertDb: electronRpcApi.ActionType.Promise()
 };
 const IPC_MAIN_API_SERVICE = electronRpcApi.createIpcMainApiService({
   channel: "some-event-name",

@@ -1,5 +1,5 @@
 import Database from '../index'
-import { ConfigEntities } from '../entities/Config'
+import { ConfigEntities } from '../../../shared/db-entities/Config'
 import { Repository } from 'typeorm'
 import { injectable, inject } from 'inversify'
 import 'reflect-metadata'
@@ -23,20 +23,53 @@ export class ConfigService implements IConfig {
   }
 
   // 插入数据操作
-  async updateConfig(config: ConfigEntities): Promise<unknown> {
-    const osQueryBuilder = await getConfigQueryBuilder()
-    const existingOS = await osQueryBuilder.findOne({
-      where: {
-        id: config.id
+  async insertConfig(config: ConfigEntities): Promise<ConfigEntities> {
+    return new Promise(async (resolve) => {
+      const osQueryBuilder = await getConfigQueryBuilder();
+      const existingOS = await osQueryBuilder.findOne({
+          where: {
+              id: config.id,
+          }
+      });
+      // 如果不存在导入，存在就直接返回
+      if (!existingOS) {
+          osQueryBuilder.save(config)
+              .then((saveRes) => {
+                  console.log("导入Config成功: ", JSON.stringify(saveRes))
+                  resolve(saveRes)
+              })
+      } else {
+          resolve(existingOS)
       }
     })
-    return existingOS
+  }
+
+     // 根据ID更新数据
+  async updateConfig(data: {
+      id: string;
+      locale?: string;
+  }) {
+      const configQueryBuilder = await getConfigQueryBuilder();
+      const config = await configQueryBuilder.findOne({
+          where: {
+              id: data.id
+          }
+      });
+      if (config?.id) {
+          const item = await configQueryBuilder.save({
+              id: config.id,
+              title: data?.locale || "",
+          })
+          return item;
+      } else {
+          return null
+      }
   }
 
   // 根据ID删除数据
   async removeConfig(id: string): Promise<unknown> {
-    const osQueryBuilder = await getConfigQueryBuilder()
-    const deleteResult = await osQueryBuilder.delete(id)
+    const configQueryBuilder = await getConfigQueryBuilder()
+    const deleteResult = await configQueryBuilder.delete(id)
     return deleteResult
   }
 }

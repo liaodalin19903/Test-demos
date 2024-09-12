@@ -72,8 +72,6 @@ app.whenReady().then(async () => {
   }
 
   // 注册ipcMain
-  //registerIpcMainHandlers()
-
   registerAPI()
 
   createWindow()
