@@ -16,7 +16,6 @@
         "src/renderer/src/*"
       ],
       "@shared/*": ["src/shared/*"],
-      "@shared/db-entities/*": ["src/shared/db-entities/*"]
     }
   }
 }
