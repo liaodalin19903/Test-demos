@@ -3,6 +3,11 @@ import { useEffect } from "react"
 
 import {subscribableLikeToObservable} from "electron-rpc-api";
 
+import { useMainStore } from './store';
+import { selectFromStore } from "staatshelfer";
+
+import { Person } from './store'
+
 import { ConfigEntities } from "@shared/db-entities/Config";
 
 // the below code block is recommended for adding if you create/destroy
@@ -22,7 +27,6 @@ const ipcMainApiClient = __ELECTRON_EXPOSURE__.buildIpcMainClient({
 // resolved methods
 //const ipcMainPingMethod = ipcMainApiClient("ping"); // type-safe API method resolving
 
-const ipcMainTestMethod = ipcMainApiClient("test")
 const ipcMainTestDbMethod = ipcMainApiClient('testInsertDb')
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -40,6 +44,11 @@ const App = () => {
     console.log("res: ", res)
   }
 
+  const storeHandle = () => {
+    // 获取config数据
+    
+  }
+
   return (
     <>
       <button
@@ -48,6 +57,14 @@ const App = () => {
         }}
       >
         点击调用ipc
+      </button>
+      <br></br>
+      <button
+        onClick={() => {
+          ipcHandle()
+        }}
+      >
+        点击使用获取store数据
       </button>
     </>
   )

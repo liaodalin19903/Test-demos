@@ -33,7 +33,9 @@
       "pg": "^8.4.0",
       "reflect-metadata": "^0.1.13",
       "rxjs": "^7.8.1",
-      "typeorm": "0.3.20"
+      "staatshelfer": "^0.0.1",
+      "typeorm": "0.3.20",
+      "zustand": "^4.5.5"
    },
    "devDependencies": {
       "@electron-toolkit/eslint-config-prettier": "^2.0.0",
