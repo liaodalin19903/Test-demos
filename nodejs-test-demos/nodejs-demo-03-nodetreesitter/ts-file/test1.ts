@@ -10,14 +10,22 @@ abstract class Animal extends AnimalBase {
 
 }
 
+interface Bitable {
+  bite()
+}
+
 class Cat extends Animal {
   shout() {
       console.log('mew mew')
   }
 }
 
-class Dog extends Animal {
+class Dog extends Animal implements Bitable {
   shout() {
       console.log('bark bark')
+  }
+
+  bite() {
+    console.log('wangwang')
   }
 }
