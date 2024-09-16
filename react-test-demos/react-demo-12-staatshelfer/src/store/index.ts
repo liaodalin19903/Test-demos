@@ -1,23 +1,24 @@
 import { defineStore, type StaatShelferStore } from "staatshelfer";
 import { create } from "zustand";
+import { initStates } from './initialState'
 
-export interface Person {
-  id: number,
-  name: string, 
-  age: number 
-}
-
-type Store = {
-  userId: string | undefined;
-  person: Person | null 
+export type Store = {
+  userId: string | undefined,
+  stateA: string | undefined,
+  stateB: number | undefined
 };
 
-export const useMainStore = create<StaatShelferStore<Store>>((set) =>
+const useMainStore = create<StaatShelferStore<Store>>((set) =>
   // throws an error if your definition for defaults don't match the Store type
   defineStore<Store>(set, {
     userId: undefined,
-    person: null 
+    stateA: undefined,
+    stateB: undefined
   }),
-
 );
+
+
+export { useMainStore, initStates }
+
+
 
