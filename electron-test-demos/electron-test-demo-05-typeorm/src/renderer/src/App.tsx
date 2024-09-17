@@ -3,10 +3,10 @@ import { useEffect } from "react"
 
 import {subscribableLikeToObservable} from "electron-rpc-api";
 
-import { useMainStore } from './store';
+import { useMainStore, initStates } from './store';
 import { selectFromStore } from "staatshelfer";
 
-import { Person } from './store'
+
 
 import { ConfigEntities } from "@shared/db-entities/Config";
 
@@ -31,7 +31,14 @@ const ipcMainTestDbMethod = ipcMainApiClient('testInsertDb')
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const App = () => {
-  //const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
+
+  const {
+    userId, setUserId,
+    stateA, setStateA,
+    stateB
+  } = selectFromStore(useMainStore, [
+    'userId', 'stateA', 'stateB'
+  ])
 
   const ipcHandle = async () => {
     console.log('clicked')
@@ -45,8 +52,11 @@ const App = () => {
   }
 
   const storeHandle = () => {
-    // 获取config数据
-    
+    // 初始化store数据
+    initStates({
+      setUserId,
+      setStateA
+    })
   }
 
   return (
@@ -61,11 +71,15 @@ const App = () => {
       <br></br>
       <button
         onClick={() => {
-          ipcHandle()
+          storeHandle()
         }}
       >
-        点击使用获取store数据
+        点击初始化store数据
       </button>
+
+      <div>userId: {userId}</div>
+      <div>stateA: {stateA}</div>
+      <div>stateB: {stateB}</div>
     </>
   )
 }
