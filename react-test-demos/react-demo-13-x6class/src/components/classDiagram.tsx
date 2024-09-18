@@ -8,28 +8,38 @@ type Position = {
 
 type ClassDiagramItemID = string 
 
-type ClassDiagramItem = {
+const nodeShapes = ['class'] as const 
+const edgeShapes = [
+  'extends',
+  'composition',
+  'implement',
+  'aggregation',
+  'association', 
+] as const 
+
+type ClassNodeItem = {
   id: ClassDiagramItemID,
-  shape: 'class'    // 注意：CAI 都是使用shape: class
-  | 'extends' | 'composition' | 'implements' | 'aggregation' | 'association',
-  source?: ClassDiagramItemID,
-  target?: ClassDiagramItemID,
-  label?: string,  
+  shape: typeof nodeShapes[number] 
   name: string[],
   attributes: string[],
   methods: string[],
   position: Position
+} 
+
+type ClassEdgeItem = {
+  id: ClassDiagramItemID,
+  shape: typeof edgeShapes[number]
+  source: ClassDiagramItemID,
+  target: ClassDiagramItemID,
+  label?: string
 }
+
+
+type ClassDiagramItem = ClassNodeItem | ClassEdgeItem
 
 export interface ClassDiagramProps  {
   items: ClassDiagramItem[]
 }
-
-// export default function ClassComp(props: ClassDiagramProps) {
-//   return (
-//     <div>ClassComp</div>
-//   )
-// }
 
 export default class ClassDiagram extends React.Component {
   private container: HTMLDivElement | undefined 
@@ -276,10 +286,6 @@ export default class ClassDiagram extends React.Component {
 
     fetch('/data/class.json').then((response) => response.json())
     .then((data) => {
-
-      console.log('lml: ', this.graph, this.container)
-      console.log('lml-data: ', data)
-
       const cells: Cell[] = []
       const edgeShapes = [
         'extends',
@@ -299,6 +305,23 @@ export default class ClassDiagram extends React.Component {
       console.log('cells: ', cells)
       this.graph!.zoomToFit({ padding: 10, maxScale: 1 })
     })
+
+    // #region 给graph添加事件
+    // this.graph.on('cell:click', ({ e, x, y, cell, view }) => {
+    //   console.log('cell :', e, x, y, cell, view)
+    // })
+    this.graph.on('node:click', ({ e, x, y, node, view }) => {
+      console.log('node: ', e, x, y, node, view)
+    })
+    this.graph.on('edge:click', ({ e, x, y, edge, view }) => {
+      console.log('edge: ', e, x, y, edge, view)
+    })
+    this.graph.on('blank:click', ({ e, x, y }) => {
+      console.log(e, x, y)
+    })
+
+    // #endregion
+
   }
 
   refContainer = (container: HTMLDivElement) => {
