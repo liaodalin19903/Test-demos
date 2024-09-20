@@ -329,13 +329,17 @@ export default class ClassDiagram extends React.Component {
   }
 
   render(): React.ReactNode {
-      return (
-        <div style={{ width: '100vw', height: '100vh' }}>
-          <div id='container'  
-           style={{ width: '100vw', height: '100vh' }}
-          ref={this.refContainer}></div>
-        </div>
-      )
+    return (
+      <div style={{ width: '100vw', height: '100vh' }}>
+        <div id='container'  
+          style={{ width: '100vw', height: '100vh' }}
+        ref={this.refContainer}></div>
+
+        <button onClick={() => {
+          console.log('toJSON数据: ', this.graph?.toJSON())
+        }}>点击获取json数据</button>
+      </div>
+    )
   }
 }
 
