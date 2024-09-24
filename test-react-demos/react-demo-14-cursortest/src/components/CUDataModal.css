@@ -1,0 +1,10 @@
+.custom-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.custom-modal .ant-modal-content {
+  top: 0;
+  padding: 0;
+}
