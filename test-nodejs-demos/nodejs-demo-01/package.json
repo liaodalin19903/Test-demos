@@ -13,6 +13,8 @@
     "@nodejs-demo-04-npmpackage/person": "^0.0.1",
     "await-to-done": "^1.1.1",
     "chai": "4",
+    "git-diff-from": "^1.1.40",
+    "git-diff-tree": "^1.1.0",
     "tree-sitter": "^0.21.1",
     "tree-sitter-javascript": "^0.21.4"
   },
