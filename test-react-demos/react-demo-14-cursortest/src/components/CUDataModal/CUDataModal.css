@@ -8,3 +8,8 @@
   top: 0;
   padding: 0;
 }
+
+.ant-modal {
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+}

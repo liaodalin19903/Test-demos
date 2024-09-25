@@ -1,27 +1,35 @@
 import React, { useEffect } from 'react';
-import { Modal, Form, Input, Button } from 'antd';
+import { Modal, Form, Button, Input } from 'antd';
+import { useForm } from 'antd/es/form/Form';
+import { Rule } from 'antd/es/form';
 
-// 删除 CSS 导入
-// 删除 import './CUDataModal.css';
-
-interface Field {
+export interface Field {
   name: string;
   label: string;
   type: string;
-  rules?: any[];
+  rules?: unknown[];
 }
 
 interface CUDataModalProps {
-  visible: boolean;
+  open: boolean;
   onClose: () => void;
-  onSubmit: (values: any) => void;
   mode: 'create' | 'update';
+  initialValues: unknown | null | object;
   fields: Field[];
-  initialValues?: any;
+  onCallBack: (values: unknown) => void;
 }
 
-const CUDataModal: React.FC<CUDataModalProps> = ({ visible, onClose, onSubmit, mode, fields, initialValues }) => {
-  const [form] = Form.useForm();
+
+
+
+const CUDataModal: React.FC<CUDataModalProps> = ({ open, onClose, onCallBack, mode, fields, initialValues }) => {
+  const [form] = useForm();
+
+  useEffect(() => {
+    if (form) {
+      form.resetFields();
+    }
+  }, [form]);
 
   useEffect(() => {
     if (mode === 'update' && initialValues) {
@@ -35,7 +43,7 @@ const CUDataModal: React.FC<CUDataModalProps> = ({ visible, onClose, onSubmit, m
     form
       .validateFields()
       .then(values => {
-        onSubmit(values);
+        onCallBack(values);
         onClose();
       })
       .catch(info => {
@@ -45,7 +53,7 @@ const CUDataModal: React.FC<CUDataModalProps> = ({ visible, onClose, onSubmit, m
 
   return (
     <Modal
-      visible={visible}
+      open={open}
       title={mode === 'create' ? 'Create Data' : 'Update Data'}
       onCancel={onClose}
       centered
@@ -65,7 +73,7 @@ const CUDataModal: React.FC<CUDataModalProps> = ({ visible, onClose, onSubmit, m
             key={field.name}
             name={field.name}
             label={field.label}
-            rules={field.rules}
+            rules={field.rules as Rule[]}
           >
             {field.type === 'text' && <Input />}
             {/* 可以根据需要添加更多类型的输入框 */}

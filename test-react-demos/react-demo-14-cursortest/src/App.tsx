@@ -1,50 +1,62 @@
-import React, { useState } from 'react';
-import { Button } from 'antd';
-import CUDataModal from './components/CUDataModal';
+import React from 'react';
+import CUDataModal from './components/CUDataModal/CUDataModal';
+import { useDataModal } from './components/CUDataModal/useDataModal';  
 
 const App: React.FC = () => {
-  const [modalVisible, setModalVisible] = useState(false);
-  const [mode, setMode] = useState<'create' | 'update'>('create');
-  const [initialValues, setInitialValues] = useState<any>(null);
+  const { isOpen, data: modalData, openModal, closeModal } = useDataModal();
 
   const fields = [
-    { name: 'name', label: 'Name', type: 'text', rules: [{ required: true, message: 'Please input the name!' }] },
-    { name: 'age', label: 'Age', type: 'text', rules: [{ required: true, message: 'Please input the age!' }] },
-    // 可以根据需要添加更多字段
+    {
+      name: 'name',
+      label: 'Name',
+      type: 'text',
+      rules: [{ required: true, message: 'Name is required' }],
+    },
   ];
 
   const handleCreate = () => {
-    setMode('create');
-    setInitialValues(null);
-    setModalVisible(true);
+    openModal({
+      data: {
+        initialValues: null,
+        mode: 'create',
+        fields: fields,
+        onCallBack: (values: unknown) => {  
+          console.log(values);
+        },
+      },
+      isOpen: true
+    });
   };
 
   const handleUpdate = () => {
-    setMode('update');
-    setInitialValues({ name: 'John Doe', age: 30 });
-    setModalVisible(true);
-  };
-
-  const handleSubmit = (values: any) => {
-    console.log('Submitted values:', values);
+    openModal({
+      data: {
+        initialValues: { name: 'John Doe', age: 30 },
+        mode: 'update',
+        fields: fields,
+        onCallBack: (values: unknown) => {  
+          console.log(values);
+        },
+      },
+      isOpen: true
+    } );
   };
 
   return (
     <div>
-      <Button type="primary" onClick={handleCreate}>
-        Create Data
-      </Button>
-      <Button type="default" onClick={handleUpdate} style={{ marginLeft: 8 }}>
-        Update Data
-      </Button>
-      <CUDataModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onSubmit={handleSubmit}
-        mode={mode}
-        fields={fields}
-        initialValues={initialValues}
-      />
+      <button onClick={handleCreate}>Create</button>
+      <button onClick={handleUpdate}>Update</button>
+      
+      {isOpen && modalData && (
+        <CUDataModal
+          open={isOpen}
+          onClose={closeModal}
+          mode={modalData.mode}
+          initialValues={modalData.initialValues} 
+          fields={modalData.fields} 
+          onCallBack={modalData.onCallBack}
+          ></CUDataModal>
+      )}
     </div>
   );
 };
