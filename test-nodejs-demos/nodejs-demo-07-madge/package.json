@@ -1,0 +1,8 @@
+{
+	"dependencies": {
+		"dependency-tree": "^11.0.1",
+		"madge": "^8.0.0",
+		"node-source-walk": "^7.0.0",
+		"precinct": "^12.1.2"
+	}
+}
