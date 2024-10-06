@@ -1,5 +1,6 @@
 import { Cell, Graph,  ObjectExt } from '@antv/x6'
 import React from 'react'
+import { DagreLayout, CircularLayout } from "@antv/layout";
 
 type Position = {
   "x": number,
@@ -284,7 +285,7 @@ export default class ClassDiagram extends React.Component {
       container: document.getElementById('container')!,
     })
 
-    fetch('/data/class.json').then((response) => response.json())
+    fetch('/data/class2.json').then((response) => response.json())
     .then((data) => {
       const cells: Cell[] = []
       const edgeShapes = [
@@ -304,6 +305,36 @@ export default class ClassDiagram extends React.Component {
       this.graph!.resetCells(cells)
       console.log('cells: ', cells)
       this.graph!.zoomToFit({ padding: 10, maxScale: 1 })
+
+      // 对graph 执行dagre布局
+
+      //const circularLayout = new CircularLayout({ radius: 10 });
+
+      // const dagreLayout = new DagreLayout({
+      //   type: 'dagre',
+      //   rankdir: 'LR',
+      //   align: 'UR',
+      //   ranksep: 35,
+      //   nodesep: 15,
+      // })
+
+      // const dagreLayout = {
+      //   type: 'dagre',
+      //   rankdir: 'LR',
+      //   align: 'UR',
+      //   ranksep: 35,
+      //   nodesep: 15,
+      // } as unknown as DagreLayout;
+
+      
+      // (async () => {
+      //   // 1. Return positions of nodes & edges.
+      //   const positions = await dagreLayout.execute(this.graph);
+      
+      //   // 2. To directly assign the positions to the nodes:
+      //   await dagreLayout.assign(this.graph);
+      // })();
+
     })
 
     // #region 给graph添加事件
