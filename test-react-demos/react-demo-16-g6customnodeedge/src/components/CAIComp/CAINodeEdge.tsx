@@ -75,7 +75,7 @@ export const CAINode = (props: CAINodeProps) => {
                 }}
             >
                 <Text>
-                    {type}
+                    {'<<'+type+'>>'}
                 </Text>
                 <Text>{CAIName}</Text>
             </div>
@@ -98,7 +98,7 @@ export const CAINode = (props: CAINodeProps) => {
 
 // 实现
 export const CAIEdgeImpl = () => {
-
+    
 }
 
 // 继承
