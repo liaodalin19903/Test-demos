@@ -118,16 +118,35 @@ export class JavaScriptNodeJS implements LangBase {
   }
 
   getInterfaceASTNode(abpath: string): CAINode[] {
-    throw new Error('Method not implemented.');
+    return [] // JavaScript 没有接口
   }
+
   getFuncASTNode(abpath: string): OutClassFunc[] {
-    throw new Error('Method not implemented.');
-  }
-  getCAIAttrASTNode(cai: CAINode): CAIAttr[] {
-    throw new Error('Method not implemented.');
-  }
-  getCAIMethodASTNode(cai: CAINode): CAIMethod[] {
-    throw new Error('Method not implemented.');
+    const sourceCode = require('fs').readFileSync(abpath, 'utf8'); // 读取文件内容
+    const parser = new Parser();
+    parser.setLanguage(JavaScript); // 设置语言为 JavaScript
+    const tree = parser.parse(sourceCode); // 解析源代码
+
+    const funcNodes: OutClassFunc[] = []; // 存储函数节点的数组
+
+    // 私有 traverse 方法
+    const traverse = (node) => {
+        if (node.type === 'function_declaration' ) { // 检查节点类型是否为函数声明或箭头函数
+            const funcNameNode = node.namedChildren.find(child => child.type === 'identifier'); // 查找函数名称节点
+            const funcNode: OutClassFunc = funcNameNode ? funcNameNode.text : ''
+            funcNodes.push(funcNode); // 将函数节点添加到数组
+        }else if(node.type === 'arrow_function'){
+            const funcNameNode = node.namedChildren.find(child => child.type === 'identifier'); // 查找函数名称节点
+            const funcNode: OutClassFunc = funcNameNode ? funcNameNode.text : ''
+            funcNodes.push(funcNode); // 将函数节点添加到数组
+        }
+        for (let i = 0; i < node.namedChildCount; i++) {
+            traverse(node.namedChildren[i]); // 递归遍历子节点
+        }
+    };
+
+    traverse(tree.rootNode); // 从根节点开始遍历
+    return funcNodes; // 返回所有函数节点
   }
   
 }

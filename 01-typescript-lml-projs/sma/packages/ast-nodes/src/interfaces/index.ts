@@ -15,6 +15,7 @@ export interface ASTNode {
 }
 
 export interface LangBase {
+    //#region 
     // 获取类外:函数AST关键字
     getFuncASTWord(): string[] 
 
@@ -29,6 +30,7 @@ export interface LangBase {
 
     // 获取类：方法的AST关键字
     getClassMethodASTWord(): string[] 
+    //#endregion
  
     /* 获取AST节点 */
     getClassASTNode(abpath: string):CAINode[] 
@@ -37,8 +39,5 @@ export interface LangBase {
 
     getFuncASTNode(abpath: string):OutClassFunc[] 
 
-    getCAIAttrASTNode(cai: CAINode): CAIAttr[] 
-
-    getCAIMethodASTNode(cai: CAINode): CAIMethod[] 
-
 }
+
