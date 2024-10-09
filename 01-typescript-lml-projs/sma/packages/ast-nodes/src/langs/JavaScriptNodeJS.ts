@@ -102,6 +102,7 @@ export class JavaScriptNodeJS implements LangBase {
       // @ts-ignore
       const classNameNode = node.namedChildren.find(child => child.type === 'identifier');
 
+      //console.log("lml-node:", node.startPosition, node.endPosition)
 
       // 返回数据  
       return {
@@ -110,6 +111,8 @@ export class JavaScriptNodeJS implements LangBase {
         cainame: classNameNode ? classNameNode.text : node.text, // 使用类名节点的文本，如果不存在，则使用当前节点的文本
         path: abpath,
         lang: langs[2],
+        // @ts-ignore
+        range: [node.startPosition, node.endPosition], // 填充 range
         attrs: this.getAttributeNames(node),//attrs, // 填充 attrs
         methods: this.getMethodNames(node) // 填充 methods
       }

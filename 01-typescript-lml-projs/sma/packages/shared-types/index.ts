@@ -24,6 +24,7 @@ export interface CAINode {
   cainame: string,
   path: string,  // 具体的文件
   lang:  typeof langs[number],  // 语言类型
+  range: [{row: number, column: number}, {row: number, column: number}],  // 起止行
   attrs?: string[],
   methods?: string[]
 }
