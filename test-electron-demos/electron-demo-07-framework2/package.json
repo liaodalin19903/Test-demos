@@ -23,7 +23,11 @@
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
-    "@electron-toolkit/utils": "^3.0.0"
+    "@electron-toolkit/utils": "^3.0.0",
+    "await-to-js": "^3.0.0",
+    "better-sqlite3": "^11.5.0",
+    "electron-rebuild": "^3.2.9",
+    "typeorm": "^0.3.20"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",
