@@ -1,0 +1,5 @@
+{
+	"dependencies": {
+		"@opentiny/tiny-engine-cli": "2.0.0-rc.0"
+	}
+}
