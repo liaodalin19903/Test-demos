@@ -9,7 +9,7 @@ export default defineConfig({
         '@main': path.resolve(__dirname, 'src/main'),
         '@preload': path.resolve(__dirname, 'src/preload'),
         '@renderer': path.resolve(__dirname, 'src/main'),
-        '@shared': path.resolve(__dirname, 'src/shared'),
+        '@shared': path.resolve(__dirname, 'src/shared')
       }
     },
     plugins: [externalizeDepsPlugin()]
@@ -20,7 +20,7 @@ export default defineConfig({
         '@main': path.resolve(__dirname, 'src/main'),
         '@preload': path.resolve(__dirname, 'src/preload'),
         '@renderer': path.resolve(__dirname, 'src/main'),
-        '@shared': path.resolve(__dirname, 'src/shared'),
+        '@shared': path.resolve(__dirname, 'src/shared')
       }
     },
     plugins: [externalizeDepsPlugin()]
@@ -31,7 +31,7 @@ export default defineConfig({
         '@main': path.resolve(__dirname, 'src/main'),
         '@preload': path.resolve(__dirname, 'src/preload'),
         '@renderer': path.resolve(__dirname, 'src/main'),
-        '@shared': path.resolve(__dirname, 'src/shared'),
+        '@shared': path.resolve(__dirname, 'src/shared')
       }
     },
     plugins: [react()]

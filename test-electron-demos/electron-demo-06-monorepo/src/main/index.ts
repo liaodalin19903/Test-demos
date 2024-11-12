@@ -2,6 +2,7 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+
 import { to } from 'await-to-js'
 import DataBase from './db'
 
@@ -51,6 +52,8 @@ app.whenReady().then(async () => {
     optimizer.watchWindowShortcuts(window)
   })
 
+  createWindow()
+
   // 数据库初始化
   if (!DataBase.isInitialized) {
     const [err] = await to(DataBase.initialize())
@@ -66,7 +69,7 @@ app.whenReady().then(async () => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
-  createWindow()
+
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
