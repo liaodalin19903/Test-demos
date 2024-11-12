@@ -1,33 +1,28 @@
-import Versions from './components/Versions'
-import electronLogo from './assets/electron.svg'
+import { createTRPCClient } from 'electron-trpc'
+
+import { type Users } from '@shared/@types'
 
 function App(): JSX.Element {
-  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
+  // 创建TRPC客户端
+  const trpcClient = createTRPCClient({
+    // 发送请求到主进程的通道名称
+    requestChannel: 'trpc-request',
+    // 接收主进程回复的通道名称
+    responseChannel: 'trpc-response'
+  })
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const handleClick = () => {
+    // 示例：调用查询方法获取用户列表
+    trpcClient.queries.getUsers().then((users: Users) => {
+      console.log('获取到的用户列表：', users)
+    })
+  }
 
   return (
     <>
-      <img alt="logo" className="logo" src={electronLogo} />
-      <div className="creator">Powered by electron-vite</div>
-      <div className="text">
-        Build an Electron app with <span className="react">React</span>
-        &nbsp;and <span className="ts">TypeScript</span>
-      </div>
-      <p className="tip">
-        Please try pressing <code>F12</code> to open the devTool
-      </p>
-      <div className="actions">
-        <div className="action">
-          <a href="https://electron-vite.org/" target="_blank" rel="noreferrer">
-            Documentation
-          </a>
-        </div>
-        <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-            Send IPC
-          </a>
-        </div>
-      </div>
-      <Versions></Versions>
+      112233
+      <button onClick={handleClick}>获取用户列表</button>
     </>
   )
 }

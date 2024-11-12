@@ -27,6 +27,7 @@
     "await-to-js": "^3.0.0",
     "better-sqlite3": "^11.5.0",
     "electron-rebuild": "^3.2.9",
+    "electron-trpc": "^0.6.1",
     "typeorm": "^0.3.20"
   },
   "devDependencies": {

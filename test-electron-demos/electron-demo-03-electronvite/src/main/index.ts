@@ -7,6 +7,8 @@ import { buildDatabasePath } from './test'
 import { to } from 'await-to-js'
 import DataBase from './db'
 
+import { trpcServer } from './trpc'
+
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -57,13 +59,19 @@ app.whenReady().then(async () => {
   if (!DataBase.isInitialized) {
     const [err] = await to(DataBase.initialize())
     if (err) {
-      console.log('数据库已初始化失败!')
+      console.log('数据库已初始化失败!', err)
     } else {
       console.log('数据库已初始化成功!')
     }
   } else {
     console.log('数据库已初始化成功!')
   }
+
+  // 当接收到来自渲染进程的TRPC请求时，处理请求并返回结果
+  ipcMain.on('trpc-request', (event, request) => {
+    const response = trpcServer.processRequest(request)
+    event.reply('trpc-response', response)
+  })
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))

@@ -1,14 +1,10 @@
 import { join } from 'path'
 import { DataSource } from 'typeorm'
 import { app } from 'electron'
-import { ConfigEntities } from 'shared/db-entities/Config'
-import fs from 'fs'
+import { ConfigEntities } from '@shared/db-entities/Config'
 
 // 直接是生产环境：如果不存在还需要创建 （better-sqlite3会自动创建，所以不必此代码）
 const dataBasePath = join(app.getPath('appData'), app.getName(), `./Data/electron_app_db.sqlite`)
-if (!fs.existsSync(dataBasePath)) {
-  fs.writeFileSync(dataBasePath, '')
-}
 
 console.log('DataBase init path: ', dataBasePath)
 const DataBase = new DataSource({
