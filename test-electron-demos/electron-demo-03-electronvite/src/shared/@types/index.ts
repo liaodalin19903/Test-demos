@@ -1,7 +1,3 @@
-export type User = {
-  id: number
-  name: string
-  email: string
-}
+export * from './api'
+export * from './user'
 
-export type Users = User[]

@@ -2,15 +2,8 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-
-import { buildDatabasePath } from './test'
-import { to } from 'await-to-js'
-import DataBase from './db'
-
-import { appRouter } from './apis/trpcServer/router'
-import {IpcRequest} from "@shared/@types";
-
-import {ipcRequestHandler} from "./apis/trpcServer/ipcRequestHandler";
+import { createIPCHandler } from 'electron-trpc/main'
+import { router } from './apis'
 
 function createWindow(): void {
   // Create the browser window.
@@ -42,12 +35,15 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  // 创建IPC handler
+  createIPCHandler({ router, windows: [mainWindow] })
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(async () => {
+app.whenReady().then(() => {
   // Set app user model id for windows
   electronApp.setAppUserModelId('com.electron')
 
@@ -58,40 +54,8 @@ app.whenReady().then(async () => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // 数据库初始化
-  if (!DataBase.isInitialized) {
-    const [err] = await to(DataBase.initialize())
-    if (err) {
-      console.log('数据库已初始化失败!', err)
-    } else {
-      console.log('数据库已初始化成功!')
-    }
-  } else {
-    console.log('数据库已初始化成功!')
-  }
-
-  // 当接收到来自渲染进程的TRPC请求时，处理请求并返回结果
-  // ipcMain.on('trpc-request', (event, request) => {
-  //   const response = trpcServer.processRequest(request)
-  //   event.reply('trpc-response', response)
-  // })
-
-  ipcMain.handle('trpc', (event, req: IpcRequest) => {
-    return ipcRequestHandler({
-      endpoint: "/trpc",
-      req,
-      router: appRouter,
-      createContext: async () => {
-        return {};
-      }
-    });
-  })
-
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
-
-  // db test
-  buildDatabasePath()
 
   createWindow()
 

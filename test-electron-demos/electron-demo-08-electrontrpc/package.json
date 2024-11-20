@@ -1,5 +1,5 @@
 {
-  "name": "electron-test-demo-03-electronvite",
+  "name": "electron-demo-08-electrontrpc",
   "version": "1.0.0",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
@@ -23,25 +23,17 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
-    "await-to-js": "^3.0.0",
-    "better-sqlite3": "^11.5.0",
-    "electron-trpc": "^0.6.1",
-    "electron-updater": "^6.1.7",
-    "fix-esm": "^1.0.1",
-    "superjson": "^2.2.1",
-    "tsx": "^4.19.0",
-    "typeorm": "^0.3.20",
-    "zod": "^3.23.8"
+    "electron-trpc": "^0.6.1"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",
     "@electron-toolkit/eslint-config-ts": "^2.0.0",
     "@electron-toolkit/tsconfig": "^1.0.1",
-    "@types/node": "^20.16.3",
+    "@types/node": "^20.14.8",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",
-    "electron": "^33.0.1",
+    "electron": "^31.0.2",
     "electron-builder": "^24.13.3",
     "electron-vite": "^2.3.0",
     "eslint": "^8.57.0",
