@@ -1,10 +1,15 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
 
 import { to } from 'await-to-js'
 import DataBase from './db'
+
+import { appRouter } from './apis/trpcServer/router'
+import {IpcRequest} from "@shared/@types";
+import {ipcRequestHandler} from "./apis/trpcServer/ipcRequestHandler";
+
+
 
 function createWindow(): void {
   // Create the browser window.
@@ -63,6 +68,17 @@ app.whenReady().then(async () => {
   } else {
     console.log('数据库已初始化成功!')
   }
+
+  ipcMain.handle('trpc', (event, req: IpcRequest) => {
+    return ipcRequestHandler({
+      endpoint: "/trpc",
+      req,
+      router: appRouter,
+      createContext: async () => {
+        return {};
+      }
+    });
+  })
 
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))

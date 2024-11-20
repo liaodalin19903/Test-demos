@@ -1,9 +1,12 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
 import { createIPCHandler } from 'electron-trpc/main'
-import { router } from './apis'
+
+import { appRouter } from './apis/trpcServer/router'
+import { IpcRequest } from '@shared/@types'
+
+import { ipcRequestHandler } from './apis/trpcServer/ipcRequestHandler'
 
 function createWindow(): void {
   // Create the browser window.
@@ -35,9 +38,6 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
-
-  // 创建IPC handler
-  createIPCHandler({ router, windows: [mainWindow] })
 }
 
 // This method will be called when Electron has finished
@@ -52,6 +52,17 @@ app.whenReady().then(() => {
   // see https://github.com/alex8088/electron-toolkit/tree/master/packages/utils
   app.on('browser-window-created', (_, window) => {
     optimizer.watchWindowShortcuts(window)
+  })
+
+  ipcMain.handle('trpc', (event, req: IpcRequest) => {
+    return ipcRequestHandler({
+      endpoint: '/trpc',
+      req,
+      router: appRouter,
+      createContext: async () => {
+        return {}
+      }
+    })
   })
 
   // IPC test
