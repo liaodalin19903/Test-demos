@@ -26,8 +26,6 @@
     "@electron-toolkit/utils": "^3.0.0",
     "await-to-js": "^3.0.0",
     "better-sqlite3": "^11.5.0",
-    "electron-rebuild": "^3.2.9",
-    "electron-trpc": "^0.6.1",
     "typeorm": "^0.3.20"
   },
   "devDependencies": {
@@ -47,6 +45,26 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "typescript": "^5.5.2",
-    "vite": "^5.3.1"
+    "vite": "^5.3.1",
+    "custom-electron-titlebar": "^4.2.8",
+    "electron-dl": "^4.0.0",
+    "electron-dl-manager": "^3.2.1",
+    "electron-find": "^1.0.7",
+    "electron-is-dev": "^3.0.1",
+    "electron-log": "^5.2.2",
+    "electron-preferences": "^2.8.2",
+    "electron-progressbar-customhtml": "^1.1.2",
+    "electron-protocols": "^1.0.4",
+    "electron-rebuild": "^3.2.9",
+    "electron-traywindow-positioner": "^1.2.1",
+    "electron-trpc": "^0.6.1",
+    "electron-unhandled": "^5.0.0",
+    "electron-util": "^0.18.1",
+    "electron-window-manager": "github:tamkeen-tms/electron-window-manager",
+    "@electron-uikit/contextmenu": "^1.0.0",
+    "@electron-uikit/core": "^1.0.0",
+    "@electron-uikit/notification": "^1.0.0",
+    "@electron-uikit/titlebar": "^1.1.0",
+    "@electron-uikit/toast": "^1.0.0"
   }
 }
