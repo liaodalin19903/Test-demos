@@ -17,7 +17,7 @@ import {
   users,
   userById,
   userCreate
-} from './apis'
+} from '..'
 
 export const appRouter = t.router({
   users: users,

@@ -23,10 +23,14 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
+    "await-to-js": "^3.0.0",
+    "better-sqlite3": "^11.5.0",
     "electron-trpc": "^0.6.1",
     "electron-updater": "^6.1.7",
+    "fix-esm": "^1.0.1",
     "superjson": "^2.2.1",
     "tsx": "^4.19.0",
+    "typeorm": "^0.3.20",
     "zod": "^3.23.8"
   },
   "devDependencies": {

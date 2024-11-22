@@ -9,7 +9,8 @@ export default defineConfig({
         '@main': path.resolve(__dirname, 'src/main'),
         '@preload': path.resolve(__dirname, 'src/preload'),
         '@renderer': path.resolve(__dirname, 'src/main'),
-        '@shared': path.resolve(__dirname, 'src/shared')
+        '@shared': path.resolve(__dirname, 'src/shared'),
+        '@types': path.resolve(__dirname, 'src/shared/@types'),
       }
     },
     plugins: [externalizeDepsPlugin()]
@@ -20,7 +21,8 @@ export default defineConfig({
         '@main': path.resolve(__dirname, 'src/main'),
         '@preload': path.resolve(__dirname, 'src/preload'),
         '@renderer': path.resolve(__dirname, 'src/main'),
-        '@shared': path.resolve(__dirname, 'src/shared')
+        '@shared': path.resolve(__dirname, 'src/shared'),
+        '@types': path.resolve(__dirname, 'src/shared/@types'),
       }
     },
     plugins: [externalizeDepsPlugin()]
@@ -31,7 +33,8 @@ export default defineConfig({
         '@main': path.resolve(__dirname, 'src/main'),
         '@preload': path.resolve(__dirname, 'src/preload'),
         '@renderer': path.resolve(__dirname, 'src/main'),
-        '@shared': path.resolve(__dirname, 'src/shared')
+        '@shared': path.resolve(__dirname, 'src/shared'),
+        '@types': path.resolve(__dirname, 'src/shared/@types'),
       }
     },
     plugins: [react()]

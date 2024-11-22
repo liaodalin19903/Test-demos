@@ -1,5 +1,5 @@
 import { AnyRouter, inferRouterContext } from '@trpc/server'
-import { IpcRequest, IpcResponse } from '@shared/types'
+import { IpcRequest, IpcResponse } from '@shared/@types'
 import { resolveHTTPResponse as resolveResponse, HTTPRequest } from '@trpc/server/http'
 
 export async function ipcRequestHandler<TRouter extends AnyRouter>(opts: {
@@ -20,7 +20,7 @@ export async function ipcRequestHandler<TRouter extends AnyRouter>(opts: {
 
   const res_req: HTTPRequest = {
     method: opts.req.method,
-    query: opts.req.query,
+    query:  new URLSearchParams(opts.req.url.split('?')[1]),
     headers: opts.req.headers,
     body: opts.req.body
   }
@@ -51,7 +51,7 @@ export async function ipcRequestHandler<TRouter extends AnyRouter>(opts: {
   const headersObj: Record<string, string> = {};
 
   // 检查 response.headers 是否存在
-  if (response.headers) {
+  if (response.headers && response.headers.entries) {
     // 使用 entries() 方法获取可迭代的键值对
     for (const [key, value] of response.headers.entries()) {
       // 确保 value 是字符串
@@ -66,11 +66,13 @@ export async function ipcRequestHandler<TRouter extends AnyRouter>(opts: {
     console.warn("response.headers is undefined");
   }
 
-  const body = response.body
+  const body = JSON.parse(response.body ? response.body : '[]')
 
-  return {
+  const res_obj = {
     body: body,
     headers: headersObj,
     status: response.status
   }
+
+  return res_obj
 }

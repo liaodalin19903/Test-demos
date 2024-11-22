@@ -9,7 +9,7 @@ export const addUser = async() => {
   const user = await trpc.userCreate.mutate({
     name: 'New User',
     dateCreated: new Date()
-  });
+  })
 
   return user
 }

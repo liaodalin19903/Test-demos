@@ -1,5 +1,5 @@
 import { electronAPI } from '@electron-toolkit/preload'
-import {IElectronAPI, IpcRequest} from "@shared/types"
+import {IElectronAPI, IpcRequest} from "@shared/@types"
 import {contextBridge, ipcRenderer} from "electron";
 
 // Custom APIs for renderer

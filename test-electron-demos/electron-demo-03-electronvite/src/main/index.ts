@@ -7,7 +7,10 @@ import { buildDatabasePath } from './test'
 import { to } from 'await-to-js'
 import DataBase from './db'
 
-import { trpcServer } from './trpc'
+import { appRouter } from './apis/trpcServer/router'
+import {IpcRequest} from "@shared/@types";
+
+import {ipcRequestHandler} from "./apis/trpcServer/ipcRequestHandler";
 
 function createWindow(): void {
   // Create the browser window.
@@ -68,9 +71,20 @@ app.whenReady().then(async () => {
   }
 
   // 当接收到来自渲染进程的TRPC请求时，处理请求并返回结果
-  ipcMain.on('trpc-request', (event, request) => {
-    const response = trpcServer.processRequest(request)
-    event.reply('trpc-response', response)
+  // ipcMain.on('trpc-request', (event, request) => {
+  //   const response = trpcServer.processRequest(request)
+  //   event.reply('trpc-response', response)
+  // })
+
+  ipcMain.handle('trpc', (event, req: IpcRequest) => {
+    return ipcRequestHandler({
+      endpoint: "/trpc",
+      req,
+      router: appRouter,
+      createContext: async () => {
+        return {};
+      }
+    });
   })
 
   // IPC test
