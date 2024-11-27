@@ -8,6 +8,12 @@ import { appRouter } from './apis/trpcServer/router'
 import { IpcRequest } from '@shared/@types'
 import { ipcRequestHandler } from './apis/trpcServer/ipcRequestHandler'
 
+//#region custom titlebar
+import { setupTitlebar, attachTitlebarToWindow } from "custom-electron-titlebar/main";
+// setup the titlebar main process
+setupTitlebar();
+//#endregion
+
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -19,8 +25,19 @@ function createWindow(): void {
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
-    }
+    },
+    //#region custom titlebar
+    //frame: false, // needed if process.versions.electron < 14
+    titleBarStyle: 'hidden',
+    /* You can use *titleBarOverlay: true* to use the original Windows controls */
+    titleBarOverlay: true,
+    //#endregion
   })
+
+  //#region custom titlebar
+  // attach fullScreen(f11 and not 'maximized') && focus listeners
+  attachTitlebarToWindow(mainWindow);
+  //#endregion
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()

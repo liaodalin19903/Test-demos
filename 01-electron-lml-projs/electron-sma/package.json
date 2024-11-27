@@ -27,6 +27,7 @@
     "@electron/rebuild": "^3.7.1",
     "await-to-js": "^3.0.0",
     "better-sqlite3": "^11.6.0",
+    "custom-electron-titlebar": "^4.2.8",
     "electron-trpc": "^0.6.1",
     "fix-esm": "^1.0.1",
     "superjson": "^2.2.1",

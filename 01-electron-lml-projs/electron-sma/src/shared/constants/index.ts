@@ -23,6 +23,13 @@ export const TASKBAR_POSITIONS = {
 };
 
 // UI 相关常量
+export const MAIN_COLOUR = '#60a965'  // 从G6 色板：greens，选择自右到左第4个
+export const MAIN_COLOUR2 = '#87c27e' // 从G6 色板：greens，选择自右到左第5个
+export const MAIN_COLOUR3 = '#add7a1' // 从G6 色板：greens，选择自右到左第6个
+export const MAIN_COLOUR4 = '#cee8c3' // 从G6 色板：greens，选择自右到左第7个
+export const MAIN_COLOUR5 = '#e8f4e2' // 从G6 色板：greens，选择自右到左第8个
+
+
 export const UI_MESSAGES = {
   SUCCESS: '操作成功',
   ERROR: '发生错误，请重试',
