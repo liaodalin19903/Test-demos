@@ -14,6 +14,8 @@ import { setupTitlebar, attachTitlebarToWindow } from "custom-electron-titlebar/
 setupTitlebar();
 //#endregion
 
+
+
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -24,7 +26,7 @@ function createWindow(): void {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
     },
     //#region custom titlebar
     //frame: false, // needed if process.versions.electron < 14
