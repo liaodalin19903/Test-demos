@@ -3,6 +3,7 @@ import styles from './style.module.css'
 import HeaderContent from "./header";
 import FooterContent from "./footer";
 import MainContent from "./main";
+import SiderContent from "./sider";
 
 import { Flex, Layout } from "antd";
 
@@ -22,12 +23,16 @@ const headerStyle: React.CSSProperties = {
 const contentStyle: React.CSSProperties = {
   textAlign: 'center',
   color: '#fff',
-  backgroundColor: '#0958d9'
+  //backgroundColor: '#0958d9'
 };
 
 const siderStyle: React.CSSProperties = {
   textAlign: 'center',
-  lineHeight: '120px',
+  width: '20px',
+  flex: '0 0 20px',
+  minWidth: '20px',
+  maxWidth: '20px',
+  lineHeight: '38px',
   color: '#fff',
   backgroundColor: '#1677ff',
 };
@@ -46,7 +51,6 @@ const footerStyle: React.CSSProperties = {
 const layoutStyle = {
   borderRadius: 8,
   overflow: 'hidden',
-  // width: '100vh',
   height: '100vh',
 };
 
@@ -57,9 +61,15 @@ function LayoutApp(): JSX.Element {
       <Flex gap="middle" wrap>
         <Layout style={layoutStyle}>
           <Header style={headerStyle}><HeaderContent/></Header>
-          <Content style={contentStyle}><MainContent/></Content>
+          <Layout>
+            <Sider width="38px" style={siderStyle}>
+              <SiderContent />
+            </Sider>
+            <Content style={contentStyle}><MainContent/></Content>
+          </Layout>
           <Footer style={footerStyle}><FooterContent/></Footer>
         </Layout>
+
       </Flex>
     </div>
 
