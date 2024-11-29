@@ -1,19 +1,13 @@
 import { getUsers, addUser } from './common/apis'
 
+import Layout from '@renderer/components/layout'
+
 function App(): JSX.Element {
 
-  const handleClick = async() => {
-    const users = await getUsers()
-
-    console.log(users)
-  }
-
   return (
-    <>
-     112233
-
-     <button onClick={handleClick}>点击打印users</button>
-    </>
+    <div>
+      <Layout/>
+    </div>
   )
 }
 

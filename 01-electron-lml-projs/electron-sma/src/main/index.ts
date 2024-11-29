@@ -8,6 +8,8 @@ import { appRouter } from './apis/trpcServer/router'
 import { IpcRequest } from '@shared/@types'
 import { ipcRequestHandler } from './apis/trpcServer/ipcRequestHandler'
 
+import { TITLEBAR_HEIGHT } from '@shared/constants'
+
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
@@ -19,7 +21,16 @@ function createWindow(): void {
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false
+    },
+    //#region titlebar的状态
+    titleBarStyle: 'hidden',
+    titleBarOverlay: {
+      color: '#2f3241',
+      symbolColor: '#74b1be',
+      height: TITLEBAR_HEIGHT
     }
+    //#endregion
+
   })
 
   mainWindow.on('ready-to-show', () => {

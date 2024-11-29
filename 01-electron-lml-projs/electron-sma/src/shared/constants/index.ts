@@ -29,5 +29,8 @@ export const UI_MESSAGES = {
   LOADING: '加载中...',
 };
 
+// 标题栏高度
+export const TITLEBAR_HEIGHT = 28
+
 // 其他常量
 export const DEFAULT_LANGUAGE = 'zh_CN';

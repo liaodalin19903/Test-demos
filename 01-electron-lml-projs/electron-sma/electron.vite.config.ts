@@ -8,7 +8,7 @@ export default defineConfig({
       alias: {
         '@main': path.resolve(__dirname, 'src/main'),
         '@preload': path.resolve(__dirname, 'src/preload'),
-        '@renderer': path.resolve(__dirname, 'src/main'),
+        '@renderer': path.resolve(__dirname, 'src/renderer/src'),
         '@shared': path.resolve(__dirname, 'src/shared'),
         '@types': path.resolve(__dirname, 'src/shared/@types'),
       }
@@ -20,7 +20,7 @@ export default defineConfig({
       alias: {
         '@main': path.resolve(__dirname, 'src/main'),
         '@preload': path.resolve(__dirname, 'src/preload'),
-        '@renderer': path.resolve(__dirname, 'src/main'),
+        '@renderer': path.resolve(__dirname, 'src/renderer/src'),
         '@shared': path.resolve(__dirname, 'src/shared'),
         '@types': path.resolve(__dirname, 'src/shared/@types'),
       }
@@ -32,7 +32,7 @@ export default defineConfig({
       alias: {
         '@main': path.resolve(__dirname, 'src/main'),
         '@preload': path.resolve(__dirname, 'src/preload'),
-        '@renderer': path.resolve(__dirname, 'src/main'),
+        '@renderer': path.resolve(__dirname, 'src/renderer/src'),
         '@shared': path.resolve(__dirname, 'src/shared'),
         '@types': path.resolve(__dirname, 'src/shared/@types'),
       }
