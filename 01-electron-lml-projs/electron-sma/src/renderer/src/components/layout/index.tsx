@@ -2,7 +2,7 @@ import styles from './style.module.css'
 
 import HeaderContent from "./header";
 import FooterContent from "./footer";
-import MainContent from "./main";
+import MainContent from "./main/main";
 import SiderContent from "./sider";
 
 import { Flex, Layout } from "antd";

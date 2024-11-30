@@ -22,6 +22,8 @@ export const TASKBAR_POSITIONS = {
   RIGHT: 'right',
 };
 
+//#region UI相关
+
 // UI 相关常量
 export const UI_MESSAGES = {
   SUCCESS: '操作成功',
@@ -31,6 +33,11 @@ export const UI_MESSAGES = {
 
 // 标题栏高度
 export const TITLEBAR_HEIGHT = 28
+
+// 主界面:main 的右侧栏（设置栏的宽度）
+export const MAIN_SETTINGS_WIDTH = 400
+
+//#endregion
 
 // 其他常量
 export const DEFAULT_LANGUAGE = 'zh_CN';
