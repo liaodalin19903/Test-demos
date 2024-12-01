@@ -1,3 +1,5 @@
+import styles from './main.module.css'
+
 import { Tabs } from 'antd'
 
 import { tabItems } from './main.tabs'
@@ -11,11 +13,16 @@ function Main(): JSX.Element {
 
   return (
     <div >
-      <Tabs tabPosition="left"
+
+      <Tabs
+        className={styles.nopaddingTabs}
+        tabPosition="left"
+        defaultActiveKey='1'
         items = {tabItems}
         style={tabsStyle}
       >
       </Tabs>
+
     </div>
   )
 }

@@ -41,3 +41,6 @@ export const MAIN_SETTINGS_WIDTH = 400
 
 // 其他常量
 export const DEFAULT_LANGUAGE = 'zh_CN';
+
+// 事件相关
+export * from './events'

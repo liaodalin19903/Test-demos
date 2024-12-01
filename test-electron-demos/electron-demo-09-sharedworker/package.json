@@ -1,5 +1,5 @@
 {
-  "name": "electron-sma",
+  "name": "electron-demo-09-sharedworker",
   "version": "1.0.0",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
@@ -18,20 +18,11 @@
     "build:unpack": "npm run build && electron-builder --dir",
     "build:win": "npm run build && electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
-    "build:linux": "electron-vite build && electron-builder --linux",
-    "rebuild": "electron-rebuild -f -w better-sqlite3"
+    "build:linux": "electron-vite build && electron-builder --linux"
   },
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.1",
-    "@electron-toolkit/utils": "^3.0.0",
-    "@electron/rebuild": "^3.7.1",
-    "await-to-js": "^3.0.0",
-    "better-sqlite3": "^11.6.0",
-    "electron-trpc": "^0.6.1",
-    "fix-esm": "^1.0.1",
-    "superjson": "^2.2.1",
-    "typeorm": "^0.3.20",
-    "zod": "^3.23.8"
+    "@electron-toolkit/utils": "^3.0.0"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",
@@ -43,7 +34,6 @@
     "@vitejs/plugin-react": "^4.3.1",
     "electron": "^31.0.2",
     "electron-builder": "^24.13.3",
-    "electron-rebuild": "^3.2.9",
     "electron-vite": "^2.3.0",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.3",
@@ -51,7 +41,6 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "typescript": "^5.5.2",
-    "vite": "^5.3.1",
-    "zustand": "^5.0.1"
+    "vite": "^5.3.1"
   }
 }
