@@ -1,14 +1,12 @@
 
 #### 简介
 
-windos manager
+windows manager: 管理特定的这些窗口
+
 
 #### 依赖
-1）基于：event-emitter 做事件共享监听
-```
-import { EventEmitter } from 'events';
-const ee = new EventEmitter();
-```
+1）基于：api sup-wm
+
 
 2）基于：db 做数据存储
 
