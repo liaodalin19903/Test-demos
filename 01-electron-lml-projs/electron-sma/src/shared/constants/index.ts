@@ -22,6 +22,8 @@ export const TASKBAR_POSITIONS = {
   RIGHT: 'right',
 };
 
+//#region UI相关
+
 // UI 相关常量
 export const MAIN_COLOUR = '#60a965'  // 从G6 色板：greens，选择自右到左第4个
 export const MAIN_COLOUR2 = '#87c27e' // 从G6 色板：greens，选择自右到左第5个
@@ -36,5 +38,16 @@ export const UI_MESSAGES = {
   LOADING: '加载中...',
 };
 
+// 标题栏高度
+export const TITLEBAR_HEIGHT = 28
+
+// 主界面:main 的右侧栏（设置栏的宽度）
+export const MAIN_SETTINGS_WIDTH = 400
+
+//#endregion
+
 // 其他常量
 export const DEFAULT_LANGUAGE = 'zh_CN';
+
+// 事件相关
+export * from './events'
