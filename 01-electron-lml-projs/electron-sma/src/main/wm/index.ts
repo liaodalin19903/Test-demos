@@ -29,6 +29,13 @@ class WindowsManager {
   //#region 1、窗口管理
 
   /**
+   * 初始化Window：创建所有的为了要展示的窗口
+   */
+  initWindows() {
+    
+  }
+
+  /**
    * 创建一个新的窗口
    * @param windowName - 窗口的名称
    * @throws {Error} 如果窗口名称已经存在，则抛出错误
@@ -163,3 +170,7 @@ class WindowsManager {
   //#endregion 数据共享
 
 }
+
+const wm = new WindowsManager()
+
+export {wm}
