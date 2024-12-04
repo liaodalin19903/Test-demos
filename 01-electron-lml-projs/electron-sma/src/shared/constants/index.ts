@@ -44,6 +44,9 @@ export const TITLEBAR_HEIGHT = 28
 // 主界面:main 的右侧栏（设置栏的宽度）
 export const MAIN_SETTINGS_WIDTH = 400
 
+// footer的按钮宽度
+export const FOOTER_WINDOW_BUTTON_WIDTH = 420  
+
 //#endregion
 
 // 其他常量

@@ -1,11 +1,13 @@
 import styles from './style.module.css'
 
 import HeaderContent from "./header";
-import FooterContent from "./footer";
+import FooterContent from "./footer/footer";
 import MainContent from "./main/main";
 import SiderContent from "./sider";
 
 import { Flex, Layout } from "antd";
+
+import { MAIN_COLOUR5 } from '@shared/constants'
 
 const { Header, Footer, Sider, Content } = Layout;
 

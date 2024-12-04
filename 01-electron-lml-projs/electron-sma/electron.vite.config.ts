@@ -37,6 +37,7 @@ export default defineConfig({
         '@types': path.resolve(__dirname, 'src/shared/@types'),
       }
     },
-    plugins: [react()]
+    plugins: [react()],
+   
   }
 })

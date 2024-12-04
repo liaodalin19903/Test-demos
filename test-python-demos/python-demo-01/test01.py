@@ -1,6 +1,5 @@
 
 
-a = 5
-b = 5
+from my_package import *
 
-print(id(a))  # 每次运行时候结果都不一样
+function1()
