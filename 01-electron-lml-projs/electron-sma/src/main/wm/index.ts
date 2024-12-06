@@ -1,46 +1,96 @@
 import { BrowserWindow } from "electron"
-import { EVENT_WINDOW_UPDATE_DATA, EVENT_WINDOW_REARRANGE } from '@shared/constants/'
+import { TITLEBAR_HEIGHT } from '@shared/constants/'
+import { join } from "path"
 
 interface IMappedWindow {
   [key: string] : BrowserWindow
 }
 
-/**
- * {
- *     事件名: [win1, win2, win3]
- * }
- */
-
-// 直接使用字面量类型联合定义允许的键类型
-// TODO: https://segmentfault.com/q/1010000045528373
-interface IEventSubscribedWindows {
-  [key: string]: BrowserWindow[]
-}
-
 class WindowsManager {
   private mapWidows: IMappedWindow
-  private eventSubscribedWindows: IEventSubscribedWindows
 
   constructor() {
     this.mapWidows = {}
-    this.eventSubscribedWindows = {}
+
+    // 初始化窗口
+    this.initWindows()
   }
 
   //#region 1、窗口管理
 
-  /**
-   * 初始化Window：创建所有的为了要展示的窗口
-   */
+  //#region 初始化窗口
+
+  // 初始化Window：创建所有的为了要展示的窗口
   initWindows() {
-    
+
+    // Create the browser window.
+    const win1Options = {
+      width: 900,
+      height: 670,
+      show: false,
+      autoHideMenuBar: true,
+      webPreferences: {
+        preload: join(__dirname, '../preload/index.js'),
+        sandbox: false
+      },
+      titleBarOverlay: {
+        color: '#2f3241',
+        symbolColor: '#74b1be',
+        height: TITLEBAR_HEIGHT
+      }
+    }
+
+    const win1 = this.createWindow('win1', win1Options)
+    win1.loadFile(join(__dirname, '../renderer/index.html#win1'))
+
+
+    // Create the browser window.
+    const win2Options = {
+      width: 900,
+      height: 670,
+      show: false,
+      autoHideMenuBar: true,
+      webPreferences: {
+        preload: join(__dirname, '../preload/index.js'),
+        sandbox: false
+      },
+      titleBarOverlay: {
+        color: '#2f3241',
+        symbolColor: '#74b1be',
+        height: TITLEBAR_HEIGHT
+      }
+    }
+    const win2 = this.createWindow('win2', win2Options)
+    win2.loadFile(join(__dirname, '../renderer/index.html#win2'))
+
+    // Create the browser window.
+    const win3Options = {
+      width: 900,
+      height: 670,
+      show: false,
+      autoHideMenuBar: true,
+      webPreferences: {
+        preload: join(__dirname, '../preload/index.js'),
+        sandbox: false
+      },
+      titleBarOverlay: {
+        color: '#2f3241',
+        symbolColor: '#74b1be',
+        height: TITLEBAR_HEIGHT
+      }
+    }
+    const win3 = this.createWindow('win3', win3Options)
+    win3.loadFile(join(__dirname, '../renderer/index.html#win3'))
   }
+
+  //#endregion 初始化窗口
 
   /**
    * 创建一个新的窗口
    * @param windowName - 窗口的名称
    * @throws {Error} 如果窗口名称已经存在，则抛出错误
    */
-  createWindow(windowName: string) {
+  createWindow(windowName: string, options: Electron.BrowserWindowConstructorOptions) {
     // 检查窗口名称是否已经存在
     if (this.mapWidows[windowName]) {
       // 如果窗口名称已经存在，抛出一个错误
@@ -48,9 +98,28 @@ class WindowsManager {
     }
 
     // 创建一个新的 BrowserWindow 实例
-    const bw = new BrowserWindow();
+    const bw = new BrowserWindow(options);
     // 将新创建的窗口实例添加到 mapWidows 中
     this.mapWidows[windowName] = bw;
+    return bw
+  }
+
+  showWindow(windowName: string) {
+    if (this.mapWidows[windowName]) {
+      // 如果窗口名称存在，返回对应的窗口实例
+      this.mapWidows[windowName].show();
+    } else {
+      // 如果窗口名称不存在，返回 null
+    }
+  }
+
+  hiddeWindow(windowName: string) {
+    if (this.mapWidows[windowName]) {
+      // 如果窗口名称存在，返回对应的窗口实例
+      this.mapWidows[windowName].hide();
+    } else {
+      // 如果窗口名称不存在，返回 null
+    }
   }
 
   /**
@@ -159,8 +228,7 @@ class WindowsManager {
 
   //#endregion 窗口管理
 
-  //#region 2、事件共享 ： 自行实现
-  // https://segmentfault.com/q/1010000045528390
+  //#region 2、事件共享 ： 我：在window的tsx初始化生命周期时候实现订阅事件
 
   //#endregion 事件共享
 

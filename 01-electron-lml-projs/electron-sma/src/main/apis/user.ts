@@ -21,6 +21,7 @@ export const users = t.procedure.query(() => {
 })
 
 
+
 export const userById = t.procedure.input((val: unknown) => {
   if (typeof val !== 'number') {
     throw new Error('invalid input');
@@ -30,6 +31,7 @@ export const userById = t.procedure.input((val: unknown) => {
   return {}  // TODO
 })
 
+// 注意：这里的{input: {name, dateCreated}} 里面的 {name, dateCreated} 就是`t.procedure.input()`里面的东西。
 export const userCreate = t.procedure.input(z.object({
   name: z.string(),
   dateCreated: z.date(),

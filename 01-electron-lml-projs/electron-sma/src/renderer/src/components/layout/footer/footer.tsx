@@ -4,8 +4,9 @@ import FooterTagButton from "./footerButton"
 
 function Footer(): JSX.Element {
 
-  const handClick = () => {
-    console.log(112233)
+  const handClick = (winName: string) => {
+    console.log(112233, winName)
+
   }
 
   return (
@@ -17,9 +18,15 @@ function Footer(): JSX.Element {
           // @ts-ignore
           WebkitAppRegion: 'no-drag'
           }}>
-          <FooterTagButton onClick={handClick}>WIN1</FooterTagButton>
-          <FooterTagButton onClick={handClick}>WIN2</FooterTagButton>
-          <FooterTagButton onClick={handClick}>WIN3</FooterTagButton>
+          <FooterTagButton onClick={() => {
+            handClick('win1')
+          }}>WIN1</FooterTagButton>
+          <FooterTagButton onClick={() => {
+            handClick('win2')
+          }}>WIN2</FooterTagButton>
+          <FooterTagButton onClick={() => {
+            handClick('win3')
+          }}>WIN3</FooterTagButton>
 
         </div>
       </Flex>

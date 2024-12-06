@@ -16,13 +16,23 @@ const t = initTRPC.create({
 import {
   users,
   userById,
-  userCreate
+  userCreate,
+
+  winShow,
+  winHide,
+  winSubscription,
+  winPublish
 } from '..'
 
 export const appRouter = t.router({
   users: users,
   userById: userById,
-  userCreate: userCreate
+  userCreate: userCreate,
+
+  winShow: winShow,
+  winHide: winHide,
+  winSubscription: winSubscription,
+  winPublish: winPublish
 })
 
 export type AppRouter = typeof appRouter;
