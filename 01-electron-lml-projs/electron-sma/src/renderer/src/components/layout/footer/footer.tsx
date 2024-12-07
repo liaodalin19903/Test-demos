@@ -1,13 +1,32 @@
 
-import { Button, Flex } from "antd"
+import { Flex } from "antd"
 import FooterTagButton from "./footerButton"
+
+import { showWindow, hideWindow } from "@renderer/common/apis"
+import { useState } from "react"
 
 function Footer(): JSX.Element {
 
-  const handClick = (winName: string) => {
-    console.log(112233, winName)
+  const [showWinStates, setShowWinStates] = useState({
+    win1: false,
+    win2: false,
+    win3: false
+  });
 
-  }
+  const handClick = (winName: string) => {
+    setShowWinStates(prevStates => {
+        const updatedStates = {
+          ...prevStates,
+            [winName]:!prevStates[winName]
+        };
+        if (updatedStates[winName]) {
+          showWindow(winName);
+        } else {
+          hideWindow(winName);
+        }
+        return updatedStates;
+    });
+};
 
   return (
     <div >

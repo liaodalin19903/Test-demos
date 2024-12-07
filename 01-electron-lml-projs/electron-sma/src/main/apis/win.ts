@@ -31,7 +31,7 @@ export const winShow = t.procedure.input(z.object({
   windowName: z.string()
 })).query(({input: {windowName}}) => {
 
-  wm[windowName].showWindow()
+  wm.showWindow(windowName)
 
   return {
     msg: '显示窗口成功'
@@ -45,7 +45,7 @@ export const winHide = t.procedure.input(z.object({
   windowName: z.string()
 })).query(({input: {windowName}}) => {
 
-  wm[windowName].hiddeWindow()
+  wm.hiddeWindow(windowName)
 
   return {
     msg: '隐藏窗口成功'
@@ -56,6 +56,8 @@ export const winHide = t.procedure.input(z.object({
  * 订阅事件: 这里是直接订阅（所有事件）
  */
 export const winSubscription = t.procedure.subscription(() => {
+
+  console.log('winSubscription: ')
   return observable((emit) => {
     function onObserve(text: string) {
       emit.next({text})

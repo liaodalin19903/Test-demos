@@ -9,6 +9,7 @@ import { IpcRequest } from '@shared/@types'
 import { ipcRequestHandler } from './apis/trpcServer/ipcRequestHandler'
 
 import { TITLEBAR_HEIGHT } from '@shared/constants'
+import { wm } from '@main/wm'
 
 function createWindow(): void {
   // Create the browser window.
@@ -78,6 +79,7 @@ app.whenReady().then( async() => {
 
 
   createWindow()
+  wm.initWindows()
 
   // 数据库初始化
   if (!DataBase.isInitialized) {

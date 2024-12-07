@@ -33,9 +33,9 @@ const AppRouter: React.FC = () => (
 );
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <AppRouter />
-  </React.StrictMode>
+  // </React.StrictMode>
 )
 
 //#endregion

@@ -7,8 +7,6 @@ import SiderContent from "./sider";
 
 import { Flex, Layout } from "antd";
 
-import { MAIN_COLOUR5 } from '@shared/constants'
-
 const { Header, Footer, Sider, Content } = Layout;
 
 const headerStyle: React.CSSProperties = {

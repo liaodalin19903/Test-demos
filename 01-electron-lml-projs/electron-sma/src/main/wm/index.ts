@@ -1,19 +1,29 @@
 import { BrowserWindow } from "electron"
-import { TITLEBAR_HEIGHT } from '@shared/constants/'
+
+import { win1Options, win2Options, win3Options } from  './winOpt'
+
 import { join } from "path"
+import { is } from "@electron-toolkit/utils"
 
 interface IMappedWindow {
   [key: string] : BrowserWindow
 }
 
 class WindowsManager {
-  private mapWidows: IMappedWindow
+
+  private static instance: WindowsManager
+  mapWidows: IMappedWindow
 
   constructor() {
     this.mapWidows = {}
+  }
 
-    // 初始化窗口
-    this.initWindows()
+  static getInstance() {
+    if (!WindowsManager.instance) {
+      WindowsManager.instance = new WindowsManager();
+      WindowsManager.instance.mapWidows = {}
+    }
+    return WindowsManager.instance;
   }
 
   //#region 1、窗口管理
@@ -24,64 +34,41 @@ class WindowsManager {
   initWindows() {
 
     // Create the browser window.
-    const win1Options = {
-      width: 900,
-      height: 670,
-      show: false,
-      autoHideMenuBar: true,
-      webPreferences: {
-        preload: join(__dirname, '../preload/index.js'),
-        sandbox: false
-      },
-      titleBarOverlay: {
-        color: '#2f3241',
-        symbolColor: '#74b1be',
-        height: TITLEBAR_HEIGHT
-      }
-    }
+
 
     const win1 = this.createWindow('win1', win1Options)
-    win1.loadFile(join(__dirname, '../renderer/index.html#win1'))
 
+    if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+      win1.loadURL(process.env['ELECTRON_RENDERER_URL'] + '/#win1')
+    } else {
+      win1.loadFile(join(__dirname, '../renderer/index.html#win1'))
+    }
 
     // Create the browser window.
-    const win2Options = {
-      width: 900,
-      height: 670,
-      show: false,
-      autoHideMenuBar: true,
-      webPreferences: {
-        preload: join(__dirname, '../preload/index.js'),
-        sandbox: false
-      },
-      titleBarOverlay: {
-        color: '#2f3241',
-        symbolColor: '#74b1be',
-        height: TITLEBAR_HEIGHT
-      }
-    }
+
     const win2 = this.createWindow('win2', win2Options)
-    win2.loadFile(join(__dirname, '../renderer/index.html#win2'))
+
+    if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+      win2.loadURL(process.env['ELECTRON_RENDERER_URL'] + '/#win2')
+    } else {
+      win2.loadFile(join(__dirname, '../renderer/index.html#win2'))
+    }
+
 
     // Create the browser window.
-    const win3Options = {
-      width: 900,
-      height: 670,
-      show: false,
-      autoHideMenuBar: true,
-      webPreferences: {
-        preload: join(__dirname, '../preload/index.js'),
-        sandbox: false
-      },
-      titleBarOverlay: {
-        color: '#2f3241',
-        symbolColor: '#74b1be',
-        height: TITLEBAR_HEIGHT
-      }
-    }
+
     const win3 = this.createWindow('win3', win3Options)
-    win3.loadFile(join(__dirname, '../renderer/index.html#win3'))
+
+    if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
+      win3.loadURL(process.env['ELECTRON_RENDERER_URL'] + '/#win3')
+    } else {
+      win3.loadFile(join(__dirname, '../renderer/index.html#win3'))
+    }
+
+
   }
+
+
 
   //#endregion 初始化窗口
 
@@ -103,6 +90,8 @@ class WindowsManager {
     this.mapWidows[windowName] = bw;
     return bw
   }
+
+
 
   showWindow(windowName: string) {
     if (this.mapWidows[windowName]) {
@@ -239,6 +228,6 @@ class WindowsManager {
 
 }
 
-const wm = new WindowsManager()
+const wm = WindowsManager.getInstance()
 
 export {wm}

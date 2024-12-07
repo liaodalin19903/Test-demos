@@ -1,4 +1,4 @@
-import { trpc } from './trpcClient/index'
+import { apiTrpc as trpc } from './trpcClient/index'
 
 export const getUsers = async() => {
   console.log('before getUsers')

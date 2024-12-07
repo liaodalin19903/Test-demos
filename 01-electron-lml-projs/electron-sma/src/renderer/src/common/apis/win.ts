@@ -1,6 +1,4 @@
-import { winSubscription } from './../../../../main/apis/win';
-
-import { trpc } from './trpcClient/index'
+import { apiTrpc as trpc } from './trpcClient/index'
 import { WINDOW_EVENTS } from '@shared/constants'
 
 
@@ -23,15 +21,10 @@ export const hideWindow = async(windowName: string) => {
 }
 
 // TODO：订阅事件，看下是怎么做的
-export const subscribeWindowEvent = async() => {
-  return await trpc.winSubscription.query()
+export const subscribeWindowEvent = () => {
+  return trpc.winSubscription
 }
 
-export const publishWindowEvent = async() => {
-  const user = await trpc.userCreate.mutate({
-    name: 'New User',
-    dateCreated: new Date()
-  });
-
-  return user
+export const publishWindowEvent = async(eventName: typeof WINDOW_EVENTS[number]) => {
+  return await trpc.winPublish.query({eventName: eventName})
 }
