@@ -1,4 +1,5 @@
-import {createTRPCProxyClient, httpBatchLink, loggerLink, wsLink} from '@trpc/client';
+import {createTRPCProxyClient, httpBatchLink, loggerLink} from '@trpc/client';
+import { ipcLink } from 'electron-trpc/renderer';
 import type {AppRouter} from '@main/apis/trpcServer/router'
 import {IpcRequest} from '@shared/@types';
 import superjson from 'superjson';
@@ -23,6 +24,7 @@ export const apiTrpc = createTRPCProxyClient<AppRouter>({
         };
       },
     }),
+    ipcLink()
   ],
   transformer: new superjson(), // 添加 transformer 属性
 });

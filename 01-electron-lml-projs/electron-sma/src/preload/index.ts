@@ -1,6 +1,7 @@
 import { electronAPI } from '@electron-toolkit/preload'
 import {IElectronAPI, IpcRequest} from '@shared/@types'
 import {contextBridge, ipcRenderer} from "electron";
+import { exposeElectronTRPC } from 'electron-trpc/main';
 
 // Custom APIs for renderer
 const api: IElectronAPI = {
@@ -26,3 +27,7 @@ if (process.contextIsolated) {
   // @ts-ignore (define in dts)
   window.api = api
 }
+
+process.once('loaded', async () => {
+  exposeElectronTRPC();
+});
