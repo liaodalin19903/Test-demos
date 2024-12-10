@@ -1,20 +1,27 @@
-import React, { useEffect } from 'react';
+import React, { createContext, useEffect } from 'react';
 
 import './App.css';
 
-import { UserProfileExample } from './components/ReactQueryExample'
+import TestComp2 from './components/TestComp2';
+
+
+// ---
+
+interface ThemeProps {
+  theme: string | undefined
+}
+
+export const ThemeContext = React.createContext<ThemeProps>({
+  theme: undefined
+});
+
 
 function App() {
 
-  useEffect(() => {
-    console.log(123456)
-    console.log(window)
-  }, [])
-
   return (
-    <div className="App">
-      <UserProfileExample />
-    </div>
+    <ThemeContext.Provider value={{theme: 'light'}}>
+      <TestComp2></TestComp2>
+    </ThemeContext.Provider>
   );
 }
 
