@@ -10,10 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.5.2",
     "@antv/g6": "^5.0.25",
-    "@antv/g6-extension-react": "^0.1.7",
+    "@antv/g6-extension-react": "^0.1.10",
     "@antv/g6-react-node": "^1.4.8",
-    "antd": "^5.21.2",
+    "@antv/graphin": "^3.0.4",
+    "antd": "^5.22.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
