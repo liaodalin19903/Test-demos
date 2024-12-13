@@ -10,6 +10,10 @@ export const APP_VERSION = '1.0.0';  // 是否可以基于package.json 来获取
 export const API_BASE_URL = 'https://api.example.com';
 export const TIMEOUT = 5000; // 请求超时时间（毫秒）
 
+export const API_PORT = 6001 // trpc 端口
+export const API_WS_PORT = 6002  // trpc 事件订阅 端口
+
+
 // 窗口相关常量
 export const WINDOW_WIDTH = 800;
 export const WINDOW_HEIGHT = 600;
@@ -45,7 +49,7 @@ export const TITLEBAR_HEIGHT = 28
 export const MAIN_SETTINGS_WIDTH = 400
 
 // footer的按钮宽度
-export const FOOTER_WINDOW_BUTTON_WIDTH = 420  
+export const FOOTER_WINDOW_BUTTON_WIDTH = 420
 
 //#endregion
 
