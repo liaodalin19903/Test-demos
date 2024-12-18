@@ -11,12 +11,6 @@ import type SuperJSON from "superjson";
 
 import { wm } from '@main/wm'
 
-import { WINDOW_EVENTS } from '@shared/constants'
-import { observable } from '@trpc/server/observable';
-import { EventEmitter } from 'events';
-
-const ee = new EventEmitter();
-
 // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
 const superjson: SuperJSON = fixESM.require("superjson");
 
@@ -53,32 +47,17 @@ export const winHide = t.procedure.input(z.object({
 })
 
 /**
- * 订阅事件: 这里是直接订阅（所有事件）
+ * 触发事件
  */
-export const winSubscription = t.procedure.subscription(() => {
+export const publishEvent = t.procedure.input(z.object({
+  winNames: z.array(z.string()),
+  eventName: z.string(),
+  data: z.unknown()
+})).query(({input: {winNames, eventName, data}}) => {
 
-  console.log('winSubscription: ')
-  return observable((emit) => {
-    function onObserve(text: string) {
-      emit.next({text})
-    }
-
-    ee.on('winPublish', onObserve)
-
-    return () => {
-      ee.off('winPublish', onObserve)
-    }
-  })
-})
-
-/**
- * 发布事件
- */
-export const winPublish = t.procedure.input(z.object({eventName: z.enum(WINDOW_EVENTS)})).query((req) => {
-  const { input } = req
-  ee.emit(input.eventName)
+  wm.publishEvent(winNames, eventName, data)
 
   return {
-    text: `已经发布事件 ${input.eventName}`
+    msg: '发布事件成功'
   }
 })

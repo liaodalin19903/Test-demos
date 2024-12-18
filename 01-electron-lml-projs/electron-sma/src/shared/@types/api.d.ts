@@ -16,4 +16,5 @@ export interface IElectronAPI {
   chrome: () => string;
   electron: () => string;
   trpc: (req: IpcRequest) => Promise<IpcResponse>;
+  onEvent: (eventName: string, callback: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => Electron.IpcRenderer;
 }

@@ -5,7 +5,7 @@ import {IpcRequest} from '@shared/@types';
 import superjson from 'superjson';
 
 // api的trpc
-export const apiTrpc = createTRPCProxyClient<AppRouter>({
+export const trpc = createTRPCProxyClient<AppRouter>({
   links: [
     loggerLink(),
     httpBatchLink({

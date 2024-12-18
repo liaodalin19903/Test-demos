@@ -20,8 +20,6 @@ export const users = t.procedure.query(() => {
   return [1, 2, 3, 4];  // TODO
 })
 
-
-
 export const userById = t.procedure.input((val: unknown) => {
   if (typeof val !== 'number') {
     throw new Error('invalid input');

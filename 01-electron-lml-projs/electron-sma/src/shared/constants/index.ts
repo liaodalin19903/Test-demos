@@ -10,9 +10,6 @@ export const APP_VERSION = '1.0.0';  // 是否可以基于package.json 来获取
 export const API_BASE_URL = 'https://api.example.com';
 export const TIMEOUT = 5000; // 请求超时时间（毫秒）
 
-export const API_PORT = 6001 // trpc 端口
-export const API_WS_PORT = 6002  // trpc 事件订阅 端口
-
 
 // 窗口相关常量
 export const WINDOW_WIDTH = 800;
@@ -58,3 +55,6 @@ export const DEFAULT_LANGUAGE = 'zh_CN';
 
 // 事件相关
 export * from './events'
+
+// 窗口相关
+export * from './win'

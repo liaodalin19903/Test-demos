@@ -1,11 +1,11 @@
 // 创建windows 需要的options参数
 
-import { TITLEBAR_HEIGHT } from "@shared/constants";
+import { TITLEBAR_HEIGHT, WINDOW_NAMES } from "@shared/constants";
 import { join } from "path";
 
 
 export const win1Options = {
-  title: 'win1',
+  title: WINDOW_NAMES.WIN1,
   width: 720,
   height: 520,
   show: false,
@@ -25,7 +25,7 @@ export const win1Options = {
 
 
 export const win2Options = {
-  title: 'win2',
+  title: WINDOW_NAMES.WIN2,
   width: 720,
   height: 520,
   show: false,
@@ -43,7 +43,7 @@ export const win2Options = {
 
 
 export const win3Options = {
-  title: 'win3',
+  title: WINDOW_NAMES.WIN3,
   width: 720,
   height: 520,
   show: false,

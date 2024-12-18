@@ -4,6 +4,7 @@ import FooterTagButton from "./footerButton"
 
 import { showWindow, hideWindow } from "@renderer/common/apis"
 import { useState } from "react"
+import { WINDOW_NAMES } from "@shared/constants";
 
 function Footer(): JSX.Element {
 
@@ -38,13 +39,13 @@ function Footer(): JSX.Element {
           WebkitAppRegion: 'no-drag'
           }}>
           <FooterTagButton onClick={() => {
-            handClick('win1')
+            handClick(WINDOW_NAMES.WIN1)
           }}>WIN1</FooterTagButton>
           <FooterTagButton onClick={() => {
-            handClick('win2')
+            handClick(WINDOW_NAMES.WIN2)
           }}>WIN2</FooterTagButton>
           <FooterTagButton onClick={() => {
-            handClick('win3')
+            handClick(WINDOW_NAMES.WIN3)
           }}>WIN3</FooterTagButton>
 
         </div>

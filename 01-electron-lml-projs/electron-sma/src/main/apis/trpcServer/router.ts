@@ -20,8 +20,7 @@ import {
 
   winShow,
   winHide,
-  winSubscription,
-  winPublish
+  publishEvent,
 } from '..'
 
 export const appRouter = t.router({
@@ -31,8 +30,7 @@ export const appRouter = t.router({
 
   winShow: winShow,
   winHide: winHide,
-  winSubscription: winSubscription,
-  winPublish: winPublish
+  publishEvent: publishEvent,
 })
 
 export type AppRouter = typeof appRouter;

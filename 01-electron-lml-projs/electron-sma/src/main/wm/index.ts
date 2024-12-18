@@ -4,6 +4,7 @@ import { win1Options, win2Options, win3Options } from  './winOpt'
 
 import { join } from "path"
 import { is } from "@electron-toolkit/utils"
+import { WINDOW_NAMES } from "@shared/constants"
 
 interface IMappedWindow {
   [key: string] : BrowserWindow
@@ -36,7 +37,7 @@ class WindowsManager {
     // Create the browser window.
 
 
-    const win1 = this.createWindow('win1', win1Options)
+    const win1 = this.createWindow(WINDOW_NAMES.WIN1, win1Options)
 
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
       win1.loadURL(process.env['ELECTRON_RENDERER_URL'] + '/#win1')
@@ -46,7 +47,7 @@ class WindowsManager {
 
     // Create the browser window.
 
-    const win2 = this.createWindow('win2', win2Options)
+    const win2 = this.createWindow(WINDOW_NAMES.WIN2, win2Options)
 
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
       win2.loadURL(process.env['ELECTRON_RENDERER_URL'] + '/#win2')
@@ -57,7 +58,7 @@ class WindowsManager {
 
     // Create the browser window.
 
-    const win3 = this.createWindow('win3', win3Options)
+    const win3 = this.createWindow(WINDOW_NAMES.WIN3, win3Options)
 
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
       win3.loadURL(process.env['ELECTRON_RENDERER_URL'] + '/#win3')
@@ -218,7 +219,18 @@ class WindowsManager {
   //#endregion 窗口管理
 
   //#region 2、事件共享 ： 我：在window的tsx初始化生命周期时候实现订阅事件
-
+  /**
+   * 发送事件
+   * @param winNames 给这么多窗口发送事件
+   * @param eventName 也就是webContents.send(channel, ...args) 里面的channel
+   * @param data 也就是webContents.send(channel, ...args) 里面的 args
+   */
+  publishEvent(winNames: string[], eventName: string, data: unknown) {
+    for (const winName of winNames) {
+      console.log('发送事件：', winName, wm.getWindow(winName))
+      wm.getWindow(winName)?.webContents.send(eventName, data)
+    }
+  }
   //#endregion 事件共享
 
 

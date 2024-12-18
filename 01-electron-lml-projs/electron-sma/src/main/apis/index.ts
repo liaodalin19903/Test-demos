@@ -8,7 +8,6 @@ export {
 export {
   winShow,
   winHide,
-  winSubscription,
-  winPublish
+  publishEvent
 } from './win'
 

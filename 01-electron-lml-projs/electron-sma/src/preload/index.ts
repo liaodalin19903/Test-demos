@@ -9,6 +9,7 @@ const api: IElectronAPI = {
   chrome: () => process.versions.chrome,
   electron: () => process.versions.electron,
   trpc: (req: IpcRequest) => ipcRenderer.invoke('trpc', req),
+  onEvent: (eventName: string, callback: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => ipcRenderer.on(eventName, callback),
 };
 
 // Use `contextBridge` APIs to expose Electron APIs to
@@ -22,9 +23,8 @@ if (process.contextIsolated) {
     console.error(error)
   }
 } else {
-  // @ts-ignore (define in dts)
+
   window.electron = electronAPI
-  // @ts-ignore (define in dts)
   window.api = api
 }
 

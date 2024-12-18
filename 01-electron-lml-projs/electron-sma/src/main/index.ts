@@ -77,7 +77,6 @@ app.whenReady().then( async() => {
     });
   })
 
-
   createWindow()
   wm.initWindows()
 
