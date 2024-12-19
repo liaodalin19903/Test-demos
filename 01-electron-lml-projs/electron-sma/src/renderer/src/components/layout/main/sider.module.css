@@ -1,0 +1,22 @@
+.leftSiderTabs {
+  height: calc(100vh - 56px)
+}
+
+.leftSiderTabs :global(.ant-tabs-nav) {
+  background-color: #2F6BF4 !important;
+  width: 64px;
+}
+
+.leftSiderTabs :global(.ant-tabs-tab) {
+  padding: 2px 2px !important;
+  color: #dddddd !important;
+  margin-top: 10px;
+}
+
+.leftSiderTabs :global(.ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn) {
+  color: #ffffff !important;
+}
+
+.leftSiderTabs :global(.ant-tabs-tabpane) {
+  padding-left: 0px !important;
+}

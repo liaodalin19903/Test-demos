@@ -58,3 +58,8 @@ export * from './events'
 
 // 窗口相关
 export * from './win'
+
+// 主题/颜色相关
+export * from './theme'
+
+

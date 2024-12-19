@@ -1,0 +1,19 @@
+
+.container {
+
+}
+
+.main {
+  background-color: #eee;
+  width: 100%;
+  height: calc(100vh - 56px);
+}
+
+/* 对应contants里面的右侧 MAIN_SETTINGS_WIDTH 宽度 */
+.sidebar {
+  background-color: #ddd;
+  width: 400px;
+  height: calc(100vh - 56px);
+}
+
+

@@ -1,9 +1,0 @@
-.nopaddingTabs {
-
-}
-
-.nopaddingTabs :global(.ant-tabs-tabpane) {
-  padding-left: 0px !important;
-}
-
-

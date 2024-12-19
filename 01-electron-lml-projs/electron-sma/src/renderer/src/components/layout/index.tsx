@@ -2,8 +2,8 @@ import styles from './style.module.css'
 
 import HeaderContent from "./header";
 import FooterContent from "./footer/footer";
-import MainContent from "./main/main";
-import SiderContent from "./sider";
+import MainContent from "./main/work-main/workMain";
+import SiderContent from "./main/sider";
 
 import { Flex, Layout } from "antd";
 
@@ -62,10 +62,12 @@ function LayoutApp(): JSX.Element {
         <Layout style={layoutStyle}>
           <Header style={headerStyle}><HeaderContent/></Header>
           <Layout>
-            <Sider width="38px" style={siderStyle}>
+            <SiderContent />
+
+            {/* <Sider width="100vw" style={siderStyle}>
               <SiderContent />
-            </Sider>
-            <Content style={contentStyle}><MainContent/></Content>
+            </Sider> */}
+            {/* <Content style={contentStyle}><MainContent/></Content> */}
           </Layout>
           <Footer style={footerStyle}><FooterContent/></Footer>
         </Layout>
