@@ -1,19 +1,21 @@
+
 import { join } from 'path'
 import { DataSource } from 'typeorm'
 import { app } from 'electron'
+
 import { ConfigEntities } from '@shared/db-entities/Config'
+import { Proj, ProjMod } from './../../shared/db-entities/Proj'
+
+const entities = [Proj, ProjMod, ConfigEntities]
 
 
 // 直接是生产环境：如果不存在还需要创建 （better-sqlite3会自动创建，所以不必此代码）
 const dataBasePath = join(app.getPath('appData'), app.getName(), `./Data/electron_app_db.sqlite`)
-//if (!fs.existsSync(dataBasePath)) {
-//  fs.writeFileSync(dataBasePath, '')
-//}
 
-console.log('DataBase init path: ', dataBasePath)
-const DataBase = new DataSource({
+console.log('dataBase init path: ', dataBasePath)
+const dataBase = new DataSource({
   type: 'better-sqlite3',
-  entities: [ConfigEntities], // 后续新建表的实体
+  entities: entities, // 后续新建表的实体
   database: dataBasePath, // 数据库地址
   synchronize: true, // 自动同步表
   logging: ['error'],
@@ -27,4 +29,4 @@ const DataBase = new DataSource({
   ) // 运行时候，此文件是out/index.js，因此是对于此的相对路径到node_modules/better-sqlite3/build/Release/better_sqlite3.node
 })
 
-export default DataBase
+export default dataBase

@@ -1,4 +1,9 @@
 
+#### 简介
+确定模块下的工作区域：
+比如：openstack的nova模块
+
+
 1、里面的TabsContent 都基于基本tabs-main-content模板（= main/apis/index.tsx模板）开发
 
 2、tabs-main-content模板有：

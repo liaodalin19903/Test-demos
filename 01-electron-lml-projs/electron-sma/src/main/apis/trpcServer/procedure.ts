@@ -13,34 +13,4 @@ const t = initTRPC.create({
   transformer: superjson
 });
 
-import {
-  users,
-  userById,
-  userCreate,
-
-  winShow,
-  winHide,
-  publishEvent,
-
-  projs,
-  projCreate,
-  projUpdate,
-  projDelete,
-} from '..'
-
-export const appRouter = t.router({
-  users: users,
-  userById: userById,
-  userCreate: userCreate,
-
-  winShow: winShow,
-  winHide: winHide,
-  publishEvent: publishEvent,
-
-  projs,
-  projCreate,
-  projUpdate,
-  projDelete,
-})
-
-export type AppRouter = typeof appRouter;
+export const publicProcedure = t.procedure;

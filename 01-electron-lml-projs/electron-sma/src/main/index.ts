@@ -3,7 +3,7 @@ import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '@main/../../resources/icon.png'
 import { to } from 'await-to-js'
-import DataBase from './db'
+import dataBase from './db'
 import { appRouter } from './apis/trpcServer/router'
 import { IpcRequest } from '@shared/@types'
 import { ipcRequestHandler } from './apis/trpcServer/ipcRequestHandler'
@@ -81,10 +81,10 @@ app.whenReady().then( async() => {
   wm.initWindows()
 
   // 数据库初始化
-  if (!DataBase.isInitialized) {
-    const [err] = await to(DataBase.initialize())
+  if (!dataBase.isInitialized) {
+    const [err] = await to(dataBase.initialize())
     if (err) {
-      console.log('数据库已初始化失败!')
+      console.log('数据库已初始化失败!', err)
     } else {
       console.log('数据库已初始化成功!')
     }

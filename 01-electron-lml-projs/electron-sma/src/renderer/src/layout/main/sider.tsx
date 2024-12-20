@@ -2,6 +2,7 @@ import { Tabs } from "antd";
 import styles from './sider.module.css'
 
 import WorkMain from './work-main/workMain'
+import SettingsMain from "./settings-main/settingsMain";
 
 import {
   SettingOutlined,
@@ -11,7 +12,7 @@ import {
 function Sider(): JSX.Element {
 
   const items = [
-    { key: "0", label: '设置', children: `项目设置-内容`, icon: <SettingOutlined />},
+    { key: "0", label: '设置', children: <SettingsMain/>, icon: <SettingOutlined />},
     { key: "1", label: '工作', children: <WorkMain/>, icon: <FormOutlined />},
 
   ]
