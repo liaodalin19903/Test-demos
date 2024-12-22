@@ -1,5 +1,5 @@
 
-import { Modal, Form, Input } from 'antd'
+import { Modal, Form, Input, InputNumber } from 'antd'
 import { HookAPI } from 'antd/es/modal/useModal';
 const { TextArea } = Input;
 import React, { ReactNode } from 'react'
@@ -13,6 +13,8 @@ import React, { ReactNode } from 'react'
 type ItemKeyType = 'string' | 'number' | 'boolean' | 'text'
 interface CRUDModalItemFields {
   [key: string] : {
+    label: string,
+    placeholder?: string,
     type: ItemKeyType,
     required: boolean,
     data?: unknown  // 更新modal需要此信息进行填充
@@ -49,14 +51,25 @@ const genForm = (props: CRUDModalProps): ReactNode => {
       wrapperCol={{ span: 20 }}
     >
       { Object.entries(props.fields).map(([key, value]) => {
-
+        
          return <Form.Item
           key={key}
-          label={key}
+          label={value.label}
           name={key}
           rules={[{required: value.required}]}
          >
-          <Input key={key + ':' + value.data} value={value.data as string}/>
+          {
+            value.type === 'string' && <Input key={key + ':' + value.data} value={value.data as string} placeholder={value.placeholder} />
+          }
+          {
+            value.type === 'text' && <TextArea key={key + ':' + value.data} value={value.data as string} placeholder={value.placeholder} />
+          }
+          {
+            value.type === 'number' && <InputNumber key={key + ':' + value.data} value={value.data as number} placeholder={value.placeholder} />
+          }
+          {
+            (value.type !== 'string' && value.type !== 'text' && value.type !== 'number') && <Input key={key + ':' + value.data} value={value.data as string} placeholder={value.placeholder} />
+          }
          </Form.Item>
         })
       }
@@ -71,16 +84,19 @@ const CRUDModal = (modal: HookAPI, props: CRUDModalProps) => {
   const content = genForm(props)
 
   const ModalpProps = {
-    width: 560,
+    width: 640,
     title: title,
     content: content,
+    closable: true,
+    okText: '确定',
+    cancelText: '取消',
     onOk: props.onConfirm,
     onCancel: props.onCancel
   }
 
 
   if(props.type === 'create') {
-    console.log('进入CRUDModal', modal, ModalpProps)
+    //console.log('进入CRUDModal', modal, ModalpProps)
     modal.info(ModalpProps)
   } else if(props.type === 'update') {
     modal.warning(ModalpProps)

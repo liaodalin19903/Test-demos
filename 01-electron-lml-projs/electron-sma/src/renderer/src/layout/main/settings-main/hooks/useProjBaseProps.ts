@@ -18,10 +18,13 @@ export const useProjBaseProps = (): CRUDModalProps => {
     onConfirm: onConfirm,
     fields: {
       'projName': {
+        label: '项目名称',
         type: 'string',
+        placeholder: 'eg. 项目名称',
         required: true
       },
       'desc': {
+        label: '项目描述',
         type: 'text',
         required: false
       }
