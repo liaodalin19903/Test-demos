@@ -1,8 +1,7 @@
 import styles from './style.module.css'
 
 import HeaderContent from "./header";
-import FooterContent from "./footer/footer";
-import MainContent from "./main/work-main/workMain";
+import FooterContent from "./footer/footer.tsx";
 import SiderContent from "./main/sider";
 
 import { Flex, Layout } from "antd";

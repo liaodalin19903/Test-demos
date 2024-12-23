@@ -6,11 +6,11 @@ import { join } from "path"
 import { is } from "@electron-toolkit/utils"
 import { WINDOW_NAMES } from "@shared/constants"
 
-interface IMappedWindow {
+export interface IMappedWindow {
   [key: string] : BrowserWindow
 }
 
-class WindowsManager {
+export class WindowsManager {
 
   private static instance: WindowsManager
   mapWidows: IMappedWindow
@@ -45,6 +45,13 @@ class WindowsManager {
       win1.loadFile(join(__dirname, '../renderer/index.html#win1'))
     }
 
+    win1.on('close', function(e) {
+      if (!global.isAppQuitting) {
+          e.preventDefault();
+          win1.hide()
+      }
+    })
+
     // Create the browser window.
 
     const win2 = this.createWindow(WINDOW_NAMES.WIN2, win2Options)
@@ -55,6 +62,12 @@ class WindowsManager {
       win2.loadFile(join(__dirname, '../renderer/index.html#win2'))
     }
 
+    win2.on('close', function(e) {
+      if (!global.isAppQuitting) {
+          e.preventDefault();
+          win2.hide()
+      }
+    })
 
     // Create the browser window.
 
@@ -65,6 +78,13 @@ class WindowsManager {
     } else {
       win3.loadFile(join(__dirname, '../renderer/index.html#win3'))
     }
+
+    win3.on('close', function(e) {
+      if (!global.isAppQuitting) {
+          e.preventDefault();
+          win3.hide()
+      }
+    })
 
 
   }
@@ -103,7 +123,7 @@ class WindowsManager {
     }
   }
 
-  hiddeWindow(windowName: string) {
+  hideWindow(windowName: string) {
     if (this.mapWidows[windowName]) {
       // 如果窗口名称存在，返回对应的窗口实例
       this.mapWidows[windowName].hide();
@@ -168,7 +188,17 @@ class WindowsManager {
     return Object.keys(this.mapWidows);
   }
 
-    /**
+  getAllWindows() {
+
+    Object.entries(this.mapWidows).forEach(([key, win]) => {
+      console.log(`当前遍历到的窗口键为: ${key}`);
+      console.log(`窗口是否可见: ${win.isVisible()}`);
+    });
+
+
+  }
+
+  /**
    * 最小化指定名称的窗口
    * @param windowName - 窗口的名称
    * @throws {Error} 如果窗口名称不存在，则抛出错误
