@@ -1,5 +1,5 @@
 
-import { Modal, Form, Input, InputNumber } from 'antd'
+import { Form, Input, InputNumber, Button, Flex } from 'antd'
 import { HookAPI } from 'antd/es/modal/useModal';
 const { TextArea } = Input;
 import React, { ReactNode } from 'react'
@@ -25,9 +25,7 @@ export interface CRUDModalProps {
   type: 'create' | 'update' | 'delete',
   name: string,  // eg. 项目
   fields: CRUDModalItemFields,  // 字段
-  onConfirm: (data: unknown) => void,
-  onCancel?: () => void,
-
+  onConfirm: (data: unknown) => void
 }
 
 const getTitle: Function = (props: CRUDModalProps) => {
@@ -42,16 +40,20 @@ const getTitle: Function = (props: CRUDModalProps) => {
 }
 
 // 生产表单
-const genForm = (props: CRUDModalProps): ReactNode => {
+const genForm = (modal: HookAPI, props: CRUDModalProps): ReactNode => {
+
+  const onFinish = (formData) => {
+    props.onConfirm(formData)
+  }
 
   return (
     <Form
       layout='vertical'
-      labelCol={{ span: 4 }}
       wrapperCol={{ span: 20 }}
+      onFinish={onFinish}
     >
       { Object.entries(props.fields).map(([key, value]) => {
-        
+
          return <Form.Item
           key={key}
           label={value.label}
@@ -73,7 +75,16 @@ const genForm = (props: CRUDModalProps): ReactNode => {
          </Form.Item>
         })
       }
-    </Form>
+
+        <Flex align={'flex-start'} justify="end">
+          <Form.Item label={null}>
+            <Button type="primary" htmlType="submit">
+              提交
+            </Button>
+          </Form.Item>
+        </Flex>
+
+      </Form>
   )
 }
 
@@ -81,17 +92,18 @@ const genForm = (props: CRUDModalProps): ReactNode => {
 const CRUDModal = (modal: HookAPI, props: CRUDModalProps) => {
 
   const title = getTitle(props)
-  const content = genForm(props)
+  const content = genForm(modal, props)
 
   const ModalpProps = {
-    width: 640,
+    width: 680,
     title: title,
     content: content,
     closable: true,
     okText: '确定',
     cancelText: '取消',
-    onOk: props.onConfirm,
-    onCancel: props.onCancel
+    footer: null,
+    // onOk: props.onConfirm,
+    // onCancel: props.onCancel
   }
 
 
