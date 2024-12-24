@@ -11,7 +11,7 @@ import { ipcRequestHandler } from './apis/trpcServer/ipcRequestHandler'
 import { TITLEBAR_HEIGHT } from '@shared/constants'
 import { wm } from '@main/wm'
 
-function createWindow(): void {
+function createWindow(): BrowserWindow {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
@@ -49,6 +49,8 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  return mainWindow
 }
 
 // This method will be called when Electron has finished
@@ -77,8 +79,8 @@ app.whenReady().then( async() => {
     });
   })
 
-  createWindow()
-  wm.initWindows()
+  const mainWindow = createWindow()
+  wm.initWindows(mainWindow)
 
   // 数据库初始化
   if (!dataBase.isInitialized) {

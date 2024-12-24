@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { publishEvent } from '@renderer/common/apis';
 import { Button } from 'antd';
 
-import { WINDOW_EVENTS, WINDOW_NAMES } from '@shared/constants';
+import { EVENTS, WINDOW_NAMES } from '@shared/constants';
 
 
 const Win1: React.FC = () => {
@@ -19,7 +19,7 @@ const Win1: React.FC = () => {
 
   const handleClick = () => {
     console.log('触发事件')
-    publishEvent([WINDOW_NAMES.WIN2, WINDOW_NAMES.WIN3], WINDOW_EVENTS.EVENT_WINDOW_UPDATE_DATA, {
+    publishEvent([WINDOW_NAMES.WIN2, WINDOW_NAMES.WIN3], EVENTS.EVENT_WINDOW_UPDATE_DATA, {
       comesFrom: WINDOW_NAMES.WIN1
     })
 
