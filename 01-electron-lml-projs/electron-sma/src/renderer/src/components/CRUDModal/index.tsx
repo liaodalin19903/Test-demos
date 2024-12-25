@@ -39,11 +39,19 @@ const getTitle: Function = (props: CRUDModalProps) => {
   return ''
 }
 
+
+type TModalInstance = { destroy: () => void; }
+
+let modalInstance: TModalInstance | undefined= undefined
+
 // 生产表单
-const genForm = (modal: HookAPI, props: CRUDModalProps): ReactNode => {
+const genForm = ( props: CRUDModalProps): ReactNode => {
 
   const onFinish = (formData) => {
     props.onConfirm(formData)
+    if(modalInstance){
+      modalInstance.destroy()
+    }
   }
 
   return (
@@ -91,8 +99,9 @@ const genForm = (modal: HookAPI, props: CRUDModalProps): ReactNode => {
 // 不是ReactNode, 是一个方法
 const CRUDModal = (modal: HookAPI, props: CRUDModalProps) => {
 
+
   const title = getTitle(props)
-  const content = genForm(modal, props)
+  const content = genForm(props)
 
   const ModalpProps = {
     width: 680,
@@ -109,11 +118,11 @@ const CRUDModal = (modal: HookAPI, props: CRUDModalProps) => {
 
   if(props.type === 'create') {
     //console.log('进入CRUDModal', modal, ModalpProps)
-    modal.info(ModalpProps)
+    modalInstance = modal.info(ModalpProps)
   } else if(props.type === 'update') {
-    modal.warning(ModalpProps)
+    modalInstance = modal.warning(ModalpProps)
   } else if (props.type === 'delete') {
-    modal.error(ModalpProps)
+    modalInstance = modal.error(ModalpProps)
   }
 }
 

@@ -1,4 +1,4 @@
-import { UpdateResult } from 'typeorm';
+import { InsertResult, UpdateResult } from 'typeorm';
 
 import * as z from 'zod'
 import { publicProcedure } from './trpcServer/procedure'
@@ -25,22 +25,27 @@ export const projCreate = publicProcedure.input(
     ).optional()
   })
 ).mutation(async({ input: {projName, desc, projmods} }) => {
-  // 创建proj表
-  const proj: Proj = await dataBase.getRepository(Proj).create({
+  // 创建proj表数据
+  const insertResult: InsertResult = await dataBase.createQueryBuilder().insert().into(Proj).values({
     projName: projName,
     desc: desc,
-  })
-  // 创建projmod表
-  for (const projmod of projmods) {
-    await dataBase.getRepository(ProjMod).create({
-      modName: projmod.modName,
-      desc: projmod.desc,
-      proj: proj
-    })
+  }).execute()
+
+  //console.log('创建proj：', insertResult.raw)
+
+  if (projmods) {
+    // 创建projmod表
+    for (const projmod of projmods) {
+      await dataBase.createQueryBuilder().insert().into(ProjMod).values({
+        modName: projmod.modName,
+        desc: projmod.desc,
+        proj: insertResult.raw
+      })
+    }
   }
 
   // 返回创建好的proj实例
-  return proj
+  return insertResult
 })
 
 export const projUpdate = publicProcedure.input(

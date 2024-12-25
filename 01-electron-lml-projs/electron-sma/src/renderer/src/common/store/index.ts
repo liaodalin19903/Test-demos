@@ -3,10 +3,14 @@ import { create } from 'zustand'
 
 import { createTodoListSlice } from './todolist.store'
 import { createBearSlice } from './bears.store'
+import { createProjSlice } from './proj.store'
 
+import { ProjSlice } from './proj.store'
 
-// 全局状态
-export const useStore = create((set:any, get:any) => ({
-  ...createBearSlice(set, get),
-  ...createTodoListSlice(set, get)
+type StoreState = ProjSlice // & OtherSlice
+
+export const useStore = create<StoreState>()((...params) => ({
+  ...createProjSlice(...params)
+  // ...createOtherSlice(...params)
 }))
+

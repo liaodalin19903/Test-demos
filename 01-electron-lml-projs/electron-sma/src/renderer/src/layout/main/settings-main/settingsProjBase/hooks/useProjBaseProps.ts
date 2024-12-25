@@ -4,13 +4,16 @@
 import type { CRUDModalProps } from '@renderer/components/CRUDModal'
 import { Proj } from '@shared/db-entities/Proj'
 
+import { addProj } from '@renderer/common/apis/proj'
+
 
 // 生成项目基础配置 的props
-export const useProjBaseProps = (): CRUDModalProps => {
+export const useGetProjBaseProps = (): CRUDModalProps => {
 
-  const onConfirm = (formData: unknown) => {
+  const onConfirm = async (formData: unknown) => {
 
     console.log('接受到回调：', formData as Proj)
+    await addProj(formData as Proj)
   }
 
   const props: CRUDModalProps = {

@@ -5,12 +5,15 @@ import FooterTagButton from "./FooterButton"
 import { showWindow, hideWindow, getAllWinNameStatus } from "@renderer/common/apis"
 import { useEffect, useState } from "react"
 import { WINDOW_NAMES, EVENTS } from "@shared/constants";
+import { useStore } from "@renderer/common/store";
 
 type TShowWinStates = {
   [key: string]: boolean
 }
 
 function Footer(): JSX.Element {
+
+  const { selectedProj } = useStore()
 
   const [showWinStates, setShowWinStates] = useState<TShowWinStates>({
     'WIN1': false,
@@ -43,9 +46,9 @@ function Footer(): JSX.Element {
 
   const handleClickTest = async () => {
     console.log('点击了测试按钮')
-    // const winsWithStatus = await getWindowsWithStatus()
 
-    // console.log(winsWithStatus)
+    console.log('selectedProj: ', selectedProj)
+    
   }
 
   useEffect(() => {
