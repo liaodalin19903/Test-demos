@@ -11,7 +11,7 @@ import { addProj, deleteProj, updateProj } from '@renderer/common/apis/proj'
  * 生成props
  * @param proj
  */
-const getProps = (type: CRUDModalProps['type'], fetchProjs: () => Promise<void>, proj?: Proj, projID?: number): CRUDModalProps => {
+const getProps = (type: CRUDModalProps['type'], fetchProjs: () => Promise<void>, proj?: Proj): CRUDModalProps => {
 
   const onConfirm = async (formData: unknown) => {
     //console.log('接受到回调：', formData as Proj)
@@ -22,7 +22,8 @@ const getProps = (type: CRUDModalProps['type'], fetchProjs: () => Promise<void>,
       await updateProj(formData as Proj)
       await fetchProjs()
     } else if(type === 'delete') {
-      await deleteProj(projID!)
+      const projID: number = (formData as Proj).id!
+      await deleteProj(projID)
       await fetchProjs()
     }
   }
@@ -71,3 +72,8 @@ export const useUpdateProjBaseProps = (proj: Proj, fetchProjs: () => Promise<voi
   return props
 }
 
+export const useDeleteProjBaseProps = (proj: Proj, fetchProjs: () => Promise<void>): CRUDModalProps => {
+
+  const props: CRUDModalProps = getProps('delete', fetchProjs, proj)
+  return props
+}

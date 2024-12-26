@@ -9,7 +9,10 @@ import { Proj, ProjMod } from '@shared/db-entities/Proj';
 
 export const projs = publicProcedure.query(async () => {
 
-  const projs = await dataBase.getRepository(Proj).createQueryBuilder('proj').getMany()
+  const projs = await dataBase.getRepository(Proj)
+  .createQueryBuilder('proj')
+  .where("isDeleted = :isDeleted", { isDeleted: false })
+  .getMany()
   return projs
 })
 
@@ -81,7 +84,7 @@ export const projDelete = publicProcedure.input(
   // 删除Proj的projmods
   await dataBase.createQueryBuilder().update(ProjMod).set({
     isDeleted: true
-  }).where('projmod.proj = :id', {id: id}).execute()
+  }).where('proj = :id', {id: id}).execute()
 
   return updateResult
 })

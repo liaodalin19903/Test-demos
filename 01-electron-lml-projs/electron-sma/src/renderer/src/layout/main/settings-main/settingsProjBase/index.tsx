@@ -5,7 +5,7 @@ import React from 'react'
 import { Card, Modal, Space, Popover,  Radio, RadioChangeEvent, Button, Row, Col } from 'antd'
 import CRUDModal from '@renderer/components/CRUDModal'
 
-import { useCreateProjBaseProps, useUpdateProjBaseProps } from './hooks/useProjBaseProps'
+import { useCreateProjBaseProps, useUpdateProjBaseProps, useDeleteProjBaseProps } from './hooks/useProjBaseProps'
 import { useStore } from '@renderer/common/store'
 import { Proj } from '@shared/db-entities/Proj'
 
@@ -30,6 +30,12 @@ export default function SettingsProjBase() {
     CRUDModal(modal, props)
   }
 
+  const handleDelete = (proj: Proj) => {
+
+    const props = useDeleteProjBaseProps(proj, fetchProjs)
+    CRUDModal(modal, props)
+  }
+
   const handleSelect = (e: RadioChangeEvent) => {
     selectProj(e.target.value)
   }
@@ -46,7 +52,7 @@ export default function SettingsProjBase() {
           <Space style={{ width:'100%' }} direction="vertical">
             { projs.map((proj) => (
               <Row key={proj.id} >
-                <Col style={{ display:'flex', alignItems: 'center' }} span={ 20 }>
+                <Col style={{ display:'flex', alignItems: 'center' }} span={ 15 }>
                   <Radio value={proj.id}>
                     <Popover
                       trigger="hover"
@@ -58,9 +64,25 @@ export default function SettingsProjBase() {
                   </Radio>
                 </Col>
                 <Col span={4}>
-                  <Button type='link' onClick={ () => {
-                    handleUpdate(proj)
+                  <Button
+                    //type='link'
+                    size='small'
+                    color="primary"
+                    variant="filled"
+                    onClick={ () => {
+                      handleUpdate(proj)
                   } }>修改</Button>
+                </Col>
+                <Col span={1}></Col>
+                <Col span={4}>
+                  <Button
+                      //type='link'
+                      size='small'
+                      color="danger"
+                      variant="filled"
+                      onClick={ () => {
+                        handleDelete(proj)
+                    } }>删除</Button>
                 </Col>
               </Row>
             ))}

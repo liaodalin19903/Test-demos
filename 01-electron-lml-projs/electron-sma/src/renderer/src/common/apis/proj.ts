@@ -14,6 +14,6 @@ export const updateProj = async (proj: Proj) => {
   return await trpc.projUpdate.mutate(proj)
 }
 
-export const deleteProj =async (id: number) => {
-  return await trpc.projDelete.mutate({id})
+export const deleteProj =async (projID: number) => {
+  return await trpc.projDelete.mutate({id: projID})
 }
