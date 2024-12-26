@@ -13,7 +13,7 @@ import { Proj } from '@shared/db-entities/Proj'
 export default function SettingsProjBase() {
 
   const [modal, contextHolder] = Modal.useModal();
-  const { projs, selectedProj, fetchProjs, selectProj } = useStore()
+  const { projs, selectedProj, fetchProjs, selectProj, fetchProjMods } = useStore()
 
   const handleCreate = () => {
     return <a onClick={()=>{
@@ -36,8 +36,11 @@ export default function SettingsProjBase() {
     CRUDModal(modal, props)
   }
 
-  const handleSelect = (e: RadioChangeEvent) => {
+  const handleSelect = async (e: RadioChangeEvent) => {
     selectProj(e.target.value)
+
+    // 触发ProjMod的获取
+    await fetchProjMods(e.target.value)
   }
 
   return (

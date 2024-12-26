@@ -47,6 +47,8 @@ let modalInstance: TModalInstance | undefined= undefined
 // 生产表单
 const genForm = ( props: CRUDModalProps): ReactNode => {
 
+  const  initialValues = useMapToFormInitialValues(props)
+
   const onFinish = (formData) => {
     props.onConfirm(formData)
     if(modalInstance){
@@ -54,7 +56,9 @@ const genForm = ( props: CRUDModalProps): ReactNode => {
     }
   }
 
-  const initialValues = useMapToFormInitialValues(props)
+  const onFinishFailed = (formData) => {
+    console.log(formData)
+  }
 
   return (
     <Form
@@ -62,6 +66,7 @@ const genForm = ( props: CRUDModalProps): ReactNode => {
       wrapperCol={{ span: 20 }}
       initialValues={initialValues}
       onFinish={onFinish}
+      onFinishFailed={onFinishFailed}
     >
       { Object.entries(props.fields).map(([key, value]) => {
 
@@ -70,7 +75,7 @@ const genForm = ( props: CRUDModalProps): ReactNode => {
           label={value.label}
           name={key}
           rules={[{required: value.required}]}
-          hidden={ key==='id' ? true : false  } 
+          hidden={ key==='id' ? true : false  }
          >
           {
             value.type === 'string' && <Input key={key + ':' + value.data} placeholder={value.placeholder} />

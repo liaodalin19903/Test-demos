@@ -34,15 +34,24 @@ export const projCreate = publicProcedure.input(
     desc: desc,
   }).execute()
 
-  //console.log('创建proj：', insertResult.raw)
+  //console.log('insertResult.raw: ', insertResult.raw)
+  // 一个proj都有一个projMod
+  const insertResultProjMod = await dataBase.createQueryBuilder().insert().into(ProjMod).values({
+    modName: projName + ':main',
+    desc: projName + '的主模块（父模块）',
+    proj: insertResult.raw
+  }).execute()
 
+  //console.log('insertResultProjMod: ', insertResultProjMod)
+
+  // 其他的模块
   if (projmods) {
     // 创建projmod表
     for (const projmod of projmods) {
       await dataBase.createQueryBuilder().insert().into(ProjMod).values({
         modName: projmod.modName,
         desc: projmod.desc,
-        proj: insertResult.raw
+        proj: insertResult.raw  // 这个是proj的id
       })
     }
   }
@@ -88,3 +97,91 @@ export const projDelete = publicProcedure.input(
 
   return updateResult
 })
+
+
+// ====【ProjMod】
+
+// 通过projId查询：proj的主mod
+export const mainProjModByProjId = publicProcedure.input(z.object({
+  projId: z.number()
+})).query(async ({input: {projId}}) => {
+
+  const projMod = await dataBase.getRepository(ProjMod)
+  .createQueryBuilder('projMod')
+  .where("isDeleted = :isDeleted", { isDeleted: false })
+  .andWhere("projId = :projId", {projId: projId})
+  .getOne()
+  return projMod
+})
+
+// 通过projId查询：projMods
+export const projModsByProjId = publicProcedure.input(z.object({
+  projId: z.number()
+})).query(async ({input: {projId}}) => {
+  const projMods = await dataBase.getRepository(ProjMod)
+  .createQueryBuilder('projMod')
+  .where("isDeleted = :isDeleted", { isDeleted: false })
+  .andWhere("projId = :projId", { projId: projId })
+  .getMany()
+  return projMods
+})
+
+// TODO:这里我只会拆分projMod和projId，不知如何只使用一个z.object验证
+export const projModCreate = publicProcedure.input(
+  z.object({
+    projMod: z.object(
+      {
+        modName: z.string(),
+        desc: z.string().optional(),
+        isMain: z.boolean().optional(),
+      },
+    ),
+    projId: z.number()
+  })
+).mutation(async({ input: {projMod: {modName, desc, isMain}, projId} }) => {
+
+  const insertResult = await dataBase.createQueryBuilder().insert().into(ProjMod).values({
+    modName: modName,
+    desc: desc,
+    isMain: isMain,
+    proj: {id: projId} as Proj
+  }).execute()
+
+  // 返回创建好的proj实例
+  return insertResult
+})
+
+export const projModUpdate = publicProcedure.input(
+  z.object({
+    id: z.number().optional(),
+    modName: z.string(),
+    desc: z.string().optional(),
+  })
+).mutation( async ({ input: {id, modName, desc} }) => {
+
+  console.log('api得到参数：', {id, modName, desc} )
+
+  const updateResult: UpdateResult = await dataBase.createQueryBuilder().update(ProjMod).set({
+    modName: modName,
+    desc: desc,
+  }).where('id = :id', {id: id}).execute()
+
+  return updateResult
+})
+
+// 软删除
+export const projModDelete = publicProcedure.input(
+  z.object({
+    id: z.number()
+  })
+).mutation( async ({ input: { id } }) => {
+
+  // 删除Proj
+  const updateResult: UpdateResult = await dataBase.createQueryBuilder().update(ProjMod).set({
+    isDeleted: true
+  }).where('id = :id', {id: id}).execute()
+
+  return updateResult
+})
+
+

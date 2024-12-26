@@ -50,6 +50,11 @@ export class ProjMod {
   modName: string
 
   @Column({
+    type: 'boolean'
+  })
+  isMain: boolean
+
+  @Column({
     type: 'text'
   })
   desc?: string
@@ -69,8 +74,9 @@ export class ProjMod {
   @UpdateDateColumn()
   updateDate?: Date
 
-  constructor(modName: string = '', desc: string | undefined = '', proj:Proj) {
+  constructor(modName: string = '', isMain: boolean = false, desc: string | undefined = '', proj:Proj) {
     this.modName = modName
+    this.isMain = isMain
     this.desc = desc
     this.proj = proj
   }

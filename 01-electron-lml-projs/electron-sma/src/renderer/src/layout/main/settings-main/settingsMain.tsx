@@ -4,6 +4,7 @@ import React from 'react'
 import { Card, Space } from 'antd'
 
 import SettingsProjBase from './settingsProjBase'
+import SettingsProjMod from './settingsProjMod'
 
 
 export default function SettingsMain() {
@@ -14,7 +15,9 @@ export default function SettingsMain() {
         <Space direction="vertical" size={16}  style={{ display: 'flex' }} >
 
           <SettingsProjBase></SettingsProjBase>
+          <SettingsProjMod></SettingsProjMod>
 
+          
         </Space>
       </Card>
     </>

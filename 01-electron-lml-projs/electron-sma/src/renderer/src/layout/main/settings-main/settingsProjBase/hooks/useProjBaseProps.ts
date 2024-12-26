@@ -14,8 +14,9 @@ import { addProj, deleteProj, updateProj } from '@renderer/common/apis/proj'
 const getProps = (type: CRUDModalProps['type'], fetchProjs: () => Promise<void>, proj?: Proj): CRUDModalProps => {
 
   const onConfirm = async (formData: unknown) => {
-    //console.log('接受到回调：', formData as Proj)
+    console.log('接受到回调：', formData as Proj)
     if(type === 'create') {
+      console.log('点击创建')
       await addProj(formData as Proj)
       await fetchProjs()
     } else if(type === 'update') {
@@ -37,7 +38,7 @@ const getProps = (type: CRUDModalProps['type'], fetchProjs: () => Promise<void>,
         label: '项目ID',
         type: 'number',
         data: proj?.id,
-        required: true
+        required: false
       },
       'projName': {
         label: '项目名称',

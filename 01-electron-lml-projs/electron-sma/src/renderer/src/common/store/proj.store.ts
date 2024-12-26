@@ -1,6 +1,6 @@
-import { Proj } from "@shared/db-entities/Proj";
+import { Proj, ProjMod } from "@shared/db-entities/Proj";
 import { StateCreator } from "zustand";
-import { getProjs, addProj, updateProj, deleteProj } from  "@renderer/common/apis"
+import { getProjs, addProj, updateProj, deleteProj, getProjMods } from  "@renderer/common/apis"
 
 export interface ProjSlice {
   projs: Proj[],
@@ -12,6 +12,11 @@ export interface ProjSlice {
   addProj: (proj:Proj) => Promise<void>,
   updateProj: (proj:Proj) => Promise<void>,
   deleteProj: (id: number) => Promise<void>,
+
+  projMods: ProjMod[],
+  selectedProjMod: ProjMod | undefined,
+  selectProjMod: (projMod:ProjMod) => Promise<void>,
+  fetchProjMods: (projId: number) => Promise<void>,
 }
 
 //type SliceType = StateCreator<ProjSlice, [], [], ProjSlice>
@@ -21,6 +26,9 @@ export const createProjSlice: StateCreator<ProjSlice> = (set, get) => ({
   // 1.状态
   projs: [] as Proj[],
   selectedProj: undefined as Proj | undefined,
+
+  projMods: [] as ProjMod[],
+  selectedProjMod: undefined as ProjMod | undefined,
 
   // 2.操作状态的actions
 
@@ -85,6 +93,33 @@ export const createProjSlice: StateCreator<ProjSlice> = (set, get) => ({
       fetchProjs()
       set({ isLoading: false })
     }
+  },
+
+  selectProjMod: async(projMod:ProjMod) => {
+    set({selectedProjMod: projMod})
+  },
+
+  fetchProjMods: async(projId: number) => {
+
+    try {
+      set({ isLoading: true })
+
+      const projMods: ProjMod[] = await getProjMods(projId)
+      set({ projMods: projMods })
+
+      const { selectedProjMod } = get()
+      if( !selectedProjMod ) {
+
+        const mainProjMods: ProjMod[] = projMods.filter((projMod) => projMod.isMain === true);
+        set({ selectedProjMod:  mainProjMods[0]})
+      }
+
+    } catch (error) {
+
+    } finally {
+      set({ isLoading: false })
+    }
+
   },
 
 })
