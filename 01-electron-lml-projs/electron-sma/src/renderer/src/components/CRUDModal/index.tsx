@@ -4,7 +4,7 @@ import { HookAPI } from 'antd/es/modal/useModal';
 const { TextArea } = Input;
 import React, { ReactNode } from 'react'
 
-
+import { useMapToFormInitialValues } from './hooks/useMapToFormInitialValues'
 
 /**
  * eg.
@@ -54,10 +54,13 @@ const genForm = ( props: CRUDModalProps): ReactNode => {
     }
   }
 
+  const initialValues = useMapToFormInitialValues(props)
+
   return (
     <Form
       layout='vertical'
       wrapperCol={{ span: 20 }}
+      initialValues={initialValues}
       onFinish={onFinish}
     >
       { Object.entries(props.fields).map(([key, value]) => {
@@ -67,18 +70,19 @@ const genForm = ( props: CRUDModalProps): ReactNode => {
           label={value.label}
           name={key}
           rules={[{required: value.required}]}
+          hidden={ key==='id' ? true : false  } 
          >
           {
-            value.type === 'string' && <Input key={key + ':' + value.data} value={value.data as string} placeholder={value.placeholder} />
+            value.type === 'string' && <Input key={key + ':' + value.data} placeholder={value.placeholder} />
           }
           {
-            value.type === 'text' && <TextArea key={key + ':' + value.data} value={value.data as string} placeholder={value.placeholder} />
+            value.type === 'text' && <TextArea key={key + ':' + value.data} placeholder={value.placeholder} />
           }
           {
-            value.type === 'number' && <InputNumber key={key + ':' + value.data} value={value.data as number} placeholder={value.placeholder} />
+            value.type === 'number' && <InputNumber key={key + ':' + value.data} placeholder={value.placeholder} />
           }
           {
-            (value.type !== 'string' && value.type !== 'text' && value.type !== 'number') && <Input key={key + ':' + value.data} value={value.data as string} placeholder={value.placeholder} />
+            (value.type !== 'string' && value.type !== 'text' && value.type !== 'number') && <Input key={key + ':' + value.data} placeholder={value.placeholder} />
           }
          </Form.Item>
         })
@@ -99,7 +103,6 @@ const genForm = ( props: CRUDModalProps): ReactNode => {
 // 不是ReactNode, 是一个方法
 const CRUDModal = (modal: HookAPI, props: CRUDModalProps) => {
 
-
   const title = getTitle(props)
   const content = genForm(props)
 
@@ -111,10 +114,7 @@ const CRUDModal = (modal: HookAPI, props: CRUDModalProps) => {
     okText: '确定',
     cancelText: '取消',
     footer: null,
-    // onOk: props.onConfirm,
-    // onCancel: props.onCancel
   }
-
 
   if(props.type === 'create') {
     //console.log('进入CRUDModal', modal, ModalpProps)

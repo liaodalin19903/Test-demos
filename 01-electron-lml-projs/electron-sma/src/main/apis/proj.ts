@@ -55,6 +55,9 @@ export const projUpdate = publicProcedure.input(
     desc: z.string().optional(),
   })
 ).mutation( async ({ input: {id, projName, desc} }) => {
+
+  console.log('api得到参数：', {id, projName, desc} )
+
   const updateResult: UpdateResult = await dataBase.createQueryBuilder().update(Proj).set({
     projName: projName,
     desc: desc,

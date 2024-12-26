@@ -7,9 +7,7 @@ function App(): JSX.Element {
 
   //#region 初始化操作
   const { fetchProjs } = useStore()
-  /**
-   * 初始化store
-   */
+  
   const initStore = async () => {
     await fetchProjs()
   }

@@ -7,16 +7,16 @@ export interface ProjSlice {
   selectedProj: Proj | undefined,
   isLoading: boolean,
 
-  selectProj: (proj: Proj) => void,
+  selectProj: (projID: number) => void,
   fetchProjs: () => Promise<void>,
   addProj: (proj:Proj) => Promise<void>,
   updateProj: (proj:Proj) => Promise<void>,
   deleteProj: (id: number) => Promise<void>,
 }
 
-type SliceType = StateCreator<ProjSlice, [], [], ProjSlice>
+//type SliceType = StateCreator<ProjSlice, [], [], ProjSlice>
 
-export const createProjSlice: SliceType = (set:any, get:any) => ({
+export const createProjSlice: StateCreator<ProjSlice> = (set, get) => ({
 
   // 1.状态
   projs: [] as Proj[],

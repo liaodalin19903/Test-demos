@@ -1,26 +1,33 @@
 
 
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 
-import { Card, Modal, Space, Popover, Checkbox, Radio, RadioChangeEvent } from 'antd'
-import CRUDModal, { CRUDModalProps } from '@renderer/components/CRUDModal'
+import { Card, Modal, Space, Popover,  Radio, RadioChangeEvent, Button, Row, Col } from 'antd'
+import CRUDModal from '@renderer/components/CRUDModal'
 
-import { useGetProjBaseProps } from './hooks/useProjBaseProps'
+import { useCreateProjBaseProps, useUpdateProjBaseProps } from './hooks/useProjBaseProps'
 import { useStore } from '@renderer/common/store'
+import { Proj } from '@shared/db-entities/Proj'
 
 
 export default function SettingsProjBase() {
 
   const [modal, contextHolder] = Modal.useModal();
-  const { projs, selectedProj, selectProj } = useStore()
+  const { projs, selectedProj, fetchProjs, selectProj } = useStore()
 
-  const handleButton = ( buttonName: string = '保存') => {
+  const handleCreate = () => {
     return <a onClick={()=>{
 
-      const props = useGetProjBaseProps()
+      const props = useCreateProjBaseProps(fetchProjs)
       CRUDModal(modal, props)
 
-    }}>{buttonName}</a>
+    }}>创建</a>
+  }
+
+  const handleUpdate = (proj: Proj) => {
+
+    const props = useUpdateProjBaseProps(proj, fetchProjs)
+    CRUDModal(modal, props)
   }
 
   const handleSelect = (e: RadioChangeEvent) => {
@@ -30,22 +37,32 @@ export default function SettingsProjBase() {
   return (
     <>
     {/* 项目 */}
-      <Card size="small" title='项目基础设置' extra={handleButton('新增')} style={{ width: 300 }}>
+      <Card size="small" title='项目基础设置' extra={handleCreate()} style={{ width: 300 }}>
         <Radio.Group
+          style={{ width:'100%' }}
           onChange={handleSelect}
           value={selectedProj?.id}
         >
-          <Space direction="vertical">
+          <Space style={{ width:'100%' }} direction="vertical">
             { projs.map((proj) => (
-              <Radio key={proj.id} value={proj.id}>
-                <Popover
-                  trigger="hover"
-                  placement='topLeft'
-                  title='项目描述'
-                  content={proj.desc}
-                >{proj.projName}
-                </Popover>
-              </Radio>
+              <Row key={proj.id} >
+                <Col style={{ display:'flex', alignItems: 'center' }} span={ 20 }>
+                  <Radio value={proj.id}>
+                    <Popover
+                      trigger="hover"
+                      placement='topLeft'
+                      title='项目描述'
+                      content={proj.desc}
+                    >{proj.projName}
+                    </Popover>
+                  </Radio>
+                </Col>
+                <Col span={4}>
+                  <Button type='link' onClick={ () => {
+                    handleUpdate(proj)
+                  } }>修改</Button>
+                </Col>
+              </Row>
             ))}
           </Space>
         </Radio.Group>

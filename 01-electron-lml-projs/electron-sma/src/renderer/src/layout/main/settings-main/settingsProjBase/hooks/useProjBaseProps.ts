@@ -4,36 +4,70 @@
 import type { CRUDModalProps } from '@renderer/components/CRUDModal'
 import { Proj } from '@shared/db-entities/Proj'
 
-import { addProj } from '@renderer/common/apis/proj'
+import { addProj, deleteProj, updateProj } from '@renderer/common/apis/proj'
 
 
-// 生成项目基础配置 的props
-export const useGetProjBaseProps = (): CRUDModalProps => {
+/**
+ * 生成props
+ * @param proj
+ */
+const getProps = (type: CRUDModalProps['type'], fetchProjs: () => Promise<void>, proj?: Proj, projID?: number): CRUDModalProps => {
 
   const onConfirm = async (formData: unknown) => {
-
-    console.log('接受到回调：', formData as Proj)
-    await addProj(formData as Proj)
+    //console.log('接受到回调：', formData as Proj)
+    if(type === 'create') {
+      await addProj(formData as Proj)
+      await fetchProjs()
+    } else if(type === 'update') {
+      await updateProj(formData as Proj)
+      await fetchProjs()
+    } else if(type === 'delete') {
+      await deleteProj(projID!)
+      await fetchProjs()
+    }
   }
 
-  const props: CRUDModalProps = {
-    type: 'create',
+  let props: CRUDModalProps = {
+    type: type,
     name: '项目',
     onConfirm: onConfirm,
     fields: {
+      'id': {
+        label: '项目ID',
+        type: 'number',
+        data: proj?.id,
+        required: true
+      },
       'projName': {
         label: '项目名称',
         type: 'string',
         placeholder: 'eg. 项目名称',
-        required: true
+        required: true,
+        data: proj?.projName
       },
       'desc': {
         label: '项目描述',
         type: 'text',
-        required: false
-      }
+        required: false,
+        data: proj?.desc
+      },
     }
   }
 
   return props
 }
+
+// 生成项目基础配置创建 的props
+export const useCreateProjBaseProps = (fetchProjs: () => Promise<void>): CRUDModalProps => {
+
+  const props: CRUDModalProps = getProps('create', fetchProjs)
+  return props
+}
+
+// 生成项目基础配置修改 的props
+export const useUpdateProjBaseProps = (proj: Proj, fetchProjs: () => Promise<void>): CRUDModalProps => {
+
+  const props: CRUDModalProps = getProps('update', fetchProjs, proj)
+  return props
+}
+
