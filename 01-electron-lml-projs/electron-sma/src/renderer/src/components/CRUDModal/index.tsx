@@ -10,13 +10,15 @@ import { useMapToFormInitialValues } from './hooks/useMapToFormInitialValues'
  * eg.
  * username:
  */
-type ItemKeyType = 'string' | 'number' | 'boolean' | 'text'
+type ItemKeyType = 'string' | 'number' | 'boolean' | 'text' | 'unchangeable'
 interface CRUDModalItemFields {
   [key: string] : {
     label: string,
     placeholder?: string,
     type: ItemKeyType,
     required: boolean,
+    hidden?: boolean,
+    disabled?: boolean,
     data?: unknown  // 更新modal需要此信息进行填充
   }
 }
@@ -75,19 +77,19 @@ const genForm = ( props: CRUDModalProps): ReactNode => {
           label={value.label}
           name={key}
           rules={[{required: value.required}]}
-          hidden={ key==='id' ? true : false  }
+          hidden={ value.hidden  }
          >
           {
-            value.type === 'string' && <Input key={key + ':' + value.data} placeholder={value.placeholder} />
+            value.type === 'string' && <Input key={key + ':' + value.data} disabled={ value.disabled } placeholder={value.placeholder} />
           }
           {
-            value.type === 'text' && <TextArea key={key + ':' + value.data} placeholder={value.placeholder} />
+            value.type === 'text' && <TextArea key={key + ':' + value.data} disabled={ value.disabled } placeholder={value.placeholder} />
           }
           {
-            value.type === 'number' && <InputNumber key={key + ':' + value.data} placeholder={value.placeholder} />
+            value.type === 'number' && <InputNumber key={key + ':' + value.data} disabled={ value.disabled } placeholder={value.placeholder} />
           }
           {
-            (value.type !== 'string' && value.type !== 'text' && value.type !== 'number') && <Input key={key + ':' + value.data} placeholder={value.placeholder} />
+            (value.type !== 'string' && value.type !== 'text' && value.type !== 'number') && <Input key={key + ':' + value.data} disabled={ value.disabled } placeholder={value.placeholder} />
           }
          </Form.Item>
         })

@@ -15,7 +15,7 @@ export interface ProjSlice {
 
   projMods: ProjMod[],
   selectedProjMod: ProjMod | undefined,
-  selectProjMod: (projMod:ProjMod) => Promise<void>,
+  selectProjMod: (projModId: number) => Promise<void>,
   fetchProjMods: (projId: number) => Promise<void>,
 }
 
@@ -95,8 +95,13 @@ export const createProjSlice: StateCreator<ProjSlice> = (set, get) => ({
     }
   },
 
-  selectProjMod: async(projMod:ProjMod) => {
-    set({selectedProjMod: projMod})
+  selectProjMod: async(projModId: number) => {
+
+    // 基于projID获取Proj
+    const { projMods } = get()
+    const filteredProjMod = (projMods as ProjMod[]).filter((projMod: ProjMod) => projMod.id === projModId);
+
+    set({selectedProjMod: filteredProjMod[0]})
   },
 
   fetchProjMods: async(projId: number) => {

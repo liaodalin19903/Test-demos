@@ -38,7 +38,8 @@ const getProps = (type: CRUDModalProps['type'], fetchProjs: () => Promise<void>,
         label: '项目ID',
         type: 'number',
         data: proj?.id,
-        required: false
+        required: false,
+        hidden: true
       },
       'projName': {
         label: '项目名称',

@@ -118,33 +118,34 @@ export const mainProjModByProjId = publicProcedure.input(z.object({
 export const projModsByProjId = publicProcedure.input(z.object({
   projId: z.number()
 })).query(async ({input: {projId}}) => {
+
+  console.log('main:', projId)
+
   const projMods = await dataBase.getRepository(ProjMod)
   .createQueryBuilder('projMod')
-  .where("isDeleted = :isDeleted", { isDeleted: false })
+  // https://jingyan.baidu.com/article/e5c39bf583fa8f39d76033b0.html
+  .where("projMod.isDeleted = :isDeleted", { isDeleted: false })
   .andWhere("projId = :projId", { projId: projId })
+  .leftJoinAndMapOne('projMod.proj', 'projMod.proj', 'proj')
   .getMany()
+
   return projMods
 })
 
-// TODO:这里我只会拆分projMod和projId，不知如何只使用一个z.object验证
 export const projModCreate = publicProcedure.input(
   z.object({
-    projMod: z.object(
-      {
-        modName: z.string(),
-        desc: z.string().optional(),
-        isMain: z.boolean().optional(),
-      },
-    ),
-    projId: z.number()
+    modName: z.string(),
+    desc: z.string().optional(),
+    isMain: z.boolean().optional(),
+    proj: z.object({})
   })
-).mutation(async({ input: {projMod: {modName, desc, isMain}, projId} }) => {
+).mutation(async({ input: {modName, desc, isMain, proj} }) => {
 
   const insertResult = await dataBase.createQueryBuilder().insert().into(ProjMod).values({
     modName: modName,
     desc: desc,
     isMain: isMain,
-    proj: {id: projId} as Proj
+    proj: proj
   }).execute()
 
   // 返回创建好的proj实例
@@ -176,7 +177,6 @@ export const projModDelete = publicProcedure.input(
   })
 ).mutation( async ({ input: { id } }) => {
 
-  // 删除Proj
   const updateResult: UpdateResult = await dataBase.createQueryBuilder().update(ProjMod).set({
     isDeleted: true
   }).where('id = :id', {id: id}).execute()

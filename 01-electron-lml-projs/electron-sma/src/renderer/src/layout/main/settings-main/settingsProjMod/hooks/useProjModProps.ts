@@ -2,7 +2,7 @@
 // import { Proj } from '@shared/db-entities/ProjMod';
 
 import type { CRUDModalProps } from '@renderer/components/CRUDModal'
-import { ProjMod } from '@shared/db-entities/Proj'
+import { Proj, ProjMod } from '@shared/db-entities/Proj'
 
 import { addProjMod, deleteProjMod, updateProjMod } from '@renderer/common/apis/proj'
 
@@ -20,13 +20,11 @@ const getProps = (type: CRUDModalProps['type'], fetchProjMods: (projId: number) 
     console.log('接受到回调：', formData as ProjMod)
     if(type === 'create') {
       console.log('点击创建')
-      await addProjMod(
-        (formData as ProjMod),
-        (formData as ProjMod).proj.id!
-      )
+      await addProjMod(formData as ProjMod)
       await fetchProjMods((formData as ProjMod).proj.id!)
     } else if(type === 'update') {
       await updateProjMod(formData as ProjMod)
+      console.log('(formData as ProjMod).proj: ', (formData as ProjMod).proj)
       await fetchProjMods((formData as ProjMod).proj.id!)
     } else if(type === 'delete') {
       const projModId: number = (formData as ProjMod).id!
@@ -35,22 +33,33 @@ const getProps = (type: CRUDModalProps['type'], fetchProjMods: (projId: number) 
     }
   }
 
+  console.log('projMod?: ', projMod)
+
   let props: CRUDModalProps = {
     type: type,
-    name: '项目',
+    name: '项目模块',
     onConfirm: onConfirm,
     fields: {
       'id': {
         label: '项目模块ID',
         type: 'number',
         data: projMod?.id,
-        required: false
+        required: false,
+        hidden: true
       },
-      'projName': {
+      'proj': {
+        label: '所属项目',
+        type: 'unchangeable',
+        data: projMod?.proj.projName,
+        required: true,
+        disabled: true
+      },
+      'modName': {
         label: '项目模块名称',
         type: 'string',
         placeholder: 'eg. 项目模块名称',
         required: true,
+        disabled: (projMod?.isMain === true) ? true : false,
         data: projMod?.modName
       },
       'desc': {
@@ -65,20 +74,21 @@ const getProps = (type: CRUDModalProps['type'], fetchProjMods: (projId: number) 
   return props
 }
 
-// 生成项目Mod 配置创建 的props
-export const useCreateProjModProps = (fetchProjMods: (projId: number) => Promise<void>): CRUDModalProps => {
+// 新增
+export const useCreateProjModProps = (fetchProjMods: (projId: number) => Promise<void>, selectedProj: Proj): CRUDModalProps => {
 
-  const props: CRUDModalProps = getProps('create', fetchProjMods)
+  const props: CRUDModalProps = getProps('create', fetchProjMods, selectedProj)
+  console.log(props)
   return props
 }
 
-// 生成项目Mod 配置修改 的props
+// 修改
 export const useUpdateProjModProps = (projMod: ProjMod, fetchProjMods: (projId: number) => Promise<void>): CRUDModalProps => {
 
   const props: CRUDModalProps = getProps('update', fetchProjMods, projMod)
   return props
 }
-
+// 删除
 export const useDeleteProjModProps = (projMod: ProjMod, fetchProjMods: (projId: number) => Promise<void>): CRUDModalProps => {
 
   const props: CRUDModalProps = getProps('delete', fetchProjMods, projMod)
