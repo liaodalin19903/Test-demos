@@ -126,7 +126,7 @@ export const projModsByProjId = publicProcedure.input(z.object({
   // https://jingyan.baidu.com/article/e5c39bf583fa8f39d76033b0.html
   .where("projMod.isDeleted = :isDeleted", { isDeleted: false })
   .andWhere("projId = :projId", { projId: projId })
-  .leftJoinAndMapOne('projMod.proj', 'projMod.proj', 'proj')
+  .leftJoinAndSelect('projMod.proj', 'proj')
   .getMany()
 
   return projMods

@@ -1,13 +1,24 @@
-export type WindowStatus = 'Minimized' | 'Maximized ' | 'Hidden' | 'VisibleNotMaximized' | undefined
+export type PrefixKey<P extends string = string, K extends string = string> = `${P}${Capitalize<K>}`;
 
+export type Prefix<P extends string, T extends object> = {
+  [K in keyof T as K extends string ? PrefixKey<P, K> : never]?: T[K];
+};
 
-const sta1: WindowStatus = 'Hidden'
-
-const compare = (sta: WindowStatus) => {
-  if(sta === 'Hidden') {
-    return false 
-  }
-  return true 
+interface AAA {
+  name: string,
+  age: number
 }
 
-compare(sta1)
+interface BBB extends Prefix<'bbb', AAA> {
+  eat: () => void 
+}
+
+
+export const b: BBB = {
+  bbbName: 'name',
+  eat: function (): void {
+    throw new Error("Function not implemented.");
+  }
+}
+
+console.log(b)

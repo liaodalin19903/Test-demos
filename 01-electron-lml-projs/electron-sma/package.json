@@ -24,6 +24,9 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.5.2",
+    "@antv/g6": "^5.0.39",
+    "@antv/g6-extension-react": "^0.1.14",
+    "@antv/graphin": "^3.0.4",
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^3.0.0",
     "@electron/rebuild": "^3.7.1",
