@@ -1,5 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne } from 'typeorm'
 
+import { G6Node, G6Edge, G6Combo } from './SMAG6Element'
+
 @Entity()
 export class Proj {
   @PrimaryGeneratedColumn()
@@ -68,14 +70,26 @@ export class ProjMod {
   })
   isDeleted: boolean | undefined
 
+  // g6Nodes  g6Edges  g6Combos
+  @OneToMany(type => G6Node, g6Node => g6Node.projMod)
+  g6Nodes?: G6Node[]
+
+  @OneToMany(type => G6Edge, g6Edge => g6Edge.projMod)
+  g6Edges?: G6Edge[]
+
+  @OneToMany(type => G6Combo, g6Combo => g6Combo.projMod)
+  g6Combos?: G6Combo[]
+  // END
+
   @CreateDateColumn()
   createDate?: Date
 
   @UpdateDateColumn()
   updateDate?: Date
 
-  constructor(modName: string = '', isMain: boolean = false, desc: string | undefined = '', proj:Proj) {
+  constructor(modName: string = '',  isMain: boolean = false, desc: string | undefined = '', proj:Proj) {
     this.modName = modName
+
     this.isMain = isMain
     this.desc = desc
     this.proj = proj
