@@ -3,11 +3,9 @@ import { join } from 'path'
 import { DataSource } from 'typeorm'
 import { app } from 'electron'
 
-import { ConfigEntities } from '@shared/db-entities/Config'
-import { Proj, ProjMod } from './../../shared/db-entities/Proj'
-
-const entities = [Proj, ProjMod, ConfigEntities]
-
+const entities = [
+  "@shared/db-entities/**/*.ts"
+]
 
 // 直接是生产环境：如果不存在还需要创建 （better-sqlite3会自动创建，所以不必此代码）
 const dataBasePath = join(app.getPath('appData'), app.getName(), `./Data/electron_app_db.sqlite`)
@@ -26,7 +24,7 @@ const dataBase = new DataSource({
   nativeBinding: join(
     __dirname,
     '../../node_modules/better-sqlite3/build/Release/better_sqlite3.node'
-  ) // 运行时候，此文件是out/index.js，因此是对于此的相对路径到node_modules/better-sqlite3/build/Release/better_sqlite3.node
+  ), // 运行时候，此文件是out/index.js，因此是对于此的相对路径到node_modules/better-sqlite3/build/Release/better_sqlite3.node
 })
 
 export default dataBase
