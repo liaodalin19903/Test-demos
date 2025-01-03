@@ -11,4 +11,6 @@ if __name__ == "__main__":
     widget = MyWidget()
     widget.show()
 
+    print(1123)
+
     sys.exit(app.exec())
