@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne, OneToOne, JoinColumn, Unique } from 'typeorm'
 import { G6Combo } from './SMAG6Element';
+import { SMANodeCodeFunc } from './SMANodes';
 
 
 // 1对1到Combo
@@ -30,7 +31,10 @@ export class SMAComboModulesGraphModule {
   desc?: string
 
   @ManyToOne(type => SMAComboModulesGraphModule)
-  parent?: SMAComboModulesGraphModule
+  parent?: SMAComboModulesGraphModule | null
+
+  @OneToMany(type => SMANodeCodeFunc, codeFunc => codeFunc.module)
+  codeFuncs: SMANodeCodeFunc[] | undefined
 
   @Column({
     default: false,
@@ -45,10 +49,11 @@ export class SMAComboModulesGraphModule {
   @UpdateDateColumn()
   updateDate?: Date
 
-  constructor(moduleName: string = '', desc: string | undefined = '', parent: SMAComboModulesGraphModule| undefined) {
+  constructor(moduleName: string = '', desc: string | undefined = '', path: string | undefined, parent: SMAComboModulesGraphModule| null) {
 
     this.moduleName = moduleName
     this.desc = desc
+    this.path = path
     this.parent = parent
   }
 }

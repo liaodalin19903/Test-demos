@@ -1,3 +1,4 @@
+import { SMAComboModulesGraphModule } from './SMACombos';
 // 标准化： https://www.yuque.com/markemotionact/txyhqy/rqmetn4m86mbi9zr?inner=ub9923b59
 
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne, JoinColumn, OneToOne, Unique } from 'typeorm'
@@ -22,7 +23,6 @@ export class SMANodeCodeFunc {
 
   @Column({
     type: 'varchar',
-    //unique: true, // 通过添加unique选项设置为唯一约束
   })
   codefuncName: string
 
@@ -33,6 +33,10 @@ export class SMANodeCodeFunc {
 
   @ManyToOne(type => SMANodeCodeFunc)
   parent?: SMANodeCodeFunc
+
+  // 所属模块
+  @ManyToOne(type => SMAComboModulesGraphModule, module => module.codeFuncs)
+  module: SMAComboModulesGraphModule | undefined
 
   @Column({
     default: false,
@@ -47,11 +51,12 @@ export class SMANodeCodeFunc {
   @UpdateDateColumn()
   updateDate?: Date
 
-  constructor(codefuncName: string = '', desc: string | undefined = '', parent: SMANodeCodeFunc| undefined) {
+  constructor(codefuncName: string = '', desc: string | undefined = '', parent: SMANodeCodeFunc| undefined, module: SMAComboModulesGraphModule | undefined) {
 
     this.codefuncName = codefuncName
     this.desc = desc
     this.parent = parent
+    this.module = module
   }
 }
 

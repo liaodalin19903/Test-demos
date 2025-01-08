@@ -47,7 +47,6 @@ function App() {
             ports: [],
             size: 10,
           },
-
         },
         // edge: {
         //   type: 'polyline',

@@ -19,22 +19,7 @@ const headerStyle: React.CSSProperties = {
   WebkitAppRegion: 'drag'
 };
 
-const contentStyle: React.CSSProperties = {
-  textAlign: 'center',
-  color: '#fff',
-  //backgroundColor: '#0958d9'
-};
 
-const siderStyle: React.CSSProperties = {
-  textAlign: 'center',
-  width: '20px',
-  flex: '0 0 20px',
-  minWidth: '20px',
-  maxWidth: '20px',
-  lineHeight: '38px',
-  color: '#fff',
-  backgroundColor: '#1677ff',
-};
 
 const footerStyle: React.CSSProperties = {
   textAlign: 'center',
@@ -62,11 +47,6 @@ function LayoutApp(): JSX.Element {
           <Header style={headerStyle}><HeaderContent/></Header>
           <Layout>
             <SiderContent />
-
-            {/* <Sider width="100vw" style={siderStyle}>
-              <SiderContent />
-            </Sider> */}
-            {/* <Content style={contentStyle}><MainContent/></Content> */}
           </Layout>
           <Footer style={footerStyle}><FooterContent/></Footer>
         </Layout>
