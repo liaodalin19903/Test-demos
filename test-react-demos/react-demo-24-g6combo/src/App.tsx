@@ -1,7 +1,10 @@
 import { GraphData } from '@antv/g6';
+import { register, ExtensionCategory } from '@antv/g6';
 import './App.css'
 import { Graphin } from '@antv/graphin';
 import { useEffect, useState } from 'react';
+
+import { SMAModulesCombo } from './g6CustomElements/smaModulesCombo';
 
 function App() {
 
@@ -9,6 +12,10 @@ function App() {
 
   useEffect( () => {
 
+    // 注册Combo
+    register(ExtensionCategory.COMBO, 'sma-modules-combo', SMAModulesCombo);
+
+    // 获取数据 
     async function fetchData() {
       // You can await here
       const data:GraphData = await handle()
@@ -34,28 +41,50 @@ function App() {
       options={{
         data,
         node: {
+          type: 'rect',
           style: {
-            labelText: (d) => d.id,
+            labelText: (d) => d.id + 'asdabdsf123',
             ports: [],
+            size: 10,
           },
-          palette: {
-            type: 'group',
-            field: 'cluster',
-          },
+
         },
+        // edge: {
+        //   type: 'polyline',
+        //     style: {
+        //       lineWidth: 3,
+        //       radius: 6,
+        //       stroke: '#8b9baf',
+        //       endArrow: true,
+        //       labelText: '支撑',
+        //       labelFill: '#8b9baf',
+        //       labelFontWeight: 600,
+        //       labelBackground: true,
+        //       labelBackgroundFill: '#f8f8f8',
+        //       labelBackgroundOpacity: 1,
+        //       labelBackgroundLineWidth: 3,
+        //       labelBackgroundStroke: '#8b9baf',
+        //       labelPadding: [1, 10],
+        //       labelBackgroundRadius: 4,
+        //       router: {
+        //         type: 'orth',
+        //       },
+        //     },
+        // },
         combo: {
-          type: 'rect'
+          // type: 'sma-modules-combo',
+
+          type: 'rect',
+          style: {
+            fill: 'darkgreen',
+            labelText: 'data'
+          }
         },
         layout: {
-          //type: 'force',
           type: 'combo-combined',
-          // collide: {
-          //   strength: 0.5,
-          // },
-          
-          comboPadding: 10,
+          comboPadding: 20,
         },
-        behaviors: ['zoom-canvas', 'drag-canvas', 'drag-element', 'click-select'],
+        behaviors: ['zoom-canvas', 'drag-canvas', 'drag-element', 'click-select', 'collapse-expand'],
         padding: 10,
         autoFit: "view"
       }}

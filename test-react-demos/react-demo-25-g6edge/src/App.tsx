@@ -3,14 +3,14 @@ import './App.css'
 import { Graphin } from '@antv/graphin';
 
 import { register, ExtensionCategory } from '@antv/g6';
-import { CommonSupportEdge } from './g6/CommonSupportEdge';
+import { SMACommonSupportEdge } from './g6/SMACommonSupportEdge';
 import { useEffect } from 'react';
 
 function App() {
 
   useEffect(() => {
     // 注册edge
-    register(ExtensionCategory.EDGE, 'common-support-edge', CommonSupportEdge);
+    register(ExtensionCategory.EDGE, 'sma-common-support-edge', SMACommonSupportEdge);
   }, [])
 
   const data: GraphData = {
@@ -483,15 +483,10 @@ function App() {
           },
         },
         edge: {
-          type: 'common-support-edge',
+          type: 'sma-common-support-edge',
           style: {
-            // labelBackground: true,
-            // labelBackgroundFill: '#f8f8f8',
-            // labelBackgroundOpacity: 1,
-            // labelBackgroundLineWidth: 3,
-            // labelBackgroundStroke: '#8b9baf',
-            // labelPadding: [1, 10],
-            // labelBackgroundRadius: 4,
+            labelBackground: true,
+            stroke: '#7EC0FC'
           }
         },
         layout: {

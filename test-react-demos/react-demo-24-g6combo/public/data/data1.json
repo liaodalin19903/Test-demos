@@ -337,10 +337,7 @@
       "source": "22",
       "target": "31"
     },
-    {
-      "source": "22",
-      "target": "32"
-    },
+    
     {
       "source": "22",
       "target": "33"
@@ -367,10 +364,6 @@
     },
     {
       "source": "23",
-      "target": "33"
-    },
-    {
-      "source": "32",
       "target": "33"
     }
   ],

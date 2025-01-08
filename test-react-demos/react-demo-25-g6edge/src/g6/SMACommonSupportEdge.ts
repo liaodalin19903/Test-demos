@@ -20,7 +20,7 @@ import { PolylineRouter } from '@antv/g6/lib/types';
  *
  * <en/> Line style properties
  */
-export interface CommonSupportEdgeStyleProps extends BaseEdgeStyleProps {
+export interface SMACommonSupportEdgeStyleProps extends BaseEdgeStyleProps {
     /**
    * <zh/> 圆角半径
    *
@@ -43,12 +43,12 @@ export interface CommonSupportEdgeStyleProps extends BaseEdgeStyleProps {
     router?: PolylineRouter;
 }
 
-type ParsedLineStyleProps = Required<CommonSupportEdgeStyleProps>;
+type ParsedLineStyleProps = Required<SMACommonSupportEdgeStyleProps>;
 
 
 
-export class CommonSupportEdge extends BaseEdge {
-  static defaultStyleProps: Partial<CommonSupportEdgeStyleProps> = {
+export class SMACommonSupportEdge extends BaseEdge {
+  static defaultStyleProps: Partial<SMACommonSupportEdgeStyleProps> = {
 
     controlPoints: [],
 
@@ -58,8 +58,7 @@ export class CommonSupportEdge extends BaseEdge {
     labelText: '支撑',
     labelFill: '#8b9baf',
     labelFontWeight: 600,
-    //#region labelBackground以及相关的属性不生效
-    labelBackground: true,
+    //#region  
     labelBackgroundFill: '#f8f8f8',
     labelBackgroundOpacity: 1,
     labelBackgroundLineWidth: 3,
@@ -72,8 +71,8 @@ export class CommonSupportEdge extends BaseEdge {
     },
   };
 
-  constructor(options: DisplayObjectConfig<CommonSupportEdgeStyleProps>) {
-    super(mergeOptions({ style: CommonSupportEdge.defaultStyleProps }, options));
+  constructor(options: DisplayObjectConfig<SMACommonSupportEdgeStyleProps>) {
+    super(mergeOptions({ style: SMACommonSupportEdge.defaultStyleProps }, options))
   }
 
   protected getControlPoints(attributes: ParsedLineStyleProps): Point[] {
