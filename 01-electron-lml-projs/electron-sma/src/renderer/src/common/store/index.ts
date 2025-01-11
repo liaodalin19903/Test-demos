@@ -6,11 +6,12 @@ import { createBearSlice } from './bears.store'
 import { createProjSlice } from './proj.store'
 
 import { ProjSlice } from './proj.store'
+import { createSMAModuleSlice, SMAModuleSlice } from './sma.store'
 
-type StoreState = ProjSlice // & OtherSlice
+type StoreState = ProjSlice  & SMAModuleSlice
 
 export const useStore = create<StoreState>()((...params) => ({
-  ...createProjSlice(...params)
-  // ...createOtherSlice(...params)
+  ...createProjSlice(...params),
+  ...createSMAModuleSlice(...params)
 }))
 

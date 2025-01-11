@@ -1,4 +1,4 @@
-import { SMAComboModulesGraphModule } from './SMACombos';
+import { SMAComboModule } from './SMACombos';
 // 标准化： https://www.yuque.com/markemotionact/txyhqy/rqmetn4m86mbi9zr?inner=ub9923b59
 
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne, JoinColumn, OneToOne, Unique } from 'typeorm'
@@ -6,7 +6,7 @@ import { G6Node } from './SMAG6Element';
 
 // 1对1到Node
 @Entity()
-@Unique(['path', 'moduleName'])
+@Unique(['path', 'codefuncName'])
 export class SMANodeCodeFunc {
   @PrimaryGeneratedColumn()
   id: number | undefined
@@ -31,12 +31,12 @@ export class SMANodeCodeFunc {
   })
   desc?: string
 
-  @ManyToOne(type => SMANodeCodeFunc)
-  parent?: SMANodeCodeFunc
+  // @ManyToOne(type => SMANodeCodeFunc)
+  // parent?: SMANodeCodeFunc | undefined
 
   // 所属模块
-  @ManyToOne(type => SMAComboModulesGraphModule, module => module.codeFuncs)
-  module: SMAComboModulesGraphModule | undefined
+  @ManyToOne(type => SMAComboModule, module => module.codeFuncs)
+  module: SMAComboModule | null
 
   @Column({
     default: false,
@@ -51,11 +51,11 @@ export class SMANodeCodeFunc {
   @UpdateDateColumn()
   updateDate?: Date
 
-  constructor(codefuncName: string = '', desc: string | undefined = '', parent: SMANodeCodeFunc| undefined, module: SMAComboModulesGraphModule | undefined) {
+  constructor(path: string, codefuncName: string = '', desc: string | undefined = '', module: SMAComboModule | null) {
 
+    this.path = path
     this.codefuncName = codefuncName
     this.desc = desc
-    this.parent = parent
     this.module = module
   }
 }

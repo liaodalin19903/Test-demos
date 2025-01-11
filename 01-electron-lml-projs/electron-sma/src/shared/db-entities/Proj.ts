@@ -25,6 +25,12 @@ export class Proj {
     default: false,
     type: 'boolean'
   })
+  selected: boolean | undefined
+
+  @Column({
+    default: false,
+    type: 'boolean'
+  })
   isDeleted: boolean | undefined
 
   // 创建数据条的时间，无需手动维护插入单条数据的时间
@@ -63,6 +69,12 @@ export class ProjMod {
 
   @ManyToOne(type => Proj, proj => proj.projmods)
   proj: Proj
+
+  @Column({
+    default: false,
+    type: 'boolean'
+  })
+  selected: boolean | undefined
 
   @Column({
     default: false,

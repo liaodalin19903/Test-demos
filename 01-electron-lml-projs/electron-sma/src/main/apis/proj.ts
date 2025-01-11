@@ -98,6 +98,25 @@ export const projDelete = publicProcedure.input(
   return updateResult
 })
 
+/**
+ * 设置选中
+ * 如果选中一个proj，循环遍历其他所有的proj设置false
+ */
+export const projSetSelectApi = publicProcedure.input(z.object({
+  projId: z.number()
+})).mutation( async({ input: {projId} }) => {
+
+  await dataBase.createQueryBuilder().update(Proj).set({
+    selected: false
+  }).execute()
+
+  const updateResult = await dataBase.createQueryBuilder().update(Proj).set({
+    selected: true
+  }).where('id = :id', {id: projId}).execute()
+
+  return updateResult
+} )
+
 
 // ====【ProjMod】
 
@@ -184,4 +203,22 @@ export const projModDelete = publicProcedure.input(
   return updateResult
 })
 
+/**
+ * 设置选中
+ * 如果选中一个proj，循环遍历其他所有的proj设置false
+ */
+export const projModSetSelectApi = publicProcedure.input(z.object({
+  projModId: z.number()
+})).mutation( async({ input: {projModId} }) => {
+
+  await dataBase.createQueryBuilder().update(ProjMod).set({
+    selected: false
+  }).execute()
+
+  const updateResult = await dataBase.createQueryBuilder().update(ProjMod).set({
+    selected: true
+  }).where('id = :id', {id: projModId}).execute()
+
+  return updateResult
+} )
 

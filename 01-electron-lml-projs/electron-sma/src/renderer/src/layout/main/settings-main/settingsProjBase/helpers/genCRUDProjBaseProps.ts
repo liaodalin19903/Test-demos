@@ -1,5 +1,4 @@
 // 配置参考定义的entity
-// import { Proj } from '@shared/db-entities/Proj';
 
 import type { CRUDModalProps } from '@renderer/components/CRUDModal'
 import { Proj } from '@shared/db-entities/Proj'

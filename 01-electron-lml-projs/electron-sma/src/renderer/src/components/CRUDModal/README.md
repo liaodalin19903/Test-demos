@@ -12,12 +12,34 @@ https://ant-design.antgroup.com/components/form-cn
 
 #### 使用
 
-import CRUDModal from '../CRUDModal'
-import { CRUDModalProps } from '../CRUDModal'
+1、引入：
+import CRUDModal from '@renderer/components/CRUDModal'
 
-组装数据为：props
+2、配置props
+Test-demos/01-electron-lml-projs/electron-sma/src/renderer/src/layout/main/settings-main/settingsProjBase/hooks/useProjBaseProps.ts
 
-调用：
-CRUDModal(props)
+
+
+3、启动
+参见：/Users/markleo/Desktop/Test/Test-demos/01-electron-lml-projs/electron-sma/src/renderer/src/layout/main/work-main/modules/modules-settings/index.tsx
+
+import CRUDModal from '@renderer/components/CRUDModal'
+
+const [modal, contextHolder] = Modal.useModal();
+const { projs, selectedProj, fetchProjs, selectProj, fetchProjMods } = useStore()
+
+
+
+
+  const handleCreate = () => {
+    return <a onClick={()=>{
+
+      const props = useCreateProjBaseProps(fetchProjs)
+      CRUDModal(modal, props)
+
+    }}>创建</a>
+  }
+
+
 
 

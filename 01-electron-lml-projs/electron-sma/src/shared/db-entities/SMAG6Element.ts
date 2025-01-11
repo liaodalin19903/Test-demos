@@ -31,11 +31,11 @@ export class G6Node {
   }
 }
 
-export enum EdgeType {
-  NodeToNode = 'NodeToNode',
-  NodeToCombo = 'NodeToCombo',
-  ComboToCombo = 'ComboToCombo',
-  ComboToNode = 'ComboToNode'
+export const EdgeConnectType = {
+  NodeToNode: 'NodeToNode',
+  NodeToCombo: 'NodeToCombo',
+  ComboToCombo: 'ComboToCombo',
+  ComboToNode: 'ComboToNode'
 }
 
 @Entity()
@@ -48,12 +48,11 @@ export class G6Edge {
   projMod: ProjMod
 
   @Column({
-    type: 'enum',
-    enum: EdgeType,
-    nullable: false,
-    default: EdgeType.NodeToNode
+    type: 'varchar',
+    nullable: true,
+    default: EdgeConnectType.NodeToNode
   })
-  type!: EdgeType
+  connecttype: string | undefined
 
   // Node:起点
   @OneToOne(type => G6Node)

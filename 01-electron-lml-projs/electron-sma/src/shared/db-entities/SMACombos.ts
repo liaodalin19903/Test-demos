@@ -6,7 +6,7 @@ import { SMANodeCodeFunc } from './SMANodes';
 // 1对1到Combo
 @Entity()
 @Unique(['path', 'moduleName'])
-export class SMAComboModulesGraphModule {
+export class SMAComboModule {
   @PrimaryGeneratedColumn()
   id: number | undefined
 
@@ -18,7 +18,7 @@ export class SMAComboModulesGraphModule {
   @Column({
     type: 'varchar',
   })
-  path: string | undefined
+  path: string
 
   @Column({
     type: 'varchar',
@@ -30,8 +30,8 @@ export class SMAComboModulesGraphModule {
   })
   desc?: string
 
-  @ManyToOne(type => SMAComboModulesGraphModule)
-  parent?: SMAComboModulesGraphModule | null
+  @ManyToOne(type => SMAComboModule)
+  parent?: SMAComboModule | null
 
   @OneToMany(type => SMANodeCodeFunc, codeFunc => codeFunc.module)
   codeFuncs: SMANodeCodeFunc[] | undefined
@@ -49,7 +49,7 @@ export class SMAComboModulesGraphModule {
   @UpdateDateColumn()
   updateDate?: Date
 
-  constructor(moduleName: string = '', desc: string | undefined = '', path: string | undefined, parent: SMAComboModulesGraphModule| null) {
+  constructor(moduleName: string = '', path: string, desc: string | undefined = '',  parent: SMAComboModule| null) {
 
     this.moduleName = moduleName
     this.desc = desc

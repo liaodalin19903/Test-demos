@@ -1,9 +1,10 @@
 
-interface AAA {
-  router: false | 'AAA' 
-}
 
-const a:AAA = {
-  router: false 
-}
+import * as A from './test04'
 
+const entities = [
+  A
+]
+
+
+export { entities }

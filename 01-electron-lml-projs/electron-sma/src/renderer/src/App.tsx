@@ -6,10 +6,11 @@ import { useEffect } from 'react'
 function App(): JSX.Element {
 
   //#region 初始化操作
-  const { fetchProjs } = useStore()
-  
+  const { fetchProjs, fetchModulesWithCodefuncs, selectedProjMod } = useStore()
+
   const initStore = async () => {
     await fetchProjs()
+    await fetchModulesWithCodefuncs(selectedProjMod!.id!)
   }
 
   useEffect(() => {
@@ -19,6 +20,9 @@ function App(): JSX.Element {
       await initStore()
     }
     asyncFunc()
+
+
+
   }, [])
 
   //#endregion

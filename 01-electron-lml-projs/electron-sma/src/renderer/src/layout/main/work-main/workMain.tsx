@@ -1,12 +1,27 @@
 import styles from './workMain.module.css'
 
-import { Tabs } from 'antd'
+import { Modal, Tabs } from 'antd'
 
 import { tabItems } from './workMain.tabs'
+import { useEffect } from 'react'
+import { useStore } from '@renderer/common/store';
 
 
 
 function WorkMain(): JSX.Element {
+
+  const [modal, contextHolder] = Modal.useModal();
+  const { selectedProjMod } = useStore()
+
+  useEffect(() => {
+    if(!selectedProjMod) {
+      modal.error({
+        title: '注意',
+        content: '请进入设置配置好：项目模块'
+      })
+    }
+  }, [])
+
   return (
     <div >
       <Tabs
@@ -16,7 +31,7 @@ function WorkMain(): JSX.Element {
         items = {tabItems}
       >
       </Tabs>
-
+    {contextHolder}
     </div>
   )
 }

@@ -5,7 +5,7 @@ import React from 'react'
 import { Card, Modal, Space, Popover,  Radio, RadioChangeEvent, Button, Row, Col } from 'antd'
 import CRUDModal from '@renderer/components/CRUDModal'
 
-import { useCreateProjBaseProps, useUpdateProjBaseProps, useDeleteProjBaseProps } from './hooks/useProjBaseProps'
+import { useCreateProjBaseProps, useUpdateProjBaseProps, useDeleteProjBaseProps } from './helpers/genCRUDProjBaseProps'
 import { useStore } from '@renderer/common/store'
 import { Proj } from '@shared/db-entities/Proj'
 

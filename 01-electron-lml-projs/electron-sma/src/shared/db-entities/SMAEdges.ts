@@ -2,6 +2,7 @@
 
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne, JoinColumn, OneToOne, Unique } from 'typeorm'
 import { G6Edge } from './SMAG6Element';
+import { SMANodeCodeFunc } from './SMANodes';
 
 // 1对1到Edge
 @Entity()

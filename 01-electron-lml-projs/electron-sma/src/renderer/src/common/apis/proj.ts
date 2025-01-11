@@ -3,6 +3,7 @@ import { Proj, ProjMod } from '@shared/db-entities/Proj'
 
 export const getProjs = async() => {
 
+  console.log('getProjs： 123')
   return await trpc.projs.query()
 }
 
@@ -14,8 +15,12 @@ export const updateProj = async (proj: Proj) => {
   return await trpc.projUpdate.mutate(proj)
 }
 
-export const deleteProj =async (projID: number) => {
+export const deleteProj = async (projID: number) => {
   return await trpc.projDelete.mutate({id: projID})
+}
+
+export const projSetSelectApi = async (projId: number) => {
+  return await trpc.projSetSelectApi.mutate({projId: projId})
 }
 
 // ===== ProjMod
@@ -38,4 +43,8 @@ export const updateProjMod = async (projMod: ProjMod) => {
 
 export const deleteProjMod =async (projModID: number) => {
   return await trpc.projModDelete.mutate({id: projModID})
+}
+
+export const projModSetSelectApi = async (projModId: number) => {
+  return await trpc.projModSetSelectApi.mutate({projModId: projModId})
 }
