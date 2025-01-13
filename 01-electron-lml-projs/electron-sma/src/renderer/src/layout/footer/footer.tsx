@@ -3,14 +3,17 @@ import { Button, Flex } from "antd"
 import FooterTagButton from "./FooterButton"
 
 import { showWindow, hideWindow, getAllWinNameStatus } from "@renderer/common/apis"
-import { useState } from "react"
-import { WINDOW_NAMES } from "@shared/constants";
+import { useEffect, useState } from "react"
+import { WINDOW_NAMES, EVENTS } from "@shared/constants";
+import { useStore } from "@renderer/common/store";
 
 type TShowWinStates = {
   [key: string]: boolean
 }
 
 function Footer(): JSX.Element {
+
+  const { selectedProj } = useStore()
 
   const [showWinStates, setShowWinStates] = useState<TShowWinStates>({
     'WIN1': false,
@@ -37,16 +40,30 @@ function Footer(): JSX.Element {
     // 步骤2：更新TagButton状态
     setTimeout(async ()=>{
       updateShowState()
-    }, 200);
+    }, 100);
 
   };
 
   const handleClickTest = async () => {
     console.log('点击了测试按钮')
-    // const winsWithStatus = await getWindowsWithStatus()
 
-    // console.log(winsWithStatus)
+    console.log('selectedProj: ', selectedProj)
+    
   }
+
+  useEffect(() => {
+    console.log('订阅事件')
+
+    window.api.onEvent(EVENTS.EVENT_FOOTERBUTTON_UPDATE_STATUS, (event, data) => {
+      console.log('收到事件', event, data)
+
+      // 更新状态
+      setTimeout(async ()=>{
+        updateShowState()
+      }, 100);
+    })
+
+  }, [])
 
   return (
     <div >

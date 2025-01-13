@@ -3,6 +3,7 @@ import { Proj, ProjMod } from '@shared/db-entities/Proj'
 
 export const getProjs = async() => {
 
+  console.log('getProjs： 123')
   return await trpc.projs.query()
 }
 
@@ -14,6 +15,36 @@ export const updateProj = async (proj: Proj) => {
   return await trpc.projUpdate.mutate(proj)
 }
 
-export const deleteProj =async (id: number) => {
-  return await trpc.projDelete.mutate({id})
+export const deleteProj = async (projID: number) => {
+  return await trpc.projDelete.mutate({id: projID})
+}
+
+export const projSetSelectApi = async (projId: number) => {
+  return await trpc.projSetSelectApi.mutate({projId: projId})
+}
+
+// ===== ProjMod
+
+export const getMainProjMod = async(projId: number) => {
+  return await trpc.mainProjModByProjId.query({projId})
+}
+
+export const getProjMods = async(projId: number) => {
+  return await trpc.projModsByProjId.query({projId})
+}
+
+export const addProjMod = async(projMod: ProjMod) => {
+  return await trpc.projModCreate.mutate(projMod)
+}
+
+export const updateProjMod = async (projMod: ProjMod) => {
+  return await trpc.projModUpdate.mutate(projMod)
+}
+
+export const deleteProjMod =async (projModID: number) => {
+  return await trpc.projModDelete.mutate({id: projModID})
+}
+
+export const projModSetSelectApi = async (projModId: number) => {
+  return await trpc.projModSetSelectApi.mutate({projModId: projModId})
 }

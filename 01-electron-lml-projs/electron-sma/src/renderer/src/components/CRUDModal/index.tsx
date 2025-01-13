@@ -1,22 +1,24 @@
 
-import { Modal, Form, Input, InputNumber } from 'antd'
+import { Form, Input, InputNumber, Button, Flex } from 'antd'
 import { HookAPI } from 'antd/es/modal/useModal';
 const { TextArea } = Input;
 import React, { ReactNode } from 'react'
 
-
+import { useMapToFormInitialValues } from './hooks/useMapToFormInitialValues'
 
 /**
  * eg.
  * username:
  */
-type ItemKeyType = 'string' | 'number' | 'boolean' | 'text'
+type ItemKeyType = 'string' | 'number' | 'boolean' | 'text' | 'unchangeable'
 interface CRUDModalItemFields {
   [key: string] : {
     label: string,
     placeholder?: string,
     type: ItemKeyType,
     required: boolean,
+    hidden?: boolean,
+    disabled?: boolean,
     data?: unknown  // 更新modal需要此信息进行填充
   }
 }
@@ -25,9 +27,7 @@ export interface CRUDModalProps {
   type: 'create' | 'update' | 'delete',
   name: string,  // eg. 项目
   fields: CRUDModalItemFields,  // 字段
-  onConfirm: (data: unknown) => void,
-  onCancel?: () => void,
-
+  onConfirm: (data: unknown) => void
 }
 
 const getTitle: Function = (props: CRUDModalProps) => {
@@ -41,39 +41,69 @@ const getTitle: Function = (props: CRUDModalProps) => {
   return ''
 }
 
+
+type TModalInstance = { destroy: () => void; }
+
+let modalInstance: TModalInstance | undefined= undefined
+
 // 生产表单
-const genForm = (props: CRUDModalProps): ReactNode => {
+const genForm = ( props: CRUDModalProps): ReactNode => {
+
+  const  initialValues = useMapToFormInitialValues(props)
+
+  const onFinish = (formData) => {
+    props.onConfirm(formData)
+    if(modalInstance){
+      modalInstance.destroy()
+    }
+  }
+
+  const onFinishFailed = (formData) => {
+    console.log(formData)
+  }
 
   return (
     <Form
       layout='vertical'
-      labelCol={{ span: 4 }}
       wrapperCol={{ span: 20 }}
+      initialValues={initialValues}
+      onFinish={onFinish}
+      onFinishFailed={onFinishFailed}
     >
       { Object.entries(props.fields).map(([key, value]) => {
-        
+
          return <Form.Item
           key={key}
           label={value.label}
           name={key}
           rules={[{required: value.required}]}
+          hidden={ value.hidden  }
          >
           {
-            value.type === 'string' && <Input key={key + ':' + value.data} value={value.data as string} placeholder={value.placeholder} />
+            value.type === 'string' && <Input key={key + ':' + value.data} disabled={ value.disabled } placeholder={value.placeholder} />
           }
           {
-            value.type === 'text' && <TextArea key={key + ':' + value.data} value={value.data as string} placeholder={value.placeholder} />
+            value.type === 'text' && <TextArea key={key + ':' + value.data} disabled={ value.disabled } placeholder={value.placeholder} />
           }
           {
-            value.type === 'number' && <InputNumber key={key + ':' + value.data} value={value.data as number} placeholder={value.placeholder} />
+            value.type === 'number' && <InputNumber key={key + ':' + value.data} disabled={ value.disabled } placeholder={value.placeholder} />
           }
           {
-            (value.type !== 'string' && value.type !== 'text' && value.type !== 'number') && <Input key={key + ':' + value.data} value={value.data as string} placeholder={value.placeholder} />
+            (value.type !== 'string' && value.type !== 'text' && value.type !== 'number') && <Input key={key + ':' + value.data} disabled={ value.disabled } placeholder={value.placeholder} />
           }
          </Form.Item>
         })
       }
-    </Form>
+
+        <Flex align={'flex-start'} justify="end">
+          <Form.Item label={null}>
+            <Button type="primary" htmlType="submit">
+              提交
+            </Button>
+          </Form.Item>
+        </Flex>
+
+      </Form>
   )
 }
 
@@ -84,24 +114,22 @@ const CRUDModal = (modal: HookAPI, props: CRUDModalProps) => {
   const content = genForm(props)
 
   const ModalpProps = {
-    width: 640,
+    width: 680,
     title: title,
     content: content,
     closable: true,
     okText: '确定',
     cancelText: '取消',
-    onOk: props.onConfirm,
-    onCancel: props.onCancel
+    footer: null,
   }
-
 
   if(props.type === 'create') {
     //console.log('进入CRUDModal', modal, ModalpProps)
-    modal.info(ModalpProps)
+    modalInstance = modal.info(ModalpProps)
   } else if(props.type === 'update') {
-    modal.warning(ModalpProps)
+    modalInstance = modal.warning(ModalpProps)
   } else if (props.type === 'delete') {
-    modal.error(ModalpProps)
+    modalInstance = modal.error(ModalpProps)
   }
 }
 

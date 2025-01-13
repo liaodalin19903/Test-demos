@@ -4,7 +4,9 @@ import { win1Options, win2Options, win3Options } from  './winOpt'
 
 import { join } from "path"
 import { is } from "@electron-toolkit/utils"
-import { WINDOW_NAMES } from "@shared/constants"
+import { EVENTS, WINDOW_NAMES } from "@shared/constants"
+
+import { mainToRenderer } from '@main/apis/apisForMain'
 
 export interface IMappedWindow {
   [key: string] : BrowserWindow
@@ -13,7 +15,8 @@ export interface IMappedWindow {
 export class WindowsManager {
 
   private static instance: WindowsManager
-  mapWidows: IMappedWindow
+  mainWindow: BrowserWindow | undefined
+  mapWidows: IMappedWindow  // 除了mainWindow之外的window
 
   constructor() {
     this.mapWidows = {}
@@ -32,11 +35,11 @@ export class WindowsManager {
   //#region 初始化窗口
 
   // 初始化Window：创建所有的为了要展示的窗口
-  initWindows() {
+  initWindows(mainWindow: BrowserWindow) {
+
+    this.mainWindow = mainWindow
 
     // Create the browser window.
-
-
     const win1 = this.createWindow(WINDOW_NAMES.WIN1, win1Options)
 
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
@@ -47,8 +50,13 @@ export class WindowsManager {
 
     win1.on('close', function(e) {
       if (!global.isAppQuitting) {
-          e.preventDefault();
-          win1.hide()
+        e.preventDefault();
+        win1.hide()
+
+        // 发起事件：更新按钮状态
+        mainToRenderer(mainWindow, EVENTS.EVENT_FOOTERBUTTON_UPDATE_STATUS, {
+          fromWindow: WINDOW_NAMES.WIN1
+        })
       }
     })
 
@@ -64,8 +72,12 @@ export class WindowsManager {
 
     win2.on('close', function(e) {
       if (!global.isAppQuitting) {
-          e.preventDefault();
-          win2.hide()
+        e.preventDefault();
+        win2.hide()
+        // 发起事件：更新按钮状态
+        mainToRenderer(mainWindow, EVENTS.EVENT_FOOTERBUTTON_UPDATE_STATUS, {
+          fromWindow: WINDOW_NAMES.WIN2
+        })
       }
     })
 
@@ -81,11 +93,14 @@ export class WindowsManager {
 
     win3.on('close', function(e) {
       if (!global.isAppQuitting) {
-          e.preventDefault();
-          win3.hide()
+        e.preventDefault();
+        win3.hide()
+        // 发起事件：更新按钮状态
+        mainToRenderer(mainWindow, EVENTS.EVENT_FOOTERBUTTON_UPDATE_STATUS, {
+          fromWindow: WINDOW_NAMES.WIN3
+        })
       }
     })
-
 
   }
 

@@ -1,17 +1,22 @@
 import { Flex } from 'antd'
 import styles from './index.module.css'
 
+import ModulesMain from './modules-main'
+import ModulesSettings from './modules-settings'
+
 function Modules(): JSX.Element {
 
   return (
     <div className={styles.container}>
       <Flex vertical={false}>
         <div className={styles.main}>
-          modules
+          <ModulesMain/>
 
 
         </div>
-        <div className={styles.sidebar}>右侧栏</div>
+        <div className={styles.sidebar}>
+          <ModulesSettings />
+        </div>
       </Flex>
     </div>
   )

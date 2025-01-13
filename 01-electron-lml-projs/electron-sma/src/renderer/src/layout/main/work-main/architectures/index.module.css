@@ -1,0 +1,14 @@
+.container {
+}
+
+.main {
+  background-color: #eee;
+  width: 100%;
+  height: calc(100vh - 56px);
+}
+
+.sidebar {
+  background-color: #ddd;
+  width: 400px;
+  height: calc(100vh - 56px);
+}

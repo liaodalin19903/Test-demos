@@ -1,25 +1,36 @@
 
 import './App.css'
-import { Card, Modal, Space,  } from 'antd'
+import { Card, Flex } from 'antd'
 
 function App() {
   
-  const [modal, contextHolder] = Modal.useModal();
-
-  const config = {
-    title: 'Use Hook!',
-    content: (
-      <div>1w2e3rreqdw</div>
-    ),
-  };
 
   return (
     <>
-     <button onClick={ () => {
-      console.log('点击按钮')
-      modal.info(config)
-     }}>按钮</button>
-     {contextHolder}
+     <div style={{ overflow: 'auto', padding: '10px', backgroundColor: 'lightgreen', width: '200px', height: '300px' }} >
+      <Flex gap="small" vertical >
+        <Card size="small" title="Card title" bordered={false} >
+          <p>Card content</p>
+          <p>Card content</p>
+          <p>Card content</p>
+        </Card>
+        <Card size="small" title="Card title" bordered={false} >
+          <p>Card content</p>
+          <p>Card content</p>
+          <p>Card content</p>
+        </Card>
+        <Card size="small" title="Card title" bordered={false} >
+          <p>Card content</p>
+          <p>Card content</p>
+          <p>Card content</p>
+        </Card>
+        <Card size="small" title="Card title" bordered={false} >
+          <p>Card content</p>
+          <p>Card content</p>
+          <p>Card content</p>
+        </Card>
+      </Flex>
+    </div>
     </>
   )
 }
