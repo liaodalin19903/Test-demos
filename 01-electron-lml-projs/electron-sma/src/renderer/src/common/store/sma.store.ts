@@ -24,8 +24,6 @@ export interface SMAModuleSlice {
 
 }
 
-//type SliceType = StateCreator<ProjSlice, [], [], ProjSlice>
-
 export const createSMAModuleSlice: StateCreator<SMAModuleSlice> = (set, get) => ({
 
   // 1.状态
@@ -125,3 +123,5 @@ export const createSMAModuleSlice: StateCreator<SMAModuleSlice> = (set, get) => 
   },
 
 })
+
+

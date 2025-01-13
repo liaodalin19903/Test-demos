@@ -5,7 +5,7 @@ import FooterTagButton from "./FooterButton"
 import { showWindow, hideWindow, getAllWinNameStatus } from "@renderer/common/apis"
 import { useEffect, useState } from "react"
 import { WINDOW_NAMES, EVENTS } from "@shared/constants";
-import { useStore } from "@renderer/common/store";
+import { useProjStore } from "@renderer/common/store";
 
 type TShowWinStates = {
   [key: string]: boolean
@@ -13,7 +13,7 @@ type TShowWinStates = {
 
 function Footer(): JSX.Element {
 
-  const { selectedProj } = useStore()
+  const { selectedProj } = useProjStore()
 
   const [showWinStates, setShowWinStates] = useState<TShowWinStates>({
     'WIN1': false,
@@ -48,7 +48,7 @@ function Footer(): JSX.Element {
     console.log('点击了测试按钮')
 
     console.log('selectedProj: ', selectedProj)
-    
+
   }
 
   useEffect(() => {

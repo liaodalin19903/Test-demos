@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Card, Modal, Space, Popover,  Radio, RadioChangeEvent, Button, Row, Col } from 'antd'
 import CRUDModal from '@renderer/components/CRUDModal'
-import { useStore } from '@renderer/common/store';
+import { useProjStore } from '@renderer/common/store';
 
 import { useCreateProjModProps, useUpdateProjModProps, useDeleteProjModProps } from './hooks/useProjModProps'
 
@@ -12,7 +12,7 @@ import { ProjMod } from '@shared/db-entities/Proj'
 export default function SettingsProjMod() {
 
   const [modal, contextHolder] = Modal.useModal();
-  const { projMods, selectedProj, selectedProjMod, selectProjMod, fetchProjMods } = useStore()
+  const { projMods, selectedProj, selectedProjMod, selectProjMod, fetchProjMods } = useProjStore()
 
   const createProps = useCreateProjModProps(fetchProjMods)
 

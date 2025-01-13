@@ -1,6 +1,6 @@
 
 import { GraphData } from '@antv/g6'
-import { useStore } from '@renderer/common/store'
+import {useSMAStore, useProjStore } from '@renderer/common/store'
 import { useEffect } from 'react'
 
 import { SMAComboModule } from '@shared/db-entities/SMACombos';
@@ -50,7 +50,9 @@ export const useGetGraphData = (): SMAComboModule[] => {
     // fetchModules,
     modulesWithCodefuncs,
     fetchModulesWithCodefuncs,
-    selectedProjMod } = useStore()
+    } = useSMAStore()
+
+  const { selectedProjMod }  = useProjStore()
 
   useEffect(() => {
 

@@ -1,4 +1,4 @@
-import { useStore } from '@renderer/common/store'
+import { useProjStore, useSMAStore } from '@renderer/common/store'
 
 import Layout from '@renderer/layout'
 import { useEffect } from 'react'
@@ -6,7 +6,8 @@ import { useEffect } from 'react'
 function App(): JSX.Element {
 
   //#region 初始化操作
-  const { fetchProjs, fetchModulesWithCodefuncs, selectedProjMod } = useStore()
+  const { fetchProjs, selectedProjMod} = useProjStore()
+  const { fetchModulesWithCodefuncs } = useSMAStore()
 
   const initStore = async () => {
     await fetchProjs()

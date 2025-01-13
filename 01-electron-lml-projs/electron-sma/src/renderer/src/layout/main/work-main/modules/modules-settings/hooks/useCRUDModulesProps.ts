@@ -12,7 +12,7 @@ import { smaModuleCreateApi, smaModuleDeleteApi, smaModuleUpdateApi } from '@ren
 
 
 import { useEffect } from 'react'
-import { useStore } from '@renderer/common/store'
+import { useSMAStore, useProjStore } from '@renderer/common/store'
 
 
 
@@ -22,7 +22,8 @@ import { useStore } from '@renderer/common/store'
  */
 const useGetProps = (type: CRUDModalProps['type'], module?: SMAComboModule): CRUDModalProps => {
 
-  const { addModule, selectedProjMod, fetchModules } = useStore()
+  const { addModule, fetchModules } = useSMAStore()
+  const { selectedProjMod } = useProjStore()
 
   const onConfirm = async (formData: unknown) => {
     console.log('接受到回调：', formData as SMAComboModule)
@@ -97,7 +98,7 @@ export const useCreateModuleProps = (): CRUDModalProps => {
 // 生成项目基础配置修改 的props
 export const useUpdateModuleProps = (): CRUDModalProps => {
 
-  const { selectedSMAModulesGraphModule } = useStore()
+  const { selectedSMAModulesGraphModule } = useSMAStore()
 
   const props: CRUDModalProps = useGetProps('update', selectedSMAModulesGraphModule)
   return props

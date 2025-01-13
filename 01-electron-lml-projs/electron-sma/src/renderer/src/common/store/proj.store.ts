@@ -1,3 +1,4 @@
+import { subscribeWithSelector } from 'zustand/middleware';
 import { Proj, ProjMod } from "@shared/db-entities/Proj";
 import { StateCreator } from "zustand";
 import {
@@ -6,8 +7,6 @@ import {
   updateProj,
   deleteProj,
   getProjMods,
-  projSetSelectApi,
-  projModSetSelectApi
 } from  "@renderer/common/apis"
 
 export interface ProjSlice {
@@ -29,115 +28,113 @@ export interface ProjSlice {
 
 //type SliceType = StateCreator<ProjSlice, [], [], ProjSlice>
 
-export const createProjSlice: StateCreator<ProjSlice> = (set, get) => {
+export const createProjSlice: StateCreator<ProjSlice> = (set, get) => (
+{
+  // 1.状态
+  projs: [] as Proj[],
+  selectedProj: undefined as Proj | undefined,
 
-  return {
+  projMods: [] as ProjMod[],
+  selectedProjMod: undefined as ProjMod | undefined,
 
-    // 1.状态
-    projs: [] as Proj[],
-    selectedProj: undefined as Proj | undefined,
+  // 2.操作状态的actions
 
-    projMods: [] as ProjMod[],
-    selectedProjMod: undefined as ProjMod | undefined,
+  isLoading: false, // 是否正在操作
+  fetchProjs: async() => {
+    try {
+      set({ isLoading: true })
+      const projs: Proj[] = await getProjs()
 
-    // 2.操作状态的actions
+      set({ projs: projs })
+    } catch (error) {
 
-    isLoading: false, // 是否正在操作
-    fetchProjs: async() => {
-      try {
-        set({ isLoading: true })
-        const projs: Proj[] = await getProjs()
+    } finally {
+      set({ isLoading: false })
+    }
+  },
 
-        set({ projs: projs })
-      } catch (error) {
+  // 选择项目
+  selectProj: (projID: number) => {
 
-      } finally {
-        set({ isLoading: false })
-      }
-    },
-
-    // 选择项目
-    selectProj: (projID: number) => {
-
-      // 基于projID获取Proj
-      const { projs } = get()
-      const filteredProj = (projs as Proj[]).filter((proj: Proj) => proj.id === projID);
+    // 基于projID获取Proj
+    const { projs } = get()
+    const filteredProj = (projs as Proj[]).filter((proj: Proj) => proj.id === projID);
 
 
 
-      set({ selectedProj: filteredProj[0] })
-    },
+    set({ selectedProj: filteredProj[0] })
+  },
 
-    addProj: async(proj:Proj) => {
-      try {
-        set({ isLoading: true })
-        await addProj(proj)
-      } catch (error) {
+  addProj: async(proj:Proj) => {
+    try {
+      set({ isLoading: true })
+      await addProj(proj)
+    } catch (error) {
 
-      } finally {
-        const { fetchProjs } = get(); // 通过get获取当前状态里的fetchProjs方法
-        fetchProjs()
-        set({ isLoading: false })
-      }
-    },
+    } finally {
+      const { fetchProjs } = get(); // 通过get获取当前状态里的fetchProjs方法
+      fetchProjs()
+      set({ isLoading: false })
+    }
+  },
 
-    updateProj: async(proj: Proj) => {
-      try {
-        set({ isLoading: true })
-        await updateProj(proj)
-      } catch (error) {
+  updateProj: async(proj: Proj) => {
+    try {
+      set({ isLoading: true })
+      await updateProj(proj)
+    } catch (error) {
 
-      } finally {
-        const { fetchProjs } = get(); // 通过get获取当前状态里的fetchProjs方法
-        fetchProjs()
-        set({ isLoading: false })
-      }
-    },
+    } finally {
+      const { fetchProjs } = get(); // 通过get获取当前状态里的fetchProjs方法
+      fetchProjs()
+      set({ isLoading: false })
+    }
+  },
 
-    deleteProj: async(id: number) => {
-      try {
-        set({ isLoading: true })
-        await deleteProj(id)
-      } catch (error) {
+  deleteProj: async(id: number) => {
+    try {
+      set({ isLoading: true })
+      await deleteProj(id)
+    } catch (error) {
 
-      } finally {
-        const { fetchProjs } = get(); // 通过get获取当前状态里的fetchProjs方法
-        fetchProjs()
-        set({ isLoading: false })
-      }
-    },
+    } finally {
+      const { fetchProjs } = get(); // 通过get获取当前状态里的fetchProjs方法
+      fetchProjs()
+      set({ isLoading: false })
+    }
+  },
 
-    selectProjMod: async(projModId: number) => {
+  selectProjMod: async(projModId: number) => {
 
-      // 基于projID获取Proj
-      const { projMods } = get()
-      const filteredProjMod = (projMods as ProjMod[]).filter((projMod: ProjMod) => projMod.id === projModId);
+    // 基于projID获取Proj
+    const { projMods } = get()
+    const filteredProjMod = (projMods as ProjMod[]).filter((projMod: ProjMod) => projMod.id === projModId);
 
-      set({selectedProjMod: filteredProjMod[0]})
-    },
+    set({selectedProjMod: filteredProjMod[0]})
+  },
 
-    fetchProjMods: async(projId: number) => {
+  fetchProjMods: async(projId: number) => {
 
-      try {
-        set({ isLoading: true })
+    try {
+      set({ isLoading: true })
 
-        const projMods: ProjMod[] = await getProjMods(projId)
-        set({ projMods: projMods })
+      const projMods: ProjMod[] = await getProjMods(projId)
+      set({ projMods: projMods })
 
-        const { selectedProjMod } = get()
-        if( !selectedProjMod ) {
+      const { selectedProjMod } = get()
+      if( !selectedProjMod ) {
 
-          const mainProjMods: ProjMod[] = projMods.filter((projMod) => projMod.isMain === true);
-          set({ selectedProjMod:  mainProjMods[0]})
-        }
-
-      } catch (error) {
-
-      } finally {
-        set({ isLoading: false })
+        const mainProjMods: ProjMod[] = projMods.filter((projMod) => projMod.isMain === true);
+        set({ selectedProjMod:  mainProjMods[0]})
       }
 
-    },
+    } catch (error) {
 
-  }
+    } finally {
+      set({ isLoading: false })
+    }
+
+  },
+
 }
+)
