@@ -10,7 +10,9 @@ function App(): JSX.Element {
 
   const initStore = async () => {
     await fetchProjs()
-    await fetchModulesWithCodefuncs(selectedProjMod!.id!)
+    if(selectedProjMod) {
+      await fetchModulesWithCodefuncs(selectedProjMod.id!)
+    }
   }
 
   useEffect(() => {

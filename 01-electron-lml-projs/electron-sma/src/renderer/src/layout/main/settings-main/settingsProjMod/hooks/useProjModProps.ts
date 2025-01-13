@@ -5,6 +5,7 @@ import type { CRUDModalProps } from '@renderer/components/CRUDModal'
 import { Proj, ProjMod } from '@shared/db-entities/Proj'
 
 import { addProjMod, deleteProjMod, updateProjMod } from '@renderer/common/apis/proj'
+import { useStore } from '@renderer/common/store'
 
 
 /**
@@ -14,13 +15,15 @@ import { addProjMod, deleteProjMod, updateProjMod } from '@renderer/common/apis/
  * @param projMod
  * @returns
  */
-const getProps = (type: CRUDModalProps['type'], fetchProjMods: (projId: number) => Promise<void>, projMod?: ProjMod): CRUDModalProps => {
+const useGetProps = (type: CRUDModalProps['type'], fetchProjMods: (projId: number) => Promise<void>, projMod?: ProjMod): CRUDModalProps => {
+
+  const { selectedProj } = useStore()
 
   const onConfirm = async (formData: unknown) => {
     console.log('接受到回调：', formData as ProjMod)
     if(type === 'create') {
       console.log('点击创建')
-      await addProjMod(formData as ProjMod)
+      await addProjMod(formData as ProjMod, selectedProj!.id!)
       await fetchProjMods((formData as ProjMod).proj.id!)
     } else if(type === 'update') {
       await updateProjMod(formData as ProjMod)
@@ -32,8 +35,6 @@ const getProps = (type: CRUDModalProps['type'], fetchProjMods: (projId: number) 
       await fetchProjMods((formData as ProjMod).proj.id!)
     }
   }
-
-  console.log('projMod?: ', projMod)
 
   let props: CRUDModalProps = {
     type: type,
@@ -50,7 +51,7 @@ const getProps = (type: CRUDModalProps['type'], fetchProjMods: (projId: number) 
       'proj': {
         label: '所属项目',
         type: 'unchangeable',
-        data: projMod?.proj.projName,
+        data: selectedProj ? selectedProj!.id : undefined,
         required: true,
         disabled: true
       },
@@ -75,9 +76,9 @@ const getProps = (type: CRUDModalProps['type'], fetchProjMods: (projId: number) 
 }
 
 // 新增
-export const useCreateProjModProps = (fetchProjMods: (projId: number) => Promise<void>, selectedProj: Proj): CRUDModalProps => {
+export const useCreateProjModProps = (fetchProjMods: (projId: number) => Promise<void>): CRUDModalProps => {
 
-  const props: CRUDModalProps = getProps('create', fetchProjMods, selectedProj)
+  const props: CRUDModalProps = useGetProps('create', fetchProjMods)
   console.log(props)
   return props
 }
@@ -85,12 +86,12 @@ export const useCreateProjModProps = (fetchProjMods: (projId: number) => Promise
 // 修改
 export const useUpdateProjModProps = (projMod: ProjMod, fetchProjMods: (projId: number) => Promise<void>): CRUDModalProps => {
 
-  const props: CRUDModalProps = getProps('update', fetchProjMods, projMod)
+  const props: CRUDModalProps = useGetProps('update', fetchProjMods, projMod)
   return props
 }
 // 删除
 export const useDeleteProjModProps = (projMod: ProjMod, fetchProjMods: (projId: number) => Promise<void>): CRUDModalProps => {
 
-  const props: CRUDModalProps = getProps('delete', fetchProjMods, projMod)
+  const props: CRUDModalProps = useGetProps('delete', fetchProjMods, projMod)
   return props
 }

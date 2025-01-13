@@ -34,7 +34,6 @@ export const projCreate = publicProcedure.input(
     desc: desc,
   }).execute()
 
-  //console.log('insertResult.raw: ', insertResult.raw)
   // 一个proj都有一个projMod
   const insertResultProjMod = await dataBase.createQueryBuilder().insert().into(ProjMod).values({
     modName: projName + ':main',
@@ -134,7 +133,7 @@ export const mainProjModByProjId = publicProcedure.input(z.object({
 })
 
 // 通过projId查询：projMods
-export const projModsByProjId = publicProcedure.input(z.object({
+export const projModsByProjIdApi = publicProcedure.input(z.object({
   projId: z.number()
 })).query(async ({input: {projId}}) => {
 
@@ -151,20 +150,33 @@ export const projModsByProjId = publicProcedure.input(z.object({
   return projMods
 })
 
-export const projModCreate = publicProcedure.input(
+export const projModCreateApi = publicProcedure.input(
   z.object({
     modName: z.string(),
     desc: z.string().optional(),
     isMain: z.boolean().optional(),
-    proj: z.object({})
+    projId: z.number()
   })
-).mutation(async({ input: {modName, desc, isMain, proj} }) => {
+).mutation(async({ input: {modName, desc, isMain, projId} }) => {
+
+  console.log('api server: ', {modName, desc, isMain, projId})
+
+  const projInstance = await dataBase.getRepository(Proj)
+  .createQueryBuilder('proj')
+  .where('id=:id', {id: projId})
+  .getOne()
+
+  // 过滤一下，如果不存在就是非主模块
+  let filteredIsMain = false
+  if (isMain === true) {
+    filteredIsMain = isMain
+  }
 
   const insertResult = await dataBase.createQueryBuilder().insert().into(ProjMod).values({
     modName: modName,
     desc: desc,
-    isMain: isMain,
-    proj: proj
+    isMain: filteredIsMain,
+    proj: projInstance!
   }).execute()
 
   // 返回创建好的proj实例

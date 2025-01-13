@@ -63,9 +63,10 @@ export class ProjMod {
   isMain: boolean
 
   @Column({
-    type: 'text'
+    type: 'text',
+    nullable: true 
   })
-  desc?: string
+  desc?: string | undefined
 
   @ManyToOne(type => Proj, proj => proj.projmods)
   proj: Proj

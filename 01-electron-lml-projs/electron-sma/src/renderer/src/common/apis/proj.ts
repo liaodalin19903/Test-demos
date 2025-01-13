@@ -30,11 +30,16 @@ export const getMainProjMod = async(projId: number) => {
 }
 
 export const getProjMods = async(projId: number) => {
-  return await trpc.projModsByProjId.query({projId})
+  return await trpc.projModsByProjIdApi.query({projId})
 }
 
-export const addProjMod = async(projMod: ProjMod) => {
-  return await trpc.projModCreate.mutate(projMod)
+export const addProjMod = async(projMod: ProjMod, projId: number) => {
+  return await trpc.projModCreateApi.mutate({
+    modName: projMod.modName,
+    desc: projMod.desc,
+    isMain: projMod.isMain,
+    projId: projId
+  })
 }
 
 export const updateProjMod = async (projMod: ProjMod) => {

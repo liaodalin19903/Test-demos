@@ -214,7 +214,6 @@ export const smaCodefunCreateApi = publicProcedure.input(
   moduleId,
   codefunc
 } }) => {
-  console.log(moduleId, codefunc)
 
   // 1.先取出module
   const module = await dataBase.getRepository(SMAComboModule).createQueryBuilder('smaComboModule')

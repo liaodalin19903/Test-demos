@@ -11,10 +11,10 @@ import { ProjMod } from '@shared/db-entities/Proj'
 
 export default function SettingsProjMod() {
 
-
-
   const [modal, contextHolder] = Modal.useModal();
   const { projMods, selectedProj, selectedProjMod, selectProjMod, fetchProjMods } = useStore()
+
+  const createProps = useCreateProjModProps(fetchProjMods)
 
   const handleCreate = () => {
     return <a onClick={()=>{
@@ -25,8 +25,8 @@ export default function SettingsProjMod() {
           content: '请先选择项目，才能创建项目模块'
         })
       } else {
-        const props = useCreateProjModProps(fetchProjMods, selectedProj)
-        CRUDModal(modal, props)
+
+        CRUDModal(modal, createProps)
       }
     }}>创建</a>
   }
