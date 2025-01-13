@@ -85,7 +85,7 @@ export const createSMAModuleSlice: StateCreator<SMAModuleSlice> = (set, get) => 
         module.parent ? module.parent.id : undefined
       )
     } catch (error) {
-
+      console.log('lml: store: ', error)
     } finally {
       const { fetchModules } = get(); // 通过get获取当前状态里的fetchProjs方法
       fetchModules(projModId)

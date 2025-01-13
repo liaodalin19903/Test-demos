@@ -28,8 +28,13 @@ const useGetProps = (type: CRUDModalProps['type'], module?: SMAComboModule): CRU
   const onConfirm = async (formData: unknown) => {
     console.log('接受到回调：', formData as SMAComboModule)
     if(type === 'create') {
-      console.log('点击创建: ', selectedProjMod)
-      await addModule(formData as SMAComboModule, selectedProjMod!.id!)
+      //console.log('点击创建: ', selectedProjMod)
+
+      try {
+        await addModule(formData as SMAComboModule, selectedProjMod!.id!)
+      } catch (error) {
+        console.log('lml：error: ', error)
+      }
       await fetchModules(selectedProjMod!.id!)
     } else if(type === 'update') {
       await smaModuleUpdateApi(formData as SMAComboModule)
