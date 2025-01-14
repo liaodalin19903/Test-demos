@@ -1,4 +1,4 @@
-import { StateCreator } from "zustand";
+import { create, StateCreator } from "zustand";
 
 export interface ASlice {
   aState: string,
@@ -12,7 +12,7 @@ export interface BSlice {
   action2: () => void 
 }
 
-export const createASlice: StateCreator<ASlice> = (set, get) => ({
+export const createASlice: StateCreator<ASlice & BSlice, [], [], ASlice> = (set, get) => ({
   aState: 'a',
   action1: () => {
 
@@ -22,7 +22,7 @@ export const createASlice: StateCreator<ASlice> = (set, get) => ({
   }
 });
 
-export const createBSlice: StateCreator<BSlice> = (set, get) => ({
+export const createBSlice: StateCreator<ASlice & BSlice, [], [], BSlice> = (set, get) => ({
   bState: 'b',
   action1: () => {
 
@@ -34,3 +34,9 @@ export const createBSlice: StateCreator<BSlice> = (set, get) => ({
     console.log(aState)
   }
 });
+
+// 创建 Zustand store
+export const useStore = create<ASlice & BSlice>((...params) => ({
+  ...createASlice(...params),
+  ...createBSlice(...params)
+}));
