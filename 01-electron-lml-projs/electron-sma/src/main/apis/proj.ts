@@ -7,7 +7,7 @@ import { Proj, ProjMod } from '@shared/db-entities/Proj';
 
 // =====
 
-export const projs = publicProcedure.query(async () => {
+export const projsApi = publicProcedure.query(async () => {
 
   const projs = await dataBase.getRepository(Proj)
   .createQueryBuilder('proj')

@@ -3,7 +3,7 @@
 import type { CRUDModalProps } from '@renderer/components/CRUDModal'
 import { Proj } from '@shared/db-entities/Proj'
 
-import { addProj, deleteProj, updateProj } from '@renderer/common/apis/proj'
+import { addProjApi, deleteProjApi, updateProjApi } from '@renderer/common/apis/proj'
 
 
 /**
@@ -16,14 +16,14 @@ const getProps = (type: CRUDModalProps['type'], fetchProjs: () => Promise<void>,
     console.log('接受到回调：', formData as Proj)
     if(type === 'create') {
       console.log('点击创建')
-      await addProj(formData as Proj)
+      await addProjApi(formData as Proj)
       await fetchProjs()
     } else if(type === 'update') {
-      await updateProj(formData as Proj)
+      await updateProjApi(formData as Proj)
       await fetchProjs()
     } else if(type === 'delete') {
       const projID: number = (formData as Proj).id!
-      await deleteProj(projID)
+      await deleteProjApi(projID)
       await fetchProjs()
     }
   }

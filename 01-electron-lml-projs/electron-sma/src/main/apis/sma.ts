@@ -26,10 +26,11 @@ export const smaModulesApi = publicProcedure.input(z.object({
   console.log('main:', projModId) // SMAComboModule
 
   const modules = await dataBase.getRepository(SMAComboModule)
-  .createQueryBuilder('SMAComboModule')
-  // https://jingyan.baidu.com/article/e5c39bf583fa8f39d76033b0.html
-  .where("combo.projMod.isDeleted = :isDeleted", { isDeleted: false })
-  .andWhere("combo.projMod.id = :projModId", { projModId: projModId })
+  .createQueryBuilder('smaComboModule')
+  .innerJoin('smaComboModule.combo', 'combo')
+  .innerJoin('combo.projMod', 'projMod')
+  .where("projMod.isDeleted = :isDeleted", { isDeleted: false })
+  .andWhere("projMod.id = :projModId", { projModId: projModId })
   .leftJoinAndSelect('SMAComboModule.combo', 'combo')
   .getMany()
 
@@ -44,14 +45,57 @@ export const smaModulesWithCodefuncsApi = publicProcedure.input(z.object({
 })).query(async ({input: {projModId}}) => {
 
   const modules = await dataBase.getRepository(SMAComboModule)
-  .createQueryBuilder('SMAComboModule')
-  .where("combo.projMod.isDeleted = :isDeleted", { isDeleted: false })
-  .andWhere("combo.projMod.id = :projModId", { projModId: projModId })
-  .leftJoinAndSelect('SMAComboModule.combo', 'combo')
-  .leftJoinAndSelect('SMAComboModule.codeFuncs', 'codeFuncs')
+  .createQueryBuilder('smaComboModule')
+  .innerJoin('smaComboModule.combo', 'combo')
+  .innerJoin('combo.projMod', 'projMod')
+  .where("projMod.isDeleted = :isDeleted", { isDeleted: false })
+  .andWhere("projMod.id = :projModId", { projModId: projModId })
+  .leftJoinAndSelect('smaComboModule.codeFuncs', 'codeFuncs')
   .getMany()
 
   return modules
+})
+
+/**
+ * 查询出modules + codefuncs + edges
+ * @param projModId
+ * @returns
+ */
+export const smaModulesWithCodefuncsAndEdgesApi = publicProcedure.input(z.object({
+  projModId: z.number()
+})).query(async ({input: {projModId}}) => {
+
+  const modules = await dataBase.getRepository(SMAComboModule)
+  .createQueryBuilder('smaComboModule')
+  .innerJoin('smaComboModule.combo', 'combo')
+  .innerJoin('combo.projMod', 'projMod')
+  .where("projMod.isDeleted = :isDeleted", { isDeleted: false })
+  .andWhere("projMod.id = :projModId", { projModId: projModId })
+  .leftJoinAndSelect('smaComboModule.combo', 'comboAlias')
+  .leftJoinAndSelect('smaComboModule.codeFuncs', 'codeFuncs')
+  .leftJoinAndSelect('codeFuncs.node', 'node')
+  .leftJoinAndSelect('node.edgeSources', 'edgeSources')
+  .leftJoinAndSelect('node.edgeTargets', 'edgeTargets')
+  .getMany()
+
+  // 处理结果，将 edges 移动到 modules 下面
+  const processedModules = modules.map(module => {
+    const edges = module.codeFuncs!.flatMap(codeFunc => {
+      const edgeSources = codeFunc.node.edgeSources ?? []; // 确保是数组
+      const edgeTargets = codeFunc.node.edgeTargets ?? []; // 确保是数组
+      return [
+        ...edgeSources,
+        ...edgeTargets
+      ];
+    });
+
+    return {
+      ...module,
+      edges // 将 edges 添加到 modules 下面
+    };
+  });
+
+  return processedModules;
 })
 
 /**
@@ -90,10 +134,12 @@ export const smaModuleCreateApi = publicProcedure.input(z.object({
   }
 
   const smaModule = new SMAComboModule(
+    comboResult.raw,
     moduleName,
     path,
     desc,
-    parentModule
+    parentModule,
+
   );
 
   const insertResult = await dataBase.getRepository(SMAComboModule).createQueryBuilder('SMAComboModule')

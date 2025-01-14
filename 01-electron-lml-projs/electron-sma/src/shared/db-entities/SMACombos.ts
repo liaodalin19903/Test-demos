@@ -13,7 +13,7 @@ export class SMAComboModule {
   // 所属Combo
   @OneToOne(type => G6Combo)
   @JoinColumn()
-  combo: G6Combo | undefined;
+  combo: G6Combo;
 
   @Column({
     type: 'varchar',
@@ -49,8 +49,9 @@ export class SMAComboModule {
   @UpdateDateColumn()
   updateDate?: Date
 
-  constructor(moduleName: string = '', path: string, desc: string | undefined = '',  parent: SMAComboModule| null) {
+  constructor(combo: G6Combo, moduleName: string = '', path: string, desc: string | undefined = '',  parent: SMAComboModule| null) {
 
+    this.combo = combo 
     this.moduleName = moduleName
     this.desc = desc
     this.path = path

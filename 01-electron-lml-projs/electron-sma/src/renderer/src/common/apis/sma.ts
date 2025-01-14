@@ -16,6 +16,13 @@ export const smaModulesWithCodefuncsApi = async(
   return modules
 }
 
+export const smaModulesWithCodefuncsAndEdgesApi = async(
+  projModId: number, // 需要传入所属 ProjMod 的 ID
+) => {
+  const modules = await trpc.smaModulesWithCodefuncsAndEdgesApi.query({projModId})
+  return modules
+}
+
 export const smaModuleCreateApi = async(
   moduleName: string, path: string, projModId: number, desc?: string | undefined, parentId?: number // 如果有父模块，可以传入父模块的 ID
 ) => {

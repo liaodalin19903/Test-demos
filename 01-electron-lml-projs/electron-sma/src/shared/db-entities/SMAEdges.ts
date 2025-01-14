@@ -40,7 +40,6 @@ export class SMAEdgeCommonSupport {
   updateDate?: Date
 
   constructor(supportName: string = '', desc: string | undefined = '' ) {
-
     this.supportName = supportName
     this.desc = desc
   }
@@ -85,9 +84,8 @@ export class SMAEdgeCAIInherit {
   @UpdateDateColumn()
   updateDate?: Date
 
-  constructor(codefuncName: string = '', desc: string | undefined = '', parent: SMANodeCodeFunc| undefined) {
+  constructor(desc: string | undefined = '', parent: SMANodeCodeFunc| undefined) {
 
-    this.codefuncName = codefuncName
     this.desc = desc
     this.parent = parent
   }

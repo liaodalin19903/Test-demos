@@ -14,6 +14,12 @@ export class G6Node {
   @ManyToOne(type => ProjMod, projMod => projMod.g6Nodes)
   projMod: ProjMod
 
+  @OneToMany(type => G6Edge, edge => edge.g6NodeSource)
+  edgeSources: G6Edge[] | undefined
+
+  @OneToMany(type => G6Edge, edge => edge.g6NodeSource)
+  edgeTargets: G6Edge[] | undefined
+
   @Column({
     default: false,
     type: 'boolean'

@@ -14,7 +14,7 @@ export class SMANodeCodeFunc {
   // 所属Combo
   @OneToOne(type => G6Node)
   @JoinColumn()
-  node: G6Node | undefined;
+  node: G6Node;
 
   @Column({
     type: 'varchar',
@@ -51,8 +51,9 @@ export class SMANodeCodeFunc {
   @UpdateDateColumn()
   updateDate?: Date
 
-  constructor(path: string, codefuncName: string = '', desc: string | undefined = '', module: SMAComboModule | null) {
+  constructor( node: G6Node, path: string, codefuncName: string = '', desc: string | undefined = '', module: SMAComboModule | null) {
 
+    this.node = node
     this.path = path
     this.codefuncName = codefuncName
     this.desc = desc

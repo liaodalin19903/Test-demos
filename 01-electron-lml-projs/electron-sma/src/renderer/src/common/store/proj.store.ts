@@ -2,10 +2,10 @@ import { subscribeWithSelector } from 'zustand/middleware';
 import { Proj, ProjMod } from "@shared/db-entities/Proj";
 import { StateCreator } from "zustand";
 import {
-  getProjs,
-  addProj,
-  updateProj,
-  deleteProj,
+  projsApi,
+  addProjApi,
+  updateProjApi,
+  deleteProjApi,
   getProjMods,
 } from  "@renderer/common/apis"
 
@@ -16,9 +16,9 @@ export interface ProjSlice {
 
   selectProj: (projID: number) => void,
   fetchProjs: () => Promise<void>,
-  addProj: (proj:Proj) => Promise<void>,
-  updateProj: (proj:Proj) => Promise<void>,
-  deleteProj: (id: number) => Promise<void>,
+  addProjApi: (proj:Proj) => Promise<void>,
+  updateProjApi: (proj:Proj) => Promise<void>,
+  deleteProjApi: (id: number) => Promise<void>,
 
   projMods: ProjMod[],
   selectedProjMod: ProjMod | undefined,
@@ -43,9 +43,20 @@ export const createProjSlice: StateCreator<ProjSlice> = (set, get) => (
   fetchProjs: async() => {
     try {
       set({ isLoading: true })
-      const projs: Proj[] = await getProjs()
+      const projs: Proj[] = await projsApi()
 
       set({ projs: projs })
+
+      // 设置selectedProj和selectedProjMod
+      const tmpSelectedProjs = projs.filter((proj) => proj.selected === true)
+
+      if( tmpSelectedProjs.length > 0) {
+        set({ selectedProj: tmpSelectedProjs[0] })
+
+        const { selectedProj, fetchProjMods } = get()
+        await fetchProjMods(selectedProj!.id!)  // 这里会自动设置selected
+      }
+
     } catch (error) {
 
     } finally {
@@ -60,46 +71,44 @@ export const createProjSlice: StateCreator<ProjSlice> = (set, get) => (
     const { projs } = get()
     const filteredProj = (projs as Proj[]).filter((proj: Proj) => proj.id === projID);
 
-
-
     set({ selectedProj: filteredProj[0] })
   },
 
-  addProj: async(proj:Proj) => {
+  addProjApi: async(proj:Proj) => {
     try {
       set({ isLoading: true })
-      await addProj(proj)
+      await addProjApi(proj)
     } catch (error) {
 
     } finally {
       const { fetchProjs } = get(); // 通过get获取当前状态里的fetchProjs方法
-      fetchProjs()
+      await fetchProjs()
       set({ isLoading: false })
     }
   },
 
-  updateProj: async(proj: Proj) => {
+  updateProjApi: async(proj: Proj) => {
     try {
       set({ isLoading: true })
-      await updateProj(proj)
+      await updateProjApi(proj)
     } catch (error) {
 
     } finally {
       const { fetchProjs } = get(); // 通过get获取当前状态里的fetchProjs方法
-      fetchProjs()
+      await fetchProjs()
       set({ isLoading: false })
     }
   },
 
-  deleteProj: async(id: number) => {
+  deleteProjApi: async(id: number) => {
     try {
       set({ isLoading: true })
-      await deleteProj(id)
+      await deleteProjApi(id)
     } catch (error) {
 
     } finally {
       const { fetchProjs } = get(); // 通过get获取当前状态里的fetchProjs方法
-      fetchProjs()
+      await fetchProjs()
       set({ isLoading: false })
     }
   },

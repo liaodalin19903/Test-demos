@@ -2,7 +2,7 @@
 import { Button, Flex } from "antd"
 import FooterTagButton from "./FooterButton"
 
-import { showWindow, hideWindow, getAllWinNameStatus } from "@renderer/common/apis"
+import { showWindow, hideWindow, getAllWinNameStatus, smaModulesWithCodefuncsAndEdgesApi } from "@renderer/common/apis"
 import { useEffect, useState } from "react"
 import { WINDOW_NAMES, EVENTS } from "@shared/constants";
 import { useProjStore } from "@renderer/common/store";
@@ -13,7 +13,7 @@ type TShowWinStates = {
 
 function Footer(): JSX.Element {
 
-  const { selectedProj } = useProjStore()
+  const { selectedProjMod } = useProjStore()
 
   const [showWinStates, setShowWinStates] = useState<TShowWinStates>({
     'WIN1': false,
@@ -47,8 +47,11 @@ function Footer(): JSX.Element {
   const handleClickTest = async () => {
     console.log('点击了测试按钮')
 
-    console.log('selectedProj: ', selectedProj)
+    //console.log('selectedProj: ', selectedProj)
 
+    const res = await smaModulesWithCodefuncsAndEdgesApi(selectedProjMod!.id!)
+
+    console.log(res)
   }
 
   useEffect(() => {
