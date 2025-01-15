@@ -1,33 +1,39 @@
 import { create, StateCreator } from "zustand";
+import { subscribeWithSelector } from "zustand/middleware";
 
 export interface ASlice {
   aState: string,
-  action1: () => void,
-  action2: () => void 
+  aStateEqualsToA: () => boolean,
+  aAction1: () => void,
+  aAction2: () => void 
 }
 
 export interface BSlice {
   bState: string,
-  action1: () => void,
-  action2: () => void 
+  bAction1: () => void,
+  bAction2: () => void 
 }
 
-export const createASlice: StateCreator<ASlice & BSlice, [], [], ASlice> = (set, get) => ({
-  aState: 'a',
-  action1: () => {
-
+export const createASlice: StateCreator<ASlice & BSlice, [], [["zustand/subscribeWithSelector", never]], ASlice> = (set, get) => ({
+  aState: '0',
+  aStateEqualsToA: () => {
+    return get().aState === 'a'
   },
-  action2: () => {
+  aAction1: () => {
+    set({ aState: 'a' })
+  },
+  aAction2: () => {
     // get can obtain the variables or methods defined in this Slice
+    set({ aState: 'b' })
   }
 });
 
-export const createBSlice: StateCreator<ASlice & BSlice, [], [], BSlice> = (set, get) => ({
+export const createBSlice: StateCreator<ASlice & BSlice, [], [["zustand/subscribeWithSelector", never]], BSlice> = (set, get) => ({
   bState: 'b',
-  action1: () => {
+  bAction1: () => {
 
   },
-  action2: () => {
+  bAction2: () => {
     // get can obtain the variables or methods defined in this Slice
 
     const { aState } = get()
@@ -35,8 +41,15 @@ export const createBSlice: StateCreator<ASlice & BSlice, [], [], BSlice> = (set,
   }
 });
 
-// 创建 Zustand store
-export const useStore = create<ASlice & BSlice>((...params) => ({
+// Zustand store
+export const useStore = create<ASlice & BSlice>()(subscribeWithSelector((...params) => ({
   ...createASlice(...params),
   ...createBSlice(...params)
-}));
+})));
+
+useStore.subscribe(
+  state => state.aStateEqualsToA,
+  (aStateEqualsToA, prevAStateEqualsToA) => {
+    console.log('lml: ', aStateEqualsToA, prevAStateEqualsToA)
+  }
+)

@@ -10,7 +10,7 @@ import { createSMAModuleSlice, SMAModuleSlice } from './sma.store'
 import { subscribeWithSelector } from 'zustand/middleware'
 
 
-type StoreState = ProjSlice & SMAModuleSlice
+//type StoreState = ProjSlice & SMAModuleSlice
 
 export const useProjStore = create<ProjSlice>()(
   subscribeWithSelector(

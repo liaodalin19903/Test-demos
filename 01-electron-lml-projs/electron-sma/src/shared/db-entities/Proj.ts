@@ -50,7 +50,7 @@ export class Proj {
 @Entity()
 export class ProjMod {
   @PrimaryGeneratedColumn()
-  id: number | undefined
+  id!: number
 
   @Column({
     type: 'varchar'
@@ -64,7 +64,7 @@ export class ProjMod {
 
   @Column({
     type: 'text',
-    nullable: true 
+    nullable: true
   })
   desc?: string | undefined
 

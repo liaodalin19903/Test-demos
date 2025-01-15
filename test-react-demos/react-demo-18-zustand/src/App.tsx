@@ -1,19 +1,24 @@
+
 import './App.css'
 
-import { useCatStore } from './store/catStore' 
+import { useStore } from './store/testSliceStore' 
 
 function App() {
 
-  const { cats, addBigCats, addSmallCats } = useCatStore()
+  const { 
+    aStateEqualsToA, 
+    aAction1,  // 设置为a
+    aAction2   // 设置为b
+  } = useStore()
 
   return (
     <>
-      
-      <div>big cats: {cats.bigCats}</div>
-      <div>small cats: {cats.smallCats}</div>
+      { aStateEqualsToA() ? 'a=a' : 'a!=a' }
 
-      <button onClick={addBigCats}>增加大猫</button>
-      <button onClick={addSmallCats}>增加小猫</button>
+      <div>
+      <button onClick={aAction1}>设置为a</button>
+      <button onClick={aAction2}>设置为b</button>
+      </div>
     </>
   )
 }

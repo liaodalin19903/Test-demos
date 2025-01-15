@@ -1,7 +1,8 @@
-import * as entities from "./entities";
 
-const entitiesArray = Object.keys(entities).map(key => entities[key]);
-console.log(entitiesArray);
+
+let a: number = 1 
+
+a === 
 
 
 

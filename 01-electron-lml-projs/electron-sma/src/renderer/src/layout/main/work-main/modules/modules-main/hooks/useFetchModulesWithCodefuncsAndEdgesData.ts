@@ -42,14 +42,11 @@ graph.render();
 */
 
 // 准备图数据(modules)
-export const useGetGraphData = (): SMAComboModule[] => {
+export const useFetchModulesWithCodefuncsAndEdgesData = () => {
 
   // 步骤1：①查询出modules, ②modules 里面的代码块, ③代码块之间的edges
   const {
-    // modules,
-    // fetchModules,
-    modulesWithCodefuncs,
-    fetchModulesWithCodefuncs,
+    fetchModulesWithCodefuncsAndEdges,
     } = useSMAStore()
 
   const { selectedProjMod }  = useProjStore()
@@ -57,17 +54,13 @@ export const useGetGraphData = (): SMAComboModule[] => {
   useEffect(() => {
 
     const asyncFunc = async () => {
-
-      console.log('lml: modulesWithCodefuncs',  modulesWithCodefuncs)
-
+      selectedProjMod && await fetchModulesWithCodefuncsAndEdges(selectedProjMod.id)
     }
-
     asyncFunc()
+  }, [selectedProjMod])
 
-  }, [])
 
-  // 步骤2：组合GraphData、样式映射
-
-  return modulesWithCodefuncs
 }
+
+
 

@@ -4,19 +4,24 @@ import { StateCreator } from "zustand";
 import {
   smaModulesApi,
   smaModulesWithCodefuncsApi,
+  smaModulesWithCodefuncsAndEdgesApi,  // modules + codefuncs + edge
   smaModuleCreateApi,
   smaModuleUpdateApi,
   smaModuleDeleteApi
 } from  "@renderer/common/apis"
 
+import { SMAComboModuleWithCodefuncsAndEdge } from '@shared/@types'
+
 export interface SMAModuleSlice {
   modules: SMAComboModule[],
   modulesWithCodefuncs: SMAComboModule[],
+  modulesWithCodefuncsAndEdges: SMAComboModuleWithCodefuncsAndEdge[], // TODO: 定义类型
   selectedSMAModulesGraphModule: SMAComboModule | undefined,  // 模块主图-选中的模块
   isLoading: boolean,
 
   fetchModules: (projModId: number) => Promise<void>,
   fetchModulesWithCodefuncs: (projModId: number) => Promise<void>,
+  fetchModulesWithCodefuncsAndEdges: (projModId: number) => Promise<void>,
   selectModulesGraphModule: (projID: number) => void,  // 模块主图 - 选择模块
   addModule: (module: SMAComboModule, projModId: number) => Promise<void>,
   updateModule: (module: SMAComboModule) => Promise<void>,
@@ -29,6 +34,7 @@ export const createSMAModuleSlice: StateCreator<SMAModuleSlice> = (set, get) => 
   // 1.状态
   modules: [] as SMAComboModule[],
   modulesWithCodefuncs:  [] as SMAComboModule[],
+  modulesWithCodefuncsAndEdges: [],
   selectedSMAModulesGraphModule: undefined as SMAComboModule | undefined,
 
   // 2.操作状态的actions
@@ -55,6 +61,21 @@ export const createSMAModuleSlice: StateCreator<SMAModuleSlice> = (set, get) => 
       const modules: SMAComboModule[] = await smaModulesWithCodefuncsApi(projModId)
 
       set({ modulesWithCodefuncs: modules })
+    } catch (error) {
+
+    } finally {
+      set({ isLoading: false })
+    }
+  },
+
+  fetchModulesWithCodefuncsAndEdges: async(projModId: number) => {
+    try {
+      set({ isLoading: true })
+
+      const modulesWithCodefuncsAndEdges: SMAComboModuleWithCodefuncsAndEdge[] = await smaModulesWithCodefuncsAndEdgesApi(projModId)
+      console.log('store: modulesWithCodefuncsAndEdges: ', modulesWithCodefuncsAndEdges)
+      set({ modulesWithCodefuncsAndEdges: modulesWithCodefuncsAndEdges })
+
     } catch (error) {
 
     } finally {
