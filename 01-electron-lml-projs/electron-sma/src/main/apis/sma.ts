@@ -7,8 +7,9 @@ import { publicProcedure } from './trpcServer/procedure'
 import dataBase from '@main/db'
 import { SMAComboModule} from '@shared/db-entities/SMACombos';
 import { ProjMod } from '@shared/db-entities/Proj';
-import { G6Combo } from '@shared/db-entities/SMAG6Element';
 import { SMANodeCodeFunc } from '@shared/db-entities';
+import { SMAEdgeCommonSupport } from '@shared/db-entities/SMAEdges';
+import { Brackets } from 'typeorm';
 
 
 //#region sma-combo-module: 模块
@@ -23,15 +24,11 @@ export const smaModulesApi = publicProcedure.input(z.object({
   projModId: z.number()
 })).query(async ({input: {projModId}}) => {
 
-  console.log('main:', projModId) // SMAComboModule
-
   const modules = await dataBase.getRepository(SMAComboModule)
   .createQueryBuilder('smaComboModule')
-  .innerJoin('smaComboModule.combo', 'combo')
-  .innerJoin('combo.projMod', 'projMod')
+  .innerJoin('smaComboModule.projMod', 'projMod')
   .where("projMod.isDeleted = :isDeleted", { isDeleted: false })
   .andWhere("projMod.id = :projModId", { projModId: projModId })
-  .leftJoinAndSelect('SMAComboModule.combo', 'combo')
   .getMany()
 
   return modules
@@ -46,8 +43,7 @@ export const smaModulesWithCodefuncsApi = publicProcedure.input(z.object({
 
   const modules = await dataBase.getRepository(SMAComboModule)
   .createQueryBuilder('smaComboModule')
-  .innerJoin('smaComboModule.combo', 'combo')
-  .innerJoin('combo.projMod', 'projMod')
+  .innerJoin('smaComboModule.projMod', 'projMod')
   .where("projMod.isDeleted = :isDeleted", { isDeleted: false })
   .andWhere("projMod.id = :projModId", { projModId: projModId })
   .leftJoinAndSelect('smaComboModule.codeFuncs', 'codeFuncs')
@@ -61,41 +57,59 @@ export const smaModulesWithCodefuncsApi = publicProcedure.input(z.object({
  * @param projModId
  * @returns
  */
-export const smaModulesWithCodefuncsAndEdgesApi = publicProcedure.input(z.object({
+export const smaModulesWithCodefuncsAndCommonSupportsApi = publicProcedure.input(z.object({
   projModId: z.number()
 })).query(async ({input: {projModId}}) => {
 
+  // 1. 先查询 modules 和它们的 codefuncs
   const modules = await dataBase.getRepository(SMAComboModule)
-  .createQueryBuilder('smaComboModule')
-  .innerJoin('smaComboModule.combo', 'combo')
-  .innerJoin('combo.projMod', 'projMod')
-  .where("projMod.isDeleted = :isDeleted", { isDeleted: false })
-  .andWhere("projMod.id = :projModId", { projModId: projModId })
-  .leftJoinAndSelect('smaComboModule.combo', 'comboAlias')
-  .leftJoinAndSelect('smaComboModule.codeFuncs', 'codeFuncs')
-  .leftJoinAndSelect('codeFuncs.node', 'node')
-  .leftJoinAndSelect('node.edgeSources', 'edgeSources')
-  .leftJoinAndSelect('node.edgeTargets', 'edgeTargets')
-  .getMany()
+    .createQueryBuilder('smaComboModule')
+    .innerJoin('smaComboModule.projMod', 'projMod')
+    .where("projMod.isDeleted = :isDeleted", { isDeleted: false })
+    .andWhere("projMod.id = :projModId", { projModId: projModId })
+    .leftJoinAndSelect('smaComboModule.codeFuncs', 'codeFuncs')
+    .getMany();
 
-  // 处理结果，将 edges 移动到 modules 下面
-  const processedModules = modules.map(module => {
-    const edges = Array.from(new Set(module.codeFuncs!.flatMap(codeFunc => {
-        const edgeSources = codeFunc.node.edgeSources?? []; // 确保是数组
-        const edgeTargets = codeFunc.node.edgeTargets?? []; // 确保是数组
-        return [
-          ...edgeSources,
-          ...edgeTargets
-        ];
-    })));
+  // 2. 获取所有 codefuncs 的 IDs
+  const codefuncIds = modules
+    .flatMap(module => module.codeFuncs)
+    .map(codefunc => codefunc!.id);
+
+  // 3. 查询这些 codefuncs 之间的 common support edges
+  const codeFuncCommonSupports = await dataBase.getRepository(SMAEdgeCommonSupport)
+    .createQueryBuilder('commonSupport')
+    .where(new Brackets(qb => {
+      codefuncIds.forEach((id, index) => {
+        const condition = `commonSupport.sourceAndTarget LIKE :pattern${index}`;
+        if (index === 0) {
+          qb.where(condition, { [`pattern${index}`]: `%SMANodeCodeFunc_${id}%` });
+        } else {
+          qb.orWhere(condition, { [`pattern${index}`]: `%SMANodeCodeFunc_${id}%` });
+        }
+      });
+    }))
+    .getMany();
+
+  // console.log('api server: codefuncIds:', codefuncIds);
+  // console.log('api server: commonSupports query result:', commonSupports);
+
+  // 4. 解析 edges 数据
+  const codefuncEdges = codeFuncCommonSupports.map(support => {
+    const [source, target] = support.sourceAndTarget.split('_')
+      .filter((_, index) => index % 2 === 1) // 获取ID部分
+      .map(Number); // 转换为数字
 
     return {
-      ...module,
-        edges // 将 edges 添加到 modules 下面
+      id: support.id,
+      source,
+      target,
     };
   });
 
-  return processedModules;
+  return {
+    modules,
+    codefuncEdges
+  };
 })
 
 /**
@@ -120,10 +134,6 @@ export const smaModuleCreateApi = publicProcedure.input(z.object({
     throw new Error('ProjMod not found');
   }
 
-  // 2.创建 G6Combo 实体
-  const g6ComboInstance = new G6Combo(projMod);
-  const comboResult = await dataBase.getRepository(G6Combo).createQueryBuilder('g6Combo').insert().into(G6Combo).values(g6ComboInstance).execute()
-
   // 3.创建SMAComboModule实例
 
   let parentModule: SMAComboModule | null = null
@@ -134,12 +144,11 @@ export const smaModuleCreateApi = publicProcedure.input(z.object({
   }
 
   const smaModule = new SMAComboModule(
-    comboResult.raw,
+    projMod,
     moduleName,
     path,
     desc,
     parentModule,
-
   );
 
   const insertResult = await dataBase.getRepository(SMAComboModule).createQueryBuilder('SMAComboModule')
@@ -165,7 +174,6 @@ export const smaModuleUpdateApi = publicProcedure.input(z.object({
   }).where('proj.id = :id', {id: id}).execute()
 
   return updateResult
-
 })
 
 // 软删除
@@ -195,8 +203,6 @@ export const smaModuleDeleteApi = publicProcedure.input(
 export const smaCodefuncsApi = publicProcedure.input(z.object({
   moduleId: z.number()
 })).query(async ({input: {moduleId}}) => {
-
-  console.log('main:', moduleId)
 
   const codefuncs = await dataBase.getRepository(SMANodeCodeFunc)
   .createQueryBuilder('smaNodeCodeFunc')
@@ -232,6 +238,7 @@ export const smaCodefunsCreateApi = publicProcedure.input(
   for (let codefunc of codefuncs) {
     //console.log(codefunc);
     const codefuncInstance = new SMANodeCodeFunc(
+      module!.projMod,
       codefunc.path,
       codefunc.codefuncName,
       codefunc.desc,
@@ -268,6 +275,7 @@ export const smaCodefunCreateApi = publicProcedure.input(
 
   // 2.遍历创建codefunc
   const codefuncInstance = new SMANodeCodeFunc(
+    module!.projMod,
     codefunc.path,
     codefunc.codefuncName,
     codefunc.desc,
@@ -288,10 +296,6 @@ export const smaCodefunUpdateApi = publicProcedure.input(z.object({
   desc: z.string().optional()
 }))
 .mutation(async ({input: {id, moduleId, path, codefuncName, desc}}) => {
-
-  // const codefuncInstance = new SMANodeCodeFunc(
-
-  // )
 
   const updateResult = await dataBase.createQueryBuilder().update(SMANodeCodeFunc)
   .set({
@@ -319,7 +323,6 @@ export const smaCodefunDeleteApi = publicProcedure.input(
 
   return updateResult
 })
-
 
 //#endregion
 

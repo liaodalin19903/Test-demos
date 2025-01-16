@@ -23,7 +23,7 @@ export interface BearSlice {
 
 
 
-export const createBearSlice: StateCreator<BearSlice> = (set, get) => ({
+export const createBearSlice: StateCreator<BearSlice, [], [["zustand/subscribeWithSelector", never]], BearSlice> = (set, get) => ({
   bears: [],
   addBear: () => {
     const { bears } = get();

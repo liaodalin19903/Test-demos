@@ -19,10 +19,11 @@ export default function ModulesMain() {
 
   useEffect(() => {
     // 准备数据
-    console.log('组件: ', modulesWithCodefuncsAndEdges)
+    //console.log('组件: ', modulesWithCodefuncsAndEdges)
 
     if(modulesWithCodefuncsAndEdges) {
       const data = DataConverter.transformData('SMAComboModuleWithCodefuncsAndEdgesToModuleGraphData', modulesWithCodefuncsAndEdges)
+      console.log('转换后的data：', data)
       setData(data)
     }
 
@@ -30,7 +31,39 @@ export default function ModulesMain() {
 
 
   return (
-    <div>ModulesMain</div>
+    <>
+      <Graphin
+        id="my-graphin-demo"
+        className="my-graphin-container"
+        style={{ backgroundColor: 'white' }}
+        options={{
+          data,
+          node: {
+            style: {
+              size: 10,
+              labelText: (node) => node.data!.codefuncName as string,
+              ports: [],
+            },
+          },
+          edge: {
+            style: {
+              stroke: '#7EC0FC',
+              endArrow: true
+            }
+          },
+          combo: {
+            type: 'rect'
+          },
+          layout: {
+            type: 'combo-combined',
+            comboPadding: 2,
+          },
+          behaviors: ['zoom-canvas', 'drag-canvas', 'drag-element', 'click-select'],
+          plugins: [{ key: 'grid-line', type: 'grid-line', follow: false }],
+        }}
+      >
+      </Graphin>
+    </>
   )
 }
 

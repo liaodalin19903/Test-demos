@@ -15,10 +15,6 @@ import {
   SMAEdgeCAIInherit,
   SMAEdgeCAIImplement,
 
-  G6Node,
-  G6Edge,
-  G6Combo,
-
   SMANodeCodeFunc,
   SMANodeDataStruct,
   SMANodeRequirement,
@@ -42,10 +38,6 @@ const dataBase = new DataSource({
     SMAEdgeCommonSupport,
     SMAEdgeCAIInherit,
     SMAEdgeCAIImplement,
-
-    G6Node,
-    G6Edge,
-    G6Combo,
 
     SMANodeCodeFunc,
     SMANodeDataStruct,

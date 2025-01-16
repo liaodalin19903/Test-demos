@@ -5,7 +5,7 @@ export interface ProjSlice {
   addProj: () => void 
 }
 
-export const createProjSlice: StateCreator<ProjSlice> = (set, get) => ({
+export const createProjSlice: StateCreator<ProjSlice, [], [["zustand/subscribeWithSelector", never]], ProjSlice> = (set, get) => ({
   projs: [],
   
   addProj: () => {

@@ -4,18 +4,18 @@ import { StateCreator } from "zustand";
 import {
   smaModulesApi,
   smaModulesWithCodefuncsApi,
-  smaModulesWithCodefuncsAndEdgesApi,  // modules + codefuncs + edge
+  smaModulesWithCodefuncsAndCommonSupportsApi,  // modules + codefuncs + edge
   smaModuleCreateApi,
   smaModuleUpdateApi,
   smaModuleDeleteApi
 } from  "@renderer/common/apis"
 
-import { SMAComboModuleWithCodefuncsAndEdge } from '@shared/@types'
+import { SMAComboModuleWithCodefuncsAndEdges } from '@shared/@types'
 
 export interface SMAModuleSlice {
   modules: SMAComboModule[],
   modulesWithCodefuncs: SMAComboModule[],
-  modulesWithCodefuncsAndEdges: SMAComboModuleWithCodefuncsAndEdge[], // TODO: 定义类型
+  modulesWithCodefuncsAndEdges: SMAComboModuleWithCodefuncsAndEdges,
   selectedSMAModulesGraphModule: SMAComboModule | undefined,  // 模块主图-选中的模块
   isLoading: boolean,
 
@@ -34,7 +34,10 @@ export const createSMAModuleSlice: StateCreator<SMAModuleSlice> = (set, get) => 
   // 1.状态
   modules: [] as SMAComboModule[],
   modulesWithCodefuncs:  [] as SMAComboModule[],
-  modulesWithCodefuncsAndEdges: [],
+  modulesWithCodefuncsAndEdges: {
+    modules: [],
+    codefuncEdges: []
+  },
   selectedSMAModulesGraphModule: undefined as SMAComboModule | undefined,
 
   // 2.操作状态的actions
@@ -72,8 +75,8 @@ export const createSMAModuleSlice: StateCreator<SMAModuleSlice> = (set, get) => 
     try {
       set({ isLoading: true })
 
-      const modulesWithCodefuncsAndEdges: SMAComboModuleWithCodefuncsAndEdge[] = await smaModulesWithCodefuncsAndEdgesApi(projModId)
-      console.log('store: modulesWithCodefuncsAndEdges: ', modulesWithCodefuncsAndEdges)
+      const modulesWithCodefuncsAndEdges = await smaModulesWithCodefuncsAndCommonSupportsApi(projModId)
+      //console.log('store: modulesWithCodefuncsAndEdges: ', modulesWithCodefuncsAndEdges)
       set({ modulesWithCodefuncsAndEdges: modulesWithCodefuncsAndEdges })
 
     } catch (error) {

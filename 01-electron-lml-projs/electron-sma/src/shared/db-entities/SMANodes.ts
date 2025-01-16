@@ -2,7 +2,18 @@ import { SMAComboModule } from './SMACombos';
 // 标准化： https://www.yuque.com/markemotionact/txyhqy/rqmetn4m86mbi9zr?inner=ub9923b59
 
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne, JoinColumn, OneToOne, Unique } from 'typeorm'
-import { G6Node } from './SMAG6Element';
+import { ProjMod } from './Proj';
+
+export const SMANodeTypeMap = {
+  SMANodeCodeFunc: 'SMANodeCodeFunc',
+  SMANodeDataStruct: 'SMANodeDataStruct',
+
+  SMANodeRequirement: 'SMANodeRequirement',
+  SMANodeAPI: 'SMANodeAPI',
+
+  SMANodeCAIClass: 'SMANodeCAIClass',
+  SMANodeCAIInterface: 'SMANodeCAIInterface'
+}
 
 // 1对1到Node
 @Entity()
@@ -11,10 +22,9 @@ export class SMANodeCodeFunc {
   @PrimaryGeneratedColumn()
   id: number | undefined
 
-  // 所属Combo
-  @OneToOne(type => G6Node)
-  @JoinColumn()
-  node: G6Node;
+  // 所属ProjMod
+  @ManyToOne(type => ProjMod, projMod => projMod.smaNodeCodeFuncs)
+  projMod: ProjMod
 
   @Column({
     type: 'varchar',
@@ -27,9 +37,10 @@ export class SMANodeCodeFunc {
   codefuncName: string
 
   @Column({
-    type: 'text'
+    type: 'text',
+    nullable: true
   })
-  desc?: string
+  desc?: string | undefined
 
   // @ManyToOne(type => SMANodeCodeFunc)
   // parent?: SMANodeCodeFunc | undefined
@@ -51,9 +62,9 @@ export class SMANodeCodeFunc {
   @UpdateDateColumn()
   updateDate?: Date
 
-  constructor( node: G6Node, path: string, codefuncName: string = '', desc: string | undefined = '', module: SMAComboModule | null) {
+  constructor(projMod: ProjMod,  path: string, codefuncName: string = '', desc: string | undefined = '', module: SMAComboModule | null) {
 
-    this.node = node
+    this.projMod = projMod
     this.path = path
     this.codefuncName = codefuncName
     this.desc = desc
@@ -68,10 +79,9 @@ export class SMANodeDataStruct {
   @PrimaryGeneratedColumn()
   id: number | undefined
 
-  // 所属Combo
-  @OneToOne(type => G6Node)
-  @JoinColumn()
-  node: G6Node | undefined;
+  // 所属ProjMod
+  @ManyToOne(type => ProjMod, projMod => projMod.smaNodeDataStructs)
+  projMod: ProjMod
 
   @Column({
     type: 'varchar',
@@ -84,9 +94,10 @@ export class SMANodeDataStruct {
   dataStructName: string
 
   @Column({
-    type: 'text'
+    type: 'text',
+    nullable: true
   })
-  desc?: string
+  desc?: string | undefined
 
   @Column({
     default: false,
@@ -101,8 +112,9 @@ export class SMANodeDataStruct {
   @UpdateDateColumn()
   updateDate?: Date
 
-  constructor(dataStructName: string = '', desc: string | undefined = '') {
+  constructor(projMod: ProjMod, dataStructName: string = '', desc: string | undefined = '') {
 
+    this.projMod = projMod
     this.dataStructName = dataStructName
     this.desc = desc
   }
@@ -115,10 +127,9 @@ export class SMANodeRequirement {
   @PrimaryGeneratedColumn()
   id: number | undefined
 
-  // 所属Combo
-  @OneToOne(type => G6Node)
-  @JoinColumn()
-  node: G6Node | undefined;
+  // 所属ProjMod
+  @ManyToOne(type => ProjMod, projMod => projMod.smaNodeRequirements)
+  projMod: ProjMod
 
   @Column({
     type: 'varchar',
@@ -131,9 +142,10 @@ export class SMANodeRequirement {
   requirementName: string
 
   @Column({
-    type: 'text'
+    type: 'text',
+    nullable: true
   })
-  desc?: string
+  desc?: string | undefined
 
   @ManyToOne(type => SMANodeRequirement)
   parent?: SMANodeRequirement
@@ -151,8 +163,9 @@ export class SMANodeRequirement {
   @UpdateDateColumn()
   updateDate?: Date
 
-  constructor(requirementName: string = '', desc: string | undefined = '', parent: SMANodeRequirement| undefined) {
+  constructor(projMod: ProjMod, requirementName: string = '', desc: string | undefined = '', parent: SMANodeRequirement| undefined) {
 
+    this.projMod = projMod
     this.requirementName = requirementName
     this.desc = desc
     this.parent = parent
@@ -166,10 +179,9 @@ export class SMANodeAPI {
   @PrimaryGeneratedColumn()
   id: number | undefined
 
-  // 所属Combo
-  @OneToOne(type => G6Node)
-  @JoinColumn()
-  node: G6Node | undefined;
+  // 所属ProjMod
+  @ManyToOne(type => ProjMod, projMod => projMod.smaNodeAPIs)
+  projMod: ProjMod
 
   @Column({
     type: 'varchar',
@@ -183,9 +195,10 @@ export class SMANodeAPI {
   apiName: string
 
   @Column({
-    type: 'text'
+    type: 'text',
+    nullable: true
   })
-  desc?: string
+  desc?: string | undefined
 
   @Column({
     default: false,
@@ -200,8 +213,9 @@ export class SMANodeAPI {
   @UpdateDateColumn()
   updateDate?: Date
 
-  constructor(apiName: string = '', desc: string | undefined = '') {
+  constructor(projMod: ProjMod, apiName: string = '', desc: string | undefined = '') {
 
+    this.projMod = projMod
     this.apiName = apiName
     this.desc = desc
   }
@@ -214,10 +228,9 @@ export class SMANodeCAIClass {
   @PrimaryGeneratedColumn()
   id: number | undefined
 
-  // 所属Combo
-  @OneToOne(type => G6Node)
-  @JoinColumn()
-  node: G6Node | undefined;
+  // 所属ProjMod
+  @ManyToOne(type => ProjMod, projMod => projMod.smaNodeCAIClasses)
+  projMod: ProjMod
 
   @Column({
     type: 'varchar',
@@ -230,9 +243,10 @@ export class SMANodeCAIClass {
   className: string
 
   @Column({
-    type: 'text'
+    type: 'text',
+    nullable: true
   })
-  desc?: string
+  desc?: string | undefined
 
   @Column({
     default: false,
@@ -247,8 +261,9 @@ export class SMANodeCAIClass {
   @UpdateDateColumn()
   updateDate?: Date
 
-  constructor(className: string = '', desc: string | undefined = '') {
+  constructor(projMod: ProjMod, className: string = '', desc: string | undefined = '') {
 
+    this.projMod = projMod
     this.className = className
     this.desc = desc
   }
@@ -261,10 +276,9 @@ export class SMANodeCAIInterface {
   @PrimaryGeneratedColumn()
   id: number | undefined
 
-  // 所属Combo
-  @OneToOne(type => G6Node)
-  @JoinColumn()
-  node: G6Node | undefined;
+  // 所属ProjMod
+  @ManyToOne(type => ProjMod, projMod => projMod.smaNodeCAIInterfaces)
+  projMod: ProjMod
 
   @Column({
     type: 'varchar',
@@ -277,9 +291,10 @@ export class SMANodeCAIInterface {
   interfaceName: string
 
   @Column({
-    type: 'text'
+    type: 'text',
+    nullable: true
   })
-  desc?: string
+  desc?: string | undefined
 
   @Column({
     default: false,
@@ -294,8 +309,9 @@ export class SMANodeCAIInterface {
   @UpdateDateColumn()
   updateDate?: Date
 
-  constructor(interfaceName: string = '', desc: string | undefined = '') {
+  constructor(projMod: ProjMod, interfaceName: string = '', desc: string | undefined = '') {
 
+    this.projMod = projMod
     this.interfaceName = interfaceName
     this.desc = desc
   }

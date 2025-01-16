@@ -5,12 +5,13 @@ import { createBearSlice, BearSlice } from './bear.store';
 import { createProjSlice, ProjSlice } from './proj.store';
 import { subscribeWithSelector } from 'zustand/middleware';
 
-
+type StoreState = ProjSlice  & BearSlice
 
 // 创建 store
-// export const useBearWithSubStore = create<BearSlice>((...params) => ({
-//   ...createBearSlice(...params)
-// }))
+export const useStore = create<StoreState>()(subscribeWithSelector((...params) => ({
+  ...createBearSlice(...params),
+  ...createProjSlice(...params)
+})))
 
 export const useBearWithSubStore = create<BearSlice>()(
   subscribeWithSelector((...params) => ({

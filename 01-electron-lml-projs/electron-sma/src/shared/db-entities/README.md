@@ -27,4 +27,9 @@ export class Proj {
   desc?: string
 ```
 
+#### SMA的元素查询
+
+直接查询G6 node,edge,combo为主表, 然后再向右进行链接 其他的上级表
+
+
 

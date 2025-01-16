@@ -2,7 +2,7 @@
 import { Button, Flex } from "antd"
 import FooterTagButton from "./FooterButton"
 
-import { showWindow, hideWindow, getAllWinNameStatus, smaModulesWithCodefuncsAndEdgesApi } from "@renderer/common/apis"
+import { showWindow, hideWindow, getAllWinNameStatus, smaModulesWithCodefuncsAndCommonSupportsApi } from "@renderer/common/apis"
 import { useEffect, useState } from "react"
 import { WINDOW_NAMES, EVENTS } from "@shared/constants";
 import { useProjStore } from "@renderer/common/store";
@@ -49,7 +49,7 @@ function Footer(): JSX.Element {
 
     //console.log('selectedProj: ', selectedProj)
 
-    const res = await smaModulesWithCodefuncsAndEdgesApi(selectedProjMod!.id!)
+    const res = await smaModulesWithCodefuncsAndCommonSupportsApi(selectedProjMod!.id!)
 
     console.log(res)
   }

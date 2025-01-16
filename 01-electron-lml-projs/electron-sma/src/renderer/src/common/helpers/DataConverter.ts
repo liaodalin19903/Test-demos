@@ -17,9 +17,9 @@ type DataType3 = {
 };
 
 
-import { NodeData, GraphData } from '@antv/g6'
+import { NodeData, GraphData, EdgeData, ComboData } from '@antv/g6'
 
-import { SMAComboModuleWithCodefuncsAndEdge } from '@shared/@types'
+import { SMAComboModuleWithCodefuncsAndEdges } from '@shared/@types'
 
 // === 定义数据转换类
 
@@ -29,7 +29,7 @@ type DataTransformerMap = {
   'DataType1ToDataType2': DataTransformer<DataType1, DataType2>;
   'DataType2ToDataType3': DataTransformer<DataType2, DataType3>;
   // 后续添加更多转换关系时，相应添加类型定义
-  'SMAComboModuleWithCodefuncsAndEdgesToModuleGraphData': DataTransformer<SMAComboModuleWithCodefuncsAndEdge[], GraphData>;
+  'SMAComboModuleWithCodefuncsAndEdgesToModuleGraphData': DataTransformer<SMAComboModuleWithCodefuncsAndEdges, GraphData>;
 };
 
 const dataTransformers: DataTransformerMap = {
@@ -48,14 +48,61 @@ const dataTransformers: DataTransformerMap = {
     return d3;
   },
   // 继续添加更多类型转换函数
-  'SMAComboModuleWithCodefuncsAndEdgesToModuleGraphData': (smaComboModuleWithCodefuncsAndEdges: SMAComboModuleWithCodefuncsAndEdge[]): GraphData => {
+  'SMAComboModuleWithCodefuncsAndEdgesToModuleGraphData': (smaComboModuleWithCodefuncsAndEdges: SMAComboModuleWithCodefuncsAndEdges): GraphData => {
 
-    console.log('DC: ', smaComboModuleWithCodefuncsAndEdges)
+    //console.log('DC: ', smaComboModuleWithCodefuncsAndEdges)
 
     // 转换为GraphData
+    const graphData: GraphData = { nodes: [], edges: [], combos: [] };
+
+    // 处理 modules 为 combos
+    smaComboModuleWithCodefuncsAndEdges.modules.forEach(module => {
+      const comboData: ComboData = {
+        id: `SMAComboModule-${module.id}`,
+        data: {
+          moduleName: module.moduleName,
+          desc: module.desc,
+          path: module.path,
+          isDeleted: module.isDeleted,
+          createDate: module.createDate,
+          updateDate: module.updateDate
+        }
+      };
+      graphData.combos?.push(comboData);
 
 
-    return {}
+      // 处理 codeFuncs 为 nodes
+      module.codeFuncs?.forEach(codeFunc => {
+        const nodeData: NodeData = {
+          id: `SMANodeCodeFunc-${codeFunc.id}`,
+          combo: `SMAComboModule-${module.id}`,
+          data: {
+            path: codeFunc.path,
+            codefuncName: codeFunc.codefuncName,
+            desc: codeFunc.desc,
+            isDeleted: codeFunc.isDeleted,
+            createDate: codeFunc.createDate,
+            updateDate: codeFunc.updateDate
+          }
+        };
+        graphData.nodes?.push(nodeData);
+      });
+    });
+
+
+    // 处理 codefuncEdges 为 edges
+    smaComboModuleWithCodefuncsAndEdges.codefuncEdges.forEach(edge => {
+      const edgeData: EdgeData = {
+        id: edge.id!.toString(),
+        source: `SMANodeCodeFunc-${edge.source}`,
+        target: `SMANodeCodeFunc-${edge.target}`
+      };
+      graphData.edges?.push(edgeData);
+    });
+
+
+    return graphData;
+
   }
 
 };
