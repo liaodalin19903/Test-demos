@@ -6,7 +6,7 @@ import { createBearSlice } from './bears.store'
 import { createProjSlice } from './proj.store'
 
 import { ProjSlice } from './proj.store'
-import { createSMAModuleSlice, SMAModuleSlice } from './sma.store'
+import { createSMAModuleSlice, SMAModuleSlice } from './smaModules.store'
 import { subscribeWithSelector } from 'zustand/middleware'
 
 
@@ -20,7 +20,7 @@ export const useProjStore = create<ProjSlice>()(
   )
 )
 
-export const useSMAStore = create<SMAModuleSlice>()((...params) => ({
+export const useSMAModulesStore = create<SMAModuleSlice>()((...params) => ({
   ...createSMAModuleSlice(...params)
 }))
 

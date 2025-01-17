@@ -32,7 +32,8 @@ export class SMAEdgeCommonSupport {
   sourceAndTarget: string // eg. SMANodeCodeFunc_21_SMANodeCodeFunc_7  (表示：从SMANodeCodeFunc:21 -> SMANodeCodeFunc:7)
 
   @Column({
-    type: 'text'
+    type: 'text',
+    nullable: true
   })
   desc?: string
 
@@ -75,7 +76,8 @@ export class SMAEdgeCAIInherit {
   inheritName: string | undefined
 
   @Column({
-    type: 'text'
+    type: 'text',
+    nullable: true
   })
   desc?: string
 
@@ -119,7 +121,8 @@ export class SMAEdgeCAIImplement {
   implementName: string
 
   @Column({
-    type: 'text'
+    type: 'text',
+    nullable: true
   })
   desc?: string
 

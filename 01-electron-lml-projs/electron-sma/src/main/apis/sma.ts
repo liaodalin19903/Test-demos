@@ -68,10 +68,24 @@ export const smaModulesWithCodefuncsAndCommonSupportsApi = publicProcedure.input
     .where("projMod.isDeleted = :isDeleted", { isDeleted: false })
     .andWhere("projMod.id = :projModId", { projModId: projModId })
     .leftJoinAndSelect('smaComboModule.codeFuncs', 'codeFuncs')
+    .leftJoinAndSelect('smaComboModule.parent', 'parent')
     .getMany();
 
+  //console.log('api-server: modules: ', modules)
+
+  // 整理 modules, 将parent对象提取出为parentId
+  const transformedModules = modules.map(module => {
+    const { parent, ...rest } = module
+    const transformedModule = {
+      ...rest,
+      parentId: module.parent? module.parent.id : undefined,
+    };
+    return transformedModule;
+  });
+
+
   // 2. 获取所有 codefuncs 的 IDs
-  const codefuncIds = modules
+  const codefuncIds = transformedModules
     .flatMap(module => module.codeFuncs)
     .map(codefunc => codefunc!.id);
 
@@ -106,10 +120,14 @@ export const smaModulesWithCodefuncsAndCommonSupportsApi = publicProcedure.input
     };
   });
 
-  return {
-    modules,
+  const returnObj = {
+    modules: transformedModules,
     codefuncEdges
-  };
+  }
+
+  console.log('api-server: returnObj: ', returnObj)
+
+  return returnObj;
 })
 
 /**
@@ -148,7 +166,7 @@ export const smaModuleCreateApi = publicProcedure.input(z.object({
     moduleName,
     path,
     desc,
-    parentModule,
+    parentModule ? parentModule : undefined,
   );
 
   const insertResult = await dataBase.getRepository(SMAComboModule).createQueryBuilder('SMAComboModule')

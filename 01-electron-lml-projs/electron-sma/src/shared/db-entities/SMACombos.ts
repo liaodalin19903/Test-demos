@@ -29,12 +29,13 @@ export class SMAComboModule {
   moduleName: string
 
   @Column({
-    type: 'text'
+    type: 'text',
+    nullable: true
   })
   desc?: string
 
   @ManyToOne(type => SMAComboModule)
-  parent?: SMAComboModule | null
+  parent: SMAComboModule | undefined
 
   @OneToMany(type => SMANodeCodeFunc, codeFunc => codeFunc.module)
   codeFuncs: SMANodeCodeFunc[] | undefined
@@ -52,7 +53,7 @@ export class SMAComboModule {
   @UpdateDateColumn()
   updateDate?: Date
 
-  constructor(projMod: ProjMod, moduleName: string = '', path: string, desc: string | undefined = '',  parent: SMAComboModule| null) {
+  constructor(projMod: ProjMod, moduleName: string = '', path: string, desc: string | undefined = '',  parent: SMAComboModule| undefined) {
 
     this.projMod = projMod
     this.moduleName = moduleName
@@ -85,7 +86,8 @@ export class SMAComboFuncodeAggregation {
   aggregationName: string
 
   @Column({
-    type: 'text'
+    type: 'text',
+    nullable: true
   })
   desc?: string
 

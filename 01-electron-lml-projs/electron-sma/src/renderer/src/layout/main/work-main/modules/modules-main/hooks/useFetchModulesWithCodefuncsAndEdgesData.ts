@@ -1,6 +1,6 @@
 
 import { GraphData } from '@antv/g6'
-import {useSMAStore, useProjStore } from '@renderer/common/store'
+import {useSMAModulesStore, useProjStore } from '@renderer/common/store'
 import { useEffect } from 'react'
 
 import { SMAComboModule } from '@shared/db-entities/SMACombos';
@@ -47,7 +47,7 @@ export const useFetchModulesWithCodefuncsAndEdgesData = () => {
   // 步骤1：①查询出modules, ②modules 里面的代码块, ③代码块之间的edges
   const {
     fetchModulesWithCodefuncsAndEdges,
-    } = useSMAStore()
+    } = useSMAModulesStore()
 
   const { selectedProjMod }  = useProjStore()
 

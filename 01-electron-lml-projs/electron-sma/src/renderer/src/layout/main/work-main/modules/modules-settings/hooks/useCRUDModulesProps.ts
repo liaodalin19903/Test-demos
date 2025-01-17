@@ -12,17 +12,21 @@ import { smaModuleCreateApi, smaModuleDeleteApi, smaModuleUpdateApi } from '@ren
 
 
 import { useEffect } from 'react'
-import { useSMAStore, useProjStore } from '@renderer/common/store'
+import { useSMAModulesStore, useProjStore } from '@renderer/common/store'
 
 
 
 /**
  * 生成props
- * @param proj
+ * @param
  */
 const useGetProps = (type: CRUDModalProps['type'], module?: SMAComboModule): CRUDModalProps => {
 
-  const { addModule, fetchModules } = useSMAStore()
+  const {
+    addModule,
+    fetchModules,
+    selectedOneSMAModulesGraphCombo,
+  } = useSMAModulesStore()
   const { selectedProjMod } = useProjStore()
 
   const onConfirm = async (formData: unknown) => {
@@ -46,7 +50,9 @@ const useGetProps = (type: CRUDModalProps['type'], module?: SMAComboModule): CRU
     }
   }
 
-  //console.log('module-lml:', module)
+  console.log('module-lml:', selectedOneSMAModulesGraphCombo)
+
+
 
   let props: CRUDModalProps = {
     type: type,
@@ -63,9 +69,9 @@ const useGetProps = (type: CRUDModalProps['type'], module?: SMAComboModule): CRU
       'parentId': {
         label: '父级模块ID',
         type: 'number',
-        data: module?.moduleName,
+        data: selectedOneSMAModulesGraphCombo ? selectedOneSMAModulesGraphCombo?.id.split('-')[1] : undefined,
         required: false,
-        hidden: module?.id ? false : true
+        hidden: selectedOneSMAModulesGraphCombo ? false : true
       },
       'path': {
         label: 'sma模块路径',
@@ -103,9 +109,9 @@ export const useCreateModuleProps = (): CRUDModalProps => {
 // 生成项目基础配置修改 的props
 export const useUpdateModuleProps = (): CRUDModalProps => {
 
-  const { selectedSMAModulesGraphModule } = useSMAStore()
+  const { selectedOneSMAModulesGraphCombo } = useSMAModulesStore()
 
-  const props: CRUDModalProps = useGetProps('update', selectedSMAModulesGraphModule)
+  const props: CRUDModalProps = useGetProps('update', selectedOneSMAModulesGraphCombo)  // TODO: 将 Combo -> Module
   return props
 }
 

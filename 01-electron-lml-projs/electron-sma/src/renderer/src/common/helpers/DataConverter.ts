@@ -49,14 +49,11 @@ const dataTransformers: DataTransformerMap = {
   },
   // 继续添加更多类型转换函数
   'SMAComboModuleWithCodefuncsAndEdgesToModuleGraphData': (smaComboModuleWithCodefuncsAndEdges: SMAComboModuleWithCodefuncsAndEdges): GraphData => {
-
-    //console.log('DC: ', smaComboModuleWithCodefuncsAndEdges)
-
-    // 转换为GraphData
     const graphData: GraphData = { nodes: [], edges: [], combos: [] };
 
     // 处理 modules 为 combos
     smaComboModuleWithCodefuncsAndEdges.modules.forEach(module => {
+
       const comboData: ComboData = {
         id: `SMAComboModule-${module.id}`,
         data: {
@@ -65,11 +62,13 @@ const dataTransformers: DataTransformerMap = {
           path: module.path,
           isDeleted: module.isDeleted,
           createDate: module.createDate,
-          updateDate: module.updateDate
+          updateDate: module.updateDate,
+          // 检查是否有 parent 字段
+         //...(module.parent!== undefined && { parent: `SMAComboModule-${module.parent}` })
         }
       };
+      module.parentId ? comboData.combo = `SMAComboModule-${module.parentId}` : undefined
       graphData.combos?.push(comboData);
-
 
       // 处理 codeFuncs 为 nodes
       module.codeFuncs?.forEach(codeFunc => {
@@ -100,10 +99,11 @@ const dataTransformers: DataTransformerMap = {
       graphData.edges?.push(edgeData);
     });
 
+    //console.log('convernter: graphData: ', graphData)
 
     return graphData;
-
   }
+
 
 };
 
