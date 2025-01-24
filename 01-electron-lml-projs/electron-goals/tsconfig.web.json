@@ -1,0 +1,23 @@
+{
+  "extends": "@electron-toolkit/tsconfig/tsconfig.web.json",
+  "include": [
+    "src/main/**/*",
+    "src/renderer/src/**/*",
+    "src/shared/**/*",
+    "src/preload/**/*",
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "jsx": "react-jsx",
+    "baseUrl": ".",
+    "paths": {
+      "@main/*": ["src/main/*"],
+      "@renderer/*": ["src/renderer/src/*"],
+      "@shared/*": ["src/shared/*"],
+      "@prelaod/*": ["src/preload/*"],
+      "@types/*": ["src/shared/@types/*"]
+    },
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+  }
+}
