@@ -2,7 +2,6 @@
 import { useEffect } from 'react'
 import './App.css'
 
-import { Dexie, type EntityTable } from 'dexie';
 import { useLiveQuery } from 'dexie-react-hooks';
 
 import { db } from './common/db'
@@ -11,6 +10,11 @@ import { Friend, ContactInfo } from './entities/Friend';
 function App() {
 
   const friends = useLiveQuery(() => {
+    
+    console.log('toArray: ', db.friends.toArray())
+    console.log('toCollection: ', db.friends.toCollection())
+    console.log('toCollection.toArray: ', db.friends.toCollection().toArray())
+
     return db.friends.toArray()
   }, [])
 

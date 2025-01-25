@@ -2,7 +2,9 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
-import { M2RMsg, R2MMsg } from '@shared/@types/Msg'
+import { M2RMsg } from '@shared/@types'
+
+import { CronJob } from 'cron';
 
 function createWindow(): BrowserWindow {
   // Create the browser window.
@@ -14,11 +16,7 @@ function createWindow(): BrowserWindow {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false,
-
-      nodeIntegration: true,
-      // contextIsolation: false,
-      enableBlinkFeatures: 'BroadcastChannel' // 启用 BroadcastChannel 特性
+      sandbox: false
     }
   })
 
@@ -61,17 +59,34 @@ app.whenReady().then(() => {
 
   const mainWindow = createWindow()
 
+  /*
   setInterval(() => {
 
     const msg: M2RMsg = {
-      name: '主进程发送消息给渲染进程',
-      M2RmsgContent: new Date().toISOString()
+      name: '主进程发送到渲染进行的数据',
+      M2Rcontent: new Date().toUTCString()
     }
 
-    mainWindow.webContents.send('m-r', msg)
+    mainWindow.webContents.send('m2r', msg)
+  }, 1_000);
+  */
 
-    console.log(msg)
-  }, 2000);
+  const job = new CronJob(
+    '* * * * * *', // cronTime   '0 0 * * * *': 每个小时执行一次（整点）
+    function () {
+      console.log('You will see this message every second');
+
+      const msg: M2RMsg = {
+        name: '主进程发送到渲染进行的数据',
+        M2Rcontent: new Date().toUTCString()
+      }
+      mainWindow.webContents.send('m2r', msg)
+
+    }, // onTick
+    null, // onComplete
+    true, // start
+    'Asia/Shanghai' // timeZone，指定时区为北京时间
+  );
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

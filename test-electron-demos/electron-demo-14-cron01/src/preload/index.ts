@@ -2,13 +2,11 @@ import { electronAPI } from '@electron-toolkit/preload'
 import {IElectronAPI, IpcRequest} from '@shared/@types'
 import {contextBridge, ipcRenderer} from "electron";
 
-
 // Custom APIs for renderer
 const api: IElectronAPI = {
   node: () => process.versions.node,
   chrome: () => process.versions.chrome,
   electron: () => process.versions.electron,
-  trpc: (req: IpcRequest) => ipcRenderer.invoke('trpc', req),
   onEvent: (eventName: string, callback: (event: Electron.IpcRendererEvent, ...args: any[]) => void) => ipcRenderer.on(eventName, callback),
 };
 
@@ -29,5 +27,5 @@ if (process.contextIsolated) {
 }
 
 process.once('loaded', async () => {
-  
+
 });

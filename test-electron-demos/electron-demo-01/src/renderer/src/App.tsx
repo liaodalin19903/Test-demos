@@ -1,11 +1,18 @@
 
+import { electron } from "process"
+import Events from "./components/Events"
+
 function App(): JSX.Element {
-  //const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
+
+
 
   return (
-    <div>
-      
-    </div>
+    <>
+      <div>
+        <button>点击</button>
+      </div>
+      <Events></Events>
+    </>
   )
 }
 
