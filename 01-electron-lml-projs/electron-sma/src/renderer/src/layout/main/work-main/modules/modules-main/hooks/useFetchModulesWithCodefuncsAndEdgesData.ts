@@ -1,6 +1,6 @@
 
 import { GraphData } from '@antv/g6'
-import { useStore } from '@renderer/common/store'
+import {useSMAModulesStore, useProjStore } from '@renderer/common/store'
 import { useEffect } from 'react'
 
 import { SMAComboModule } from '@shared/db-entities/SMACombos';
@@ -42,30 +42,25 @@ graph.render();
 */
 
 // 准备图数据(modules)
-export const useGetGraphData = (): SMAComboModule[] => {
+export const useFetchModulesWithCodefuncsAndEdgesData = () => {
 
   // 步骤1：①查询出modules, ②modules 里面的代码块, ③代码块之间的edges
   const {
-    // modules,
-    // fetchModules,
-    modulesWithCodefuncs,
-    fetchModulesWithCodefuncs,
-    selectedProjMod } = useStore()
+    fetchModulesWithCodefuncsAndEdges,
+    } = useSMAModulesStore()
+
+  const { selectedProjMod }  = useProjStore()
 
   useEffect(() => {
 
     const asyncFunc = async () => {
-
-      console.log('lml: modulesWithCodefuncs',  modulesWithCodefuncs)
-
+      selectedProjMod && await fetchModulesWithCodefuncsAndEdges(selectedProjMod.id)
     }
-
     asyncFunc()
+  }, [selectedProjMod])
 
-  }, [])
 
-  // 步骤2：组合GraphData、样式映射
-
-  return modulesWithCodefuncs
 }
+
+
 

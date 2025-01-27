@@ -26,7 +26,7 @@ Test-demos/01-electron-lml-projs/electron-sma/src/renderer/src/layout/main/setti
 import CRUDModal from '@renderer/components/CRUDModal'
 
 const [modal, contextHolder] = Modal.useModal();
-const { projs, selectedProj, fetchProjs, selectProj, fetchProjMods } = useStore()
+const { projs, selectedProj, fetchProjs, selectProj, fetchProjMods } = useProjStore()
 
 
 

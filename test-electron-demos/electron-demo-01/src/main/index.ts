@@ -2,8 +2,9 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { M2RMsg, R2MMsg } from '@shared/@types/Msg'
 
-function createWindow(): void {
+function createWindow(): BrowserWindow {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
@@ -13,7 +14,11 @@ function createWindow(): void {
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      sandbox: false,
+
+      nodeIntegration: true,
+      // contextIsolation: false,
+      enableBlinkFeatures: 'BroadcastChannel' // 启用 BroadcastChannel 特性
     }
   })
 
@@ -33,6 +38,8 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  return mainWindow
 }
 
 // This method will be called when Electron has finished
@@ -52,7 +59,19 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
-  createWindow()
+  const mainWindow = createWindow()
+
+  setInterval(() => {
+
+    const msg: M2RMsg = {
+      name: '主进程发送消息给渲染进程',
+      M2RmsgContent: new Date().toISOString()
+    }
+
+    mainWindow.webContents.send('m-r', msg)
+
+    console.log(msg)
+  }, 2000);
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

@@ -1,13 +1,12 @@
+import { subscribeWithSelector } from 'zustand/middleware';
 import { Proj, ProjMod } from "@shared/db-entities/Proj";
 import { StateCreator } from "zustand";
 import {
-  getProjs,
-  addProj,
-  updateProj,
-  deleteProj,
+  projsApi,
+  addProjApi,
+  updateProjApi,
+  deleteProjApi,
   getProjMods,
-  projSetSelectApi,
-  projModSetSelectApi
 } from  "@renderer/common/apis"
 
 export interface ProjSlice {
@@ -17,9 +16,9 @@ export interface ProjSlice {
 
   selectProj: (projID: number) => void,
   fetchProjs: () => Promise<void>,
-  addProj: (proj:Proj) => Promise<void>,
-  updateProj: (proj:Proj) => Promise<void>,
-  deleteProj: (id: number) => Promise<void>,
+  addProjApi: (proj:Proj) => Promise<void>,
+  updateProjApi: (proj:Proj) => Promise<void>,
+  deleteProjApi: (id: number) => Promise<void>,
 
   projMods: ProjMod[],
   selectedProjMod: ProjMod | undefined,
@@ -29,115 +28,122 @@ export interface ProjSlice {
 
 //type SliceType = StateCreator<ProjSlice, [], [], ProjSlice>
 
-export const createProjSlice: StateCreator<ProjSlice> = (set, get) => {
+export const createProjSlice: StateCreator<ProjSlice> = (set, get) => (
+{
+  // 1.状态
+  projs: [] as Proj[],
+  selectedProj: undefined as Proj | undefined,
 
-  return {
+  projMods: [] as ProjMod[],
+  selectedProjMod: undefined as ProjMod | undefined,
 
-    // 1.状态
-    projs: [] as Proj[],
-    selectedProj: undefined as Proj | undefined,
+  // 2.操作状态的actions
 
-    projMods: [] as ProjMod[],
-    selectedProjMod: undefined as ProjMod | undefined,
+  isLoading: false, // 是否正在操作
+  fetchProjs: async() => {
+    try {
+      set({ isLoading: true })
+      const projs: Proj[] = await projsApi()
 
-    // 2.操作状态的actions
+      set({ projs: projs })
 
-    isLoading: false, // 是否正在操作
-    fetchProjs: async() => {
-      try {
-        set({ isLoading: true })
-        const projs: Proj[] = await getProjs()
+      // 设置selectedProj和selectedProjMod
+      const tmpSelectedProjs = projs.filter((proj) => proj.selected === true)
 
-        set({ projs: projs })
-      } catch (error) {
+      if( tmpSelectedProjs.length > 0) {
+        set({ selectedProj: tmpSelectedProjs[0] })
 
-      } finally {
-        set({ isLoading: false })
-      }
-    },
-
-    // 选择项目
-    selectProj: (projID: number) => {
-
-      // 基于projID获取Proj
-      const { projs } = get()
-      const filteredProj = (projs as Proj[]).filter((proj: Proj) => proj.id === projID);
-
-
-
-      set({ selectedProj: filteredProj[0] })
-    },
-
-    addProj: async(proj:Proj) => {
-      try {
-        set({ isLoading: true })
-        await addProj(proj)
-      } catch (error) {
-
-      } finally {
-        const { fetchProjs } = get(); // 通过get获取当前状态里的fetchProjs方法
-        fetchProjs()
-        set({ isLoading: false })
-      }
-    },
-
-    updateProj: async(proj: Proj) => {
-      try {
-        set({ isLoading: true })
-        await updateProj(proj)
-      } catch (error) {
-
-      } finally {
-        const { fetchProjs } = get(); // 通过get获取当前状态里的fetchProjs方法
-        fetchProjs()
-        set({ isLoading: false })
-      }
-    },
-
-    deleteProj: async(id: number) => {
-      try {
-        set({ isLoading: true })
-        await deleteProj(id)
-      } catch (error) {
-
-      } finally {
-        const { fetchProjs } = get(); // 通过get获取当前状态里的fetchProjs方法
-        fetchProjs()
-        set({ isLoading: false })
-      }
-    },
-
-    selectProjMod: async(projModId: number) => {
-
-      // 基于projID获取Proj
-      const { projMods } = get()
-      const filteredProjMod = (projMods as ProjMod[]).filter((projMod: ProjMod) => projMod.id === projModId);
-
-      set({selectedProjMod: filteredProjMod[0]})
-    },
-
-    fetchProjMods: async(projId: number) => {
-
-      try {
-        set({ isLoading: true })
-
-        const projMods: ProjMod[] = await getProjMods(projId)
-        set({ projMods: projMods })
-
-        const { selectedProjMod } = get()
-        if( !selectedProjMod ) {
-
-          const mainProjMods: ProjMod[] = projMods.filter((projMod) => projMod.isMain === true);
-          set({ selectedProjMod:  mainProjMods[0]})
-        }
-
-      } catch (error) {
-
-      } finally {
-        set({ isLoading: false })
+        const { selectedProj, fetchProjMods } = get()
+        await fetchProjMods(selectedProj!.id!)  // 这里会自动设置selected
       }
 
-    },
+    } catch (error) {
 
-  }
+    } finally {
+      set({ isLoading: false })
+    }
+  },
+
+  // 选择项目
+  selectProj: (projID: number) => {
+
+    // 基于projID获取Proj
+    const { projs } = get()
+    const filteredProj = (projs as Proj[]).filter((proj: Proj) => proj.id === projID);
+
+    set({ selectedProj: filteredProj[0] })
+  },
+
+  addProjApi: async(proj:Proj) => {
+    try {
+      set({ isLoading: true })
+      await addProjApi(proj)
+    } catch (error) {
+
+    } finally {
+      const { fetchProjs } = get(); // 通过get获取当前状态里的fetchProjs方法
+      await fetchProjs()
+      set({ isLoading: false })
+    }
+  },
+
+  updateProjApi: async(proj: Proj) => {
+    try {
+      set({ isLoading: true })
+      await updateProjApi(proj)
+    } catch (error) {
+
+    } finally {
+      const { fetchProjs } = get(); // 通过get获取当前状态里的fetchProjs方法
+      await fetchProjs()
+      set({ isLoading: false })
+    }
+  },
+
+  deleteProjApi: async(id: number) => {
+    try {
+      set({ isLoading: true })
+      await deleteProjApi(id)
+    } catch (error) {
+
+    } finally {
+      const { fetchProjs } = get(); // 通过get获取当前状态里的fetchProjs方法
+      await fetchProjs()
+      set({ isLoading: false })
+    }
+  },
+
+  selectProjMod: async(projModId: number) => {
+
+    // 基于projID获取Proj
+    const { projMods } = get()
+    const filteredProjMod = (projMods as ProjMod[]).filter((projMod: ProjMod) => projMod.id === projModId);
+
+    set({selectedProjMod: filteredProjMod[0]})
+  },
+
+  fetchProjMods: async(projId: number) => {
+
+    try {
+      set({ isLoading: true })
+
+      const projMods: ProjMod[] = await getProjMods(projId)
+      set({ projMods: projMods })
+
+      const { selectedProjMod } = get()
+      if( !selectedProjMod ) {
+
+        const mainProjMods: ProjMod[] = projMods.filter((projMod) => projMod.isMain === true);
+        set({ selectedProjMod:  mainProjMods[0]})
+      }
+
+    } catch (error) {
+
+    } finally {
+      set({ isLoading: false })
+    }
+
+  },
+
 }
+)

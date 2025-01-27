@@ -1,7 +1,11 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne, OneToOne, JoinColumn, Unique } from 'typeorm'
-import { G6Combo } from './SMAG6Element';
 import { SMANodeCodeFunc } from './SMANodes';
+import { ProjMod } from './Proj';
 
+export const SMAComboTypeMap = {
+  SMAComboModule: 'SMAComboModule',
+  SMAComboFuncodeAggregation: 'SMAComboFuncodeAggregation'
+}
 
 // 1对1到Combo
 @Entity()
@@ -10,10 +14,9 @@ export class SMAComboModule {
   @PrimaryGeneratedColumn()
   id: number | undefined
 
-  // 所属Combo
-  @OneToOne(type => G6Combo)
-  @JoinColumn()
-  combo: G6Combo | undefined;
+  // 所属ProjMod
+  @ManyToOne(type => ProjMod, projMod => projMod.smaComboModules)
+  projMod: ProjMod
 
   @Column({
     type: 'varchar',
@@ -26,12 +29,13 @@ export class SMAComboModule {
   moduleName: string
 
   @Column({
-    type: 'text'
+    type: 'text',
+    nullable: true
   })
   desc?: string
 
   @ManyToOne(type => SMAComboModule)
-  parent?: SMAComboModule | null
+  parent: SMAComboModule | undefined
 
   @OneToMany(type => SMANodeCodeFunc, codeFunc => codeFunc.module)
   codeFuncs: SMANodeCodeFunc[] | undefined
@@ -49,8 +53,9 @@ export class SMAComboModule {
   @UpdateDateColumn()
   updateDate?: Date
 
-  constructor(moduleName: string = '', path: string, desc: string | undefined = '',  parent: SMAComboModule| null) {
+  constructor(projMod: ProjMod, moduleName: string = '', path: string, desc: string | undefined = '',  parent: SMAComboModule| undefined) {
 
+    this.projMod = projMod
     this.moduleName = moduleName
     this.desc = desc
     this.path = path
@@ -65,10 +70,9 @@ export class SMAComboFuncodeAggregation {
   @PrimaryGeneratedColumn()
   id: number | undefined
 
-  // 所属Combo
-  @OneToOne(type => G6Combo)
-  @JoinColumn()
-  combo: G6Combo | undefined;
+  // 所属ProjMod
+  @ManyToOne(type => ProjMod, projMod => projMod.smaComboFuncodeAggregations)
+  projMod: ProjMod
 
   // 类型
   @Column({
@@ -82,7 +86,8 @@ export class SMAComboFuncodeAggregation {
   aggregationName: string
 
   @Column({
-    type: 'text'
+    type: 'text',
+    nullable: true
   })
   desc?: string
 
@@ -102,8 +107,8 @@ export class SMAComboFuncodeAggregation {
   @UpdateDateColumn()
   updateDate?: Date
 
-  constructor(aggregationName: string = '', desc: string | undefined = '') {
-
+  constructor(projMod: ProjMod, aggregationName: string = '', desc: string | undefined = '') {
+    this.projMod = projMod
     this.aggregationName = aggregationName
     this.desc = desc
   }

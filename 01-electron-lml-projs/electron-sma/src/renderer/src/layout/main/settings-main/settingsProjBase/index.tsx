@@ -1,19 +1,20 @@
 
 
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { Card, Modal, Space, Popover,  Radio, RadioChangeEvent, Button, Row, Col } from 'antd'
 import CRUDModal from '@renderer/components/CRUDModal'
 
 import { useCreateProjBaseProps, useUpdateProjBaseProps, useDeleteProjBaseProps } from './helpers/genCRUDProjBaseProps'
-import { useStore } from '@renderer/common/store'
+import { useProjStore } from '@renderer/common/store'
 import { Proj } from '@shared/db-entities/Proj'
 
 
 export default function SettingsProjBase() {
 
   const [modal, contextHolder] = Modal.useModal();
-  const { projs, selectedProj, fetchProjs, selectProj, fetchProjMods } = useStore()
+  const { projs, selectedProj, fetchProjs, selectProj, fetchProjMods } = useProjStore()
+
 
   const handleCreate = () => {
     return <a onClick={()=>{

@@ -1,6 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne } from 'typeorm'
 
-import { G6Node, G6Edge, G6Combo } from './SMAG6Element'
+import { SMAComboFuncodeAggregation, SMAComboModule } from './SMACombos'
+import { SMAEdgeCAIImplement, SMAEdgeCAIInherit, SMAEdgeCommonSupport } from './SMAEdges'
+import { SMANodeAPI, SMANodeCAIClass, SMANodeCAIInterface, SMANodeCodeFunc, SMANodeDataStruct, SMANodeRequirement } from './SMANodes'
 
 @Entity()
 export class Proj {
@@ -50,7 +52,7 @@ export class Proj {
 @Entity()
 export class ProjMod {
   @PrimaryGeneratedColumn()
-  id: number | undefined
+  id!: number
 
   @Column({
     type: 'varchar'
@@ -64,7 +66,7 @@ export class ProjMod {
 
   @Column({
     type: 'text',
-    nullable: true 
+    nullable: true
   })
   desc?: string | undefined
 
@@ -83,16 +85,41 @@ export class ProjMod {
   })
   isDeleted: boolean | undefined
 
-  // g6Nodes  g6Edges  g6Combos
-  @OneToMany(type => G6Node, g6Node => g6Node.projMod)
-  g6Nodes?: G6Node[]
+  //#region
+  @OneToMany(type => SMAComboModule, smaComboModule => smaComboModule.projMod)
+  smaComboModules: SMAComboModule[] | undefined
 
-  @OneToMany(type => G6Edge, g6Edge => g6Edge.projMod)
-  g6Edges?: G6Edge[]
+  @OneToMany(type => SMAComboFuncodeAggregation, smaComboFuncodeAggregation => smaComboFuncodeAggregation.projMod)
+  smaComboFuncodeAggregations: SMAComboModule[] | undefined
 
-  @OneToMany(type => G6Combo, g6Combo => g6Combo.projMod)
-  g6Combos?: G6Combo[]
-  // END
+  @OneToMany(type => SMAEdgeCommonSupport, smaEdgeCommonSupport => smaEdgeCommonSupport.projMod)
+  smaEdgeCommonSupports: SMAComboModule[] | undefined
+
+  @OneToMany(type => SMAEdgeCAIInherit, smaEdgeCAIInherit => smaEdgeCAIInherit.projMod)
+  smaEdgeCAIInherits: SMAComboModule[] | undefined
+
+  @OneToMany(type => SMAEdgeCAIImplement, smaEdgeCAIImplement => smaEdgeCAIImplement.projMod)
+  smaEdgeCAIImplements: SMAComboModule[] | undefined
+
+  @OneToMany(type => SMANodeCodeFunc, smaNodeCodeFunc => smaNodeCodeFunc.projMod)
+  smaNodeCodeFuncs: SMAComboModule[] | undefined
+
+  @OneToMany(type => SMANodeDataStruct, smaNodeDataStruct => smaNodeDataStruct.projMod)
+  smaNodeDataStructs: SMAComboModule[] | undefined
+
+  @OneToMany(type => SMANodeRequirement, smaNodeRequirement => smaNodeRequirement.projMod)
+  smaNodeRequirements: SMAComboModule[] | undefined
+
+  @OneToMany(type => SMANodeAPI, smaNodeAPI => smaNodeAPI.projMod)
+  smaNodeAPIs: SMAComboModule[] | undefined
+
+  @OneToMany(type => SMANodeCAIClass, smaNodeCAIClass => smaNodeCAIClass.projMod)
+  smaNodeCAIClasses: SMAComboModule[] | undefined
+
+  @OneToMany(type => SMANodeCAIInterface, smaNodeCAIInterface => smaNodeCAIInterface.projMod)
+  smaNodeCAIInterfaces: SMAComboModule[] | undefined
+
+  //#endregion
 
   @CreateDateColumn()
   createDate?: Date
@@ -100,7 +127,13 @@ export class ProjMod {
   @UpdateDateColumn()
   updateDate?: Date
 
-  constructor(modName: string = '',  isMain: boolean = false, desc: string | undefined = '', proj:Proj) {
+  constructor(
+    modName: string = '',
+    isMain: boolean = false,
+    desc: string | undefined = '',
+    proj:Proj
+    ) {
+
     this.modName = modName
 
     this.isMain = isMain

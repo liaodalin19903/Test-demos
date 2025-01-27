@@ -5,7 +5,7 @@ import type { CRUDModalProps } from '@renderer/components/CRUDModal'
 import { Proj, ProjMod } from '@shared/db-entities/Proj'
 
 import { addProjMod, deleteProjMod, updateProjMod } from '@renderer/common/apis/proj'
-import { useStore } from '@renderer/common/store'
+import { useProjStore } from '@renderer/common/store'
 
 
 /**
@@ -17,7 +17,7 @@ import { useStore } from '@renderer/common/store'
  */
 const useGetProps = (type: CRUDModalProps['type'], fetchProjMods: (projId: number) => Promise<void>, projMod?: ProjMod): CRUDModalProps => {
 
-  const { selectedProj } = useStore()
+  const { selectedProj } = useProjStore()
 
   const onConfirm = async (formData: unknown) => {
     console.log('接受到回调：', formData as ProjMod)

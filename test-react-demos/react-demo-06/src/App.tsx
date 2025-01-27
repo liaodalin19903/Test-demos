@@ -1,27 +1,38 @@
 import React, { createContext, useEffect } from 'react';
 
 import './App.css';
-
-import TestComp2 from './components/TestComp2';
-
-
-// ---
-
-interface ThemeProps {
-  theme: string | undefined
-}
-
-export const ThemeContext = React.createContext<ThemeProps>({
-  theme: undefined
-});
-
+import { of } from 'rxjs';
+import { useObservable } from 'dexie-react-hooks'
+import { concatMap, delay } from 'rxjs/operators';
 
 function App() {
 
+
+  // 创建一个发出 1, 2, 3 的 Observable
+  const source = of(1, 2, 3);
+
+  // 让每个值依次延迟一定时间后发出
+  const delayedSource = source.pipe(
+      concatMap(value => of(value).pipe(delay( 1000)))
+  );
+  // // 订阅Observable并处理发出的值
+  // delayedSource.subscribe(value => {
+  //     console.log(new Date().toISOString(), value);
+  // });
+
+  //const value = useObservable(delayedSource)
+
+  useEffect(() => {
+    
+
+  }, [])
+
   return (
-    <ThemeContext.Provider value={{theme: 'light'}}>
-      <TestComp2></TestComp2>
-    </ThemeContext.Provider>
+    <>
+    112233
+
+    value: {value}
+    </>
   );
 }
 
