@@ -1,39 +1,64 @@
-import React, { createContext, useEffect } from 'react';
 
+import { useEffect } from 'react';
 import './App.css';
-import { of } from 'rxjs';
-import { useObservable } from 'dexie-react-hooks'
-import { concatMap, delay } from 'rxjs/operators';
+
+import { client } from './common/notionClient'
+
 
 function App() {
 
 
-  // 创建一个发出 1, 2, 3 的 Observable
-  const source = of(1, 2, 3);
-
-  // 让每个值依次延迟一定时间后发出
-  const delayedSource = source.pipe(
-      concatMap(value => of(value).pipe(delay( 1000)))
-  );
-  // // 订阅Observable并处理发出的值
-  // delayedSource.subscribe(value => {
-  //     console.log(new Date().toISOString(), value);
-  // });
-
-  //const value = useObservable(delayedSource)
-
   useEffect(() => {
-    
+    const asyncFunc = async() => {
+      
+    }
+    asyncFunc()
+    }, [])
 
-  }, [])
+  const onClick = async () => {
+
+    // 判断database是否存在
+    
+    // 创建database
+    const res = await client.databases.create({
+      parent: {
+        page_id: '186deaa8-cb4b-809f-9a1f-fa408a96b195',
+        type: 'page_id'
+      },
+      title: [
+        {
+          "type": "text",
+          "text": {
+            'content': 'goalsop_props',
+            'link': null 
+          }
+        }
+      ],
+      properties: {
+        "Name": {
+          "title": {}
+        },
+        "desc": {
+            "rich_text": {}
+        },
+      }
+    })
+
+    console.log('res: ', res)
+  }  
+  
 
   return (
     <>
     112233
 
-    value: {value}
+    <button onClick={onClick}>点击创建database</button>
     </>
   );
 }
 
 export default App;
+
+
+
+
