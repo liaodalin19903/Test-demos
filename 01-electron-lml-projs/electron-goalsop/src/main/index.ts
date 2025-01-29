@@ -1,7 +1,12 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-import icon from '../../resources/icon.png?asset'
+import icon from '@main/../../ricon.png'
+import { to } from 'await-to-js'
+import { appRouter } from './apis/trpcServer/router'
+import { IpcRequest } from '@shared/@types'
+import { ipcRequestHandler } from './apis/trpcServer/ipcRequestHandler'
+
 
 function createWindow(): void {
   // Create the browser window.
@@ -53,6 +58,17 @@ app.whenReady().then(() => {
   ipcMain.on('ping', () => console.log('pong'))
 
   createWindow()
+
+  ipcMain.handle('trpc', (event, req: IpcRequest) => {
+    return ipcRequestHandler({
+      endpoint: "/trpc",
+      req,
+      router: appRouter,
+      createContext: async () => {
+        return {};
+      }
+    });
+  })
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
