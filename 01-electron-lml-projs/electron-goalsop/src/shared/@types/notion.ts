@@ -1,7 +1,4 @@
-// export interface GoalsopDatabase {
-//   Name: string,
-//   goalsop_proj_id: string,
-//   desc: string
-// }
+import { NotionDatabasePage } from '@main/apis/notion'
 
 
+export type NotionDatabase = NotionDatabasePage

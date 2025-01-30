@@ -1,5 +1,5 @@
 
-import Prepare from "./components/Prepare"
+import Prepare from "./common/components/Prepare"
 
 import Main from './layout/Main'
 

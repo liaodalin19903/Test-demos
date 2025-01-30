@@ -9,7 +9,7 @@ import {
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 
-import { useBreadcrumbPathInfo } from './hooks/useBreadcrumbInfo'
+import { useBreadcrumbContetInfo, useBreadcrumbPathInfo } from './hooks/useBreadcrumbInfo'
 
 import { db } from '@renderer/common/db'
 import { useLiveQuery } from 'dexie-react-hooks';
@@ -52,6 +52,8 @@ const Main: React.FC = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  //#region 选中的左侧栏
+
   const noSettings = useLiveQuery(async () => {
     const count = await db.settings.count();
     return count === 0;
@@ -91,6 +93,15 @@ const Main: React.FC = () => {
 
   const breadcrumbPathInfo = useBreadcrumbPathInfo(settings ? settings?.selectedNavMenuKey: undefined)
 
+  const ContentComp = useBreadcrumbContetInfo(settings ? settings?.selectedNavMenuKey: undefined)
+
+  // 将 breadcrumbPathInfo 转换为符合 items 属性要求的格式
+  const breadcrumbItems = breadcrumbPathInfo.map((path, index) => ({
+      title: path
+  }));
+
+  //#endregion
+
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
     <Layout style={{ minHeight: '100vh' }}>
@@ -108,12 +119,10 @@ const Main: React.FC = () => {
         <Header style={{ padding: 0, background: colorBgContainer }} >
         </Header>
         <Content style={{ margin: '0 16px' }}>
-          <Breadcrumb style={{ margin: '16px 0' }}>
-
-            { breadcrumbPathInfo.map((path, index) => (
-              <Breadcrumb.Item key={index}>{path}</Breadcrumb.Item>
-            ))}
-
+          <Breadcrumb
+            style={{ margin: '16px 0' }}
+            items={breadcrumbItems}
+          >
           </Breadcrumb>
           <div
             style={{
@@ -123,7 +132,7 @@ const Main: React.FC = () => {
               borderRadius: borderRadiusLG,
             }}
           >
-            Bill is a cat.
+            {ContentComp}
           </div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>

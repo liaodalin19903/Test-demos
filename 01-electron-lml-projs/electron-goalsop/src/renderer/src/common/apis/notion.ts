@@ -1,7 +1,6 @@
 import { trpc } from './trpcClient/index'
 
 export const databasesApi = async() => {
-  console.log('before getUsers')
   return await trpc.databasesApi.query()
 }
 
