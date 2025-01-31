@@ -5,25 +5,30 @@ import { TableProps } from "antd";
 export const columns = [
   {
     title: '名称',
-    dataIndex: 'properties.Name',
+    dataIndex: ['properties', 'Name'],
     key: 'Name',
     onCell: (record: NotionDatabase, index? :number) => ({
-      children: 'adasdasdsa'
+      children: 'asdsadsa'
+      //children: record.properties.Name.title[0].plain_text
+      //children: record.created_by.object
     })
   },
-  {
-    title: '描述',
-    dataIndex: 'properties.desc',
-    key: 'desc',
-    onCell: (record: NotionDatabase, index? :number) => ({
-      children: 'adasdasdsa'
-    })
-  },
-  {
-    title: 'Goalsop项目ID',
-    dataIndex: 'properties.goalsop_proj_id',
-    key: 'goalsop_proj_id',
-  },
+  // {
+  //   title: '描述',
+  //   dataIndex: ['properties', 'desc'],
+  //   key: 'desc',
+  //   onCell: (record: NotionDatabase, index? :number) => ({
+  //     children: record.properties.desc.rich_text
+  //   })
+  // },
+  // {
+  //   title: 'Goalsop项目ID',
+  //   dataIndex: ['properties', 'goalsop_proj_id'],
+  //   key: 'goalsop_proj_id',
+  //   onCell: (record: NotionDatabase, index? :number) => ({
+  //     children: record.properties.goalsop_proj_id.rich_text
+  //   })
+  // },
   {
     title: '创建时间',
     dataIndex: 'created_time',

@@ -1,8 +1,6 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
-//import icon from '@main/../../ricon.png'
-import { to } from 'await-to-js'
 import { appRouter } from './apis/trpcServer/router'
 import { IpcRequest } from '@shared/@types'
 import { ipcRequestHandler } from './apis/trpcServer/ipcRequestHandler'
@@ -11,7 +9,7 @@ import { ipcRequestHandler } from './apis/trpcServer/ipcRequestHandler'
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 900,
+    width: 1140,
     height: 670,
     show: false,
     autoHideMenuBar: true,

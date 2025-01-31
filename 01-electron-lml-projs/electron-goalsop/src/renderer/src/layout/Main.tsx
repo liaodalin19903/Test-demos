@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   DesktopOutlined,
   FileOutlined,
@@ -7,13 +7,14 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { Breadcrumb, Button, Flex, Layout, Menu, Tag, theme } from 'antd';
 
 import { useBreadcrumbContetInfo, useBreadcrumbPathInfo } from './hooks/useBreadcrumbInfo'
 
 import { db } from '@renderer/common/db'
 import { useLiveQuery } from 'dexie-react-hooks';
 import { GoalsopSettings } from '@shared/@types';
+import { useSelectedProj } from './hooks/useSelectedProj';
 
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -51,6 +52,14 @@ const Main: React.FC = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+  const selectedProj = useSelectedProj()
+
+  //#region 生命周期
+  useEffect(() => {
+
+  }, [])
+  //#endregion
 
   //#region 选中的左侧栏
 
@@ -102,6 +111,12 @@ const Main: React.FC = () => {
 
   //#endregion
 
+  const test = () => {
+
+  }
+
+
+
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
     <Layout style={{ minHeight: '100vh' }}>
@@ -109,7 +124,7 @@ const Main: React.FC = () => {
         <div className="demo-logo-vertical" />
         <Menu
         theme="dark"
-        defaultSelectedKeys={['1']}
+        defaultSelectedKeys={['2']}
         mode="inline"
         items={items}
         onSelect={onSelectMenu}
@@ -117,6 +132,17 @@ const Main: React.FC = () => {
       </Sider>
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }} >
+
+            <Flex style={{ height: '100%', marginLeft: '10px' }}
+              justify='flex-start'
+              align='center'
+              gap="small"
+              >
+              <Tag color="#108ee9">选中项目: {selectedProj?.properties?.Name.title[0].plain_text}</Tag>
+              <Button>同步数据</Button>
+              <Button onClick={test}>测试</Button>
+            </Flex>
+
         </Header>
         <Content style={{ margin: '0 16px' }}>
           <Breadcrumb
@@ -130,12 +156,13 @@ const Main: React.FC = () => {
               minHeight: 360,
               background: colorBgContainer,
               borderRadius: borderRadiusLG,
+              height: 'calc(100% - 70px)'
             }}
           >
             {ContentComp}
           </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>
+        <Footer style={{ backgroundColor: 'lightblue', textAlign: 'center' }}>
           Ant Design ©{new Date().getFullYear()} Created by Ant UED
         </Footer>
       </Layout>
@@ -145,3 +172,5 @@ const Main: React.FC = () => {
 };
 
 export default Main;
+
+

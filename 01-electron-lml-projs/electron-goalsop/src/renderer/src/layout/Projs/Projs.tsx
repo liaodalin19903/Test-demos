@@ -17,6 +17,9 @@ export default function Projs() {
         ...proj,
         key: proj.id
     }));
+
+    console.log('updatedProjs: ', updatedProjs)
+
     return updatedProjs;
   }, []);
 
