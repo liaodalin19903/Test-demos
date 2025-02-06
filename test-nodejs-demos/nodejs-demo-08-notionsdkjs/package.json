@@ -1,0 +1,18 @@
+{
+  "name": "nodejs-demo-08-notionsdkjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@notionhq/client": "^2.2.15",
+    "notion-client": "^7.1.6",
+    "react-notion-x": "^7.2.6"
+  }
+}

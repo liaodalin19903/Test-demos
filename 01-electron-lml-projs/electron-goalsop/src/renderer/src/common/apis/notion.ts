@@ -12,4 +12,10 @@ export const databaseByIdApi = async(database_id: string) => {
   return user
 }
 
+export const dataX6ByIdApi = async(database_id: string) => {
+  const dataX6 = await trpc.dataX6ByIdApi.query({
+    database_id: database_id,
+  });
 
+  return dataX6
+}

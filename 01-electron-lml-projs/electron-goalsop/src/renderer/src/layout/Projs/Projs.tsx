@@ -13,23 +13,32 @@ export default function Projs() {
   const data = useLiveQuery(async () => {
     const projs = await db.databases.toArray();
     // 为 projs 数组中的每个元素添加 key 属性
-    const updatedProjs = projs.map((proj) => ({
+    const dataSource = projs.map((proj) => ({
         ...proj,
         key: proj.id
     }));
 
-    console.log('updatedProjs: ', updatedProjs)
 
-    return updatedProjs;
+    const filteredIds = dataSource.filter(item => item.properties.selected.number === 1).map(item => item.id);
+    //console.log('filteredIds: ', filteredIds)
+
+    return {
+      dataSource: dataSource,
+      selectedDatabaseKey: filteredIds[0]
+    }
   }, []);
 
 
   return (
     <div>
     <Table<NotionDatabase>
-        rowSelection={{ type: 'radio', ...rowSelection }}
+        rowSelection={{
+          type: 'radio',
+          ...rowSelection,
+          selectedRowKeys: [data?.selectedDatabaseKey!]
+         }}
         columns={columns}
-        dataSource={data}
+        dataSource={data?.dataSource}
       />
     </div>
   )

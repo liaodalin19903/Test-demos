@@ -15,6 +15,7 @@ import { db } from '@renderer/common/db'
 import { useLiveQuery } from 'dexie-react-hooks';
 import { GoalsopSettings } from '@shared/@types';
 import { useSelectedProj } from './hooks/useSelectedProj';
+import { dataX6ByIdApi } from '@renderer/common/apis';
 
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -111,8 +112,10 @@ const Main: React.FC = () => {
 
   //#endregion
 
-  const test = () => {
-
+  const test = async () => {
+    // @ts-ignore
+    const DataX6Json = await dataX6ByIdApi(selectedProj!.properties.goalsop_proj_id.rich_text[0].plain_text)
+    console.log('DataX6Json: ', DataX6Json)
   }
 
 

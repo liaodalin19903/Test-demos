@@ -5,30 +5,29 @@ import { TableProps } from "antd";
 export const columns = [
   {
     title: '名称',
-    dataIndex: ['properties', 'Name'],
+    dataIndex: ['properties', 'Name', 'title', '0', 'plain_text'],
     key: 'Name',
     onCell: (record: NotionDatabase, index? :number) => ({
-      children: 'asdsadsa'
-      //children: record.properties.Name.title[0].plain_text
-      //children: record.created_by.object
+      children: record.properties.Name.title[0].plain_text
     })
   },
-  // {
-  //   title: '描述',
-  //   dataIndex: ['properties', 'desc'],
-  //   key: 'desc',
-  //   onCell: (record: NotionDatabase, index? :number) => ({
-  //     children: record.properties.desc.rich_text
-  //   })
-  // },
-  // {
-  //   title: 'Goalsop项目ID',
-  //   dataIndex: ['properties', 'goalsop_proj_id'],
-  //   key: 'goalsop_proj_id',
-  //   onCell: (record: NotionDatabase, index? :number) => ({
-  //     children: record.properties.goalsop_proj_id.rich_text
-  //   })
-  // },
+  {
+    title: '描述',
+    dataIndex: ['properties', 'desc', 'rich_text', '0', 'plain_text'],
+    key: 'desc',
+    onCell: (record: NotionDatabase, index? :number) => ({
+      children: record.properties.desc.rich_text[0] ? record.properties.desc.rich_text[0].plain_text : ''
+    })
+  },
+  {
+    title: 'Goalsop项目ID',
+    dataIndex: ['properties', 'goalsop_proj_id', 'rich_text', '0', 'plain_text'],
+    key: 'goalsop_proj_id',
+    onCell: (record: NotionDatabase, index? :number) => ({
+      //@ts-ignore
+      children: record.properties.goalsop_proj_id.rich_text[0].plain_text
+    })
+  },
   {
     title: '创建时间',
     dataIndex: 'created_time',
