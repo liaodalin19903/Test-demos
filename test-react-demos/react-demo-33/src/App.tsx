@@ -12,7 +12,7 @@ function App() {
     
     console.log(111)
     axios.get('http://localhost:3000/blocks/1').then((res) => {
-      console.log(res.data.results)
+      console.log(JSON.stringify(res.data))
 
       blocks = res.data.results
     })
@@ -21,11 +21,14 @@ function App() {
 
   return (
     <>
-      <Stack>
+      {/* <Stack> */}
         {blocks.map((block) => (
-          <NotionBlock key={block.id} block={block} />
-        ))}
-      </Stack>
+          111
+        ))
+        }
+
+        {/* <NotionBlock key={block.id} block={block} /> */}
+      {/* </Stack> */}
     </>
   )
 }
