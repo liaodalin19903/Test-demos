@@ -1,0 +1,15 @@
+{
+  "name": "notionsdk-properties",
+  "version": "1.0.0",
+  "description": "notion-sdk-js封装，方便properties的查询",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@notionhq/client": "^2.2.15"
+  }
+}

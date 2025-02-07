@@ -1,11 +1,12 @@
 
 
-console.log()
 
+import dotenv from 'dotenv'
 
-const flag = 0
+dotenv.config()
 
-if(flag) {
-  console.log('11')
-}
+console.log(process.env)  // 包含：.env中定义的变量
+console.log(process.env.S3_BUCKET) 
+console.log(process.env.SECRET_KEY) 
+
 

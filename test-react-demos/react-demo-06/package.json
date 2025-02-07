@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@chakra-ui/react": "^3.7.0",
     "@mark-common-js/crypto-esm": "^1.0.1",
     "@notionhq/client": "^2.2.15",
     "@sota1235/notion-sdk-js-helper": "^2.2.0",
@@ -16,7 +17,10 @@
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "antd": "^5.23.3",
+    "axios": "^1.7.9",
+    "cors": "^2.8.5",
     "dexie-react-hooks": "^1.1.7",
+    "notion-blocks-chakra-ui": "^0.0.15",
     "notion-client": "^7.1.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -53,6 +57,7 @@
     ]
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "vitest": "^2.1.4"
   }
 }

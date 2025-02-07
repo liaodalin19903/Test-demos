@@ -1,15 +1,25 @@
-import React from 'react';
-import ReactFrameComponent from 'react-frame-component';
+import React, { useEffect } from 'react';
+import axios from 'axios'
+import { Stack } from '@chakra-ui/react';
+import { NotionBlock } from 'notion-blocks-chakra-ui';
 
 export default function App() {
-  //const url = 'https://www.notion.so/markleo/TypeScript-14adeaa8cb4b80bf94bed5dcdb4f977c'; 
+  
+  const blocks: any[] = []
 
-  //const url = 'https://www.notion.so/markleo/page-01-182deaa8cb4b80aa98b7dd9769a6df02'
+  // useEffect(() => {
+  //   axios.get('http://localhost:3000/blocks/1').then((res) => {
+  //     console.log(res)
+  //   })
+  // }, [])
 
-  const url = 'https://markleo.notion.site/page-01-182deaa8cb4b80aa98b7dd9769a6df02'
   return (
     <>
-      <iframe src={url} title='001'></iframe>
+      <Stack>
+        {blocks.map((block) => (
+          <NotionBlock key={block.id} block={block} />
+        ))}
+      </Stack>
     </>
-  );
+  )
 }
