@@ -1,36 +1,11 @@
-import { Stack } from "@chakra-ui/react"
-import axios from "axios"
-import { NotionBlock } from "notion-blocks-chakra-ui"
-import { useEffect } from "react"
+import React from 'react'
+import Markdown from 'react-markdown'
 
+export default function App() {
 
-function App() {
-
-  let blocks: unknown[] = []
-
-  useEffect(() => {
-    
-    console.log(111)
-    axios.get('http://localhost:3000/blocks/1').then((res) => {
-      console.log(JSON.stringify(res.data))
-
-      blocks = res.data.results
-    })
-
-  }, [])
-
+  const mdString = "\n11\n\n\n22\n\n\n```json\n{\n aaa: 111,\n bbb: 222,\n}\n```\n\n"
+  
   return (
-    <>
-      {/* <Stack> */}
-        {blocks.map((block) => (
-          111
-        ))
-        }
-
-        {/* <NotionBlock key={block.id} block={block} /> */}
-      {/* </Stack> */}
-    </>
+    <Markdown >{mdString}</Markdown>
   )
 }
-
-export default App

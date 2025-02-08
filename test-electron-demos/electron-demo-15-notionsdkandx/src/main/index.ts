@@ -57,7 +57,7 @@ app.whenReady().then(async () => {
   createWindow()
 
 
-  const NOTION_TOKEN = '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'
+  const NOTION_TOKEN = 'ntn_111597715054833VgFVtnUaFvR6C62bam4UVJEFMRrkPhu8RE222'
 
   const client = new Client({
     auth: NOTION_TOKEN,
@@ -70,7 +70,7 @@ app.whenReady().then(async () => {
   }
 
   await getUsers()
-  
+
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

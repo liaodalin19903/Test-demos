@@ -1,7 +1,7 @@
 import { NotionAPI } from "notion-client"
 
 const notion = new NotionAPI({
-  authToken: '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'
+  authToken: 'ntn_111597715054833VgFVtnUaFvR6C62bam4UVJEFMRrkPhu8RE222'
 })
 
 console.log('notion: ', notion)

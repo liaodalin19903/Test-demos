@@ -4,7 +4,7 @@ import { Notionable } from 'notionable'
 
 (async() => {
 
-  const INTEGRATION_KEY = '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'
+  const INTEGRATION_KEY = 'ntn_111597715054833VgFVtnUaFvR6C62bam4UVJEFMRrkPhu8RE222'
 
   const dbName = 'database-001'
 
