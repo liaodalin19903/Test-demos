@@ -5,7 +5,7 @@ const fs = require('fs');
 // import {NotionToMarkdown} from "notion-to-md";
 
 const notion = new Client({
-  auth: "ntn_111597715054833VgFVtnUaFvR6C62bam4UVJEFMRrkPhu8RE222",
+  auth: "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",
 });
 
 // passing notion client to the option

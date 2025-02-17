@@ -7,7 +7,7 @@ import { Database001PageType } from './pagetypes'
 import MKNotionPage from '../lib/mkpage'
 
 
-const token = 'ntn_111597715054833VgFVtnUaFvR6C62bam4UVJEFMRrkPhu8RE222'
+const token = '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'
 const dbId = '17ddeaa8cb4b80babdb6db9d10f6bd77'
 
 MKNotion.init(token)
