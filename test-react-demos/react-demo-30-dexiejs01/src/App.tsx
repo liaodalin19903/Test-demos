@@ -1,56 +1,42 @@
 
-import { useEffect } from 'react'
+import { useState } from 'react';
 import './App.css'
 
-import { useLiveQuery } from 'dexie-react-hooks';
-
-import { db } from './common/db'
-import { Friend, ContactInfo } from './entities/Friend';
+import Dexie from 'dexie'
 
 function App() {
 
-  const friends = useLiveQuery(() => {
-    
-    console.log('toArray: ', db.friends.toArray())
-    console.log('toCollection: ', db.friends.toCollection())
-    console.log('toCollection.toArray: ', db.friends.toCollection().toArray())
+  const [db, setDb] = useState<Dexie>()
 
-    return db.friends.toArray()
-  }, [])
+  // 创建数据库
+  const handleCreateDB = async () => {
+    try {
+      const db = new Dexie('myDatabase');
 
+      db.version(1).stores({
+        users: '++id, name, email'
+      });
 
-  const handleClick = () => {
+      // 打开数据库
+      await db.open();
 
-    const contact: ContactInfo = {
-      email: '123@gmail.com',
-      tel: 15982321123,
-      address: {
-        country: 'china',
-        province: 'sichuan',
-        street: 'chenghua street',
-        city: 'chengdu',
-        streetNo: 1321
-      }
+      setDb(db)
+
+      console.log("数据库创建成功");
+    } catch (error) {
+      console.error("数据库创建失败:", error);
     }
+  };
 
-    const friend: Friend = {
-      name: '小明',
-      age: 23,
-      contact
-    }
+  const handleAddData = async () => {
 
-    db.friends.add(friend).then(() => {
-      console.log('添加成功')
-    }).catch((err) => {
-      console.log(err)
-    })
   }
 
   return (
     <>
-      friend count: {friends?.length}
+      <button onClick={handleCreateDB}>点击创建数据库以及stores</button>
 
-      <button onClick={handleClick}>点击添加数据</button>
+      <button onClick={handleAddData}>添加数据</button>
     </>
   )
 }

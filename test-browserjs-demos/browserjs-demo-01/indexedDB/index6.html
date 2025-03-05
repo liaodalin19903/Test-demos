@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <script src="./indexedDB.js"></script>
+</head>
+<body>
+
+  <button onclick="queryDataByKey()">点击查询数据</button>
+  
+<script>
+
+  window.db = undefined
+  // 打开数据库
+  openDB('class', 1).then(( db ) => {
+    window.db = db // 保存数据库对象
+
+    console.log('打开数据库成功', db);
+
+    // 创建数据到仓库
+    let data = {
+      uuid: "67C675CB2BFAFA30338E3D2B",
+      name: "张三",
+      age: 23,
+    }
+
+    addData(db, 'students', data).then((res) => {
+      console.log('添加数据成功', res);
+    })
+
+  }).catch((err) => {
+    
+  });;
+
+
+const queryDataByKey = () => {
+  
+  console.log('db', db);
+
+  getDataByKey(db, 'students', '67C675CB2BFAFA30338E3D2B').then((res) => {
+    console.log('查询数据成功', res);
+  })
+}  
+
+</script>
+</body>
+</html>

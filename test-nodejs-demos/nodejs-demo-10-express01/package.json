@@ -15,6 +15,7 @@
   "dependencies": {
     "@notionhq/client": "^2.2.15",
     "express": "^4.21.2",
+    "mongoose": "^8.11.0",
     "notion-compat": "^7.1.6"
   },
   "devDependencies": {

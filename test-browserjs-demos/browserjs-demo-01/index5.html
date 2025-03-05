@@ -1,33 +1,38 @@
+<!DOCTYPE html>
 <html>
-<!--本文以接入版本2.25.1的Web播放器SDK为例进行说明，如需接入其他版本，请参考Web播放器SDK获取对应版本号，并在下述示例代码中将2.25.1替换成目标版本号-->
 <head>
-  <link rel="stylesheet" href="https://g.alicdn.com/apsara-media-box/imp-web-player/2.25.1/skins/default/aliplayer-min.css" />  //（必须）引用此css文件。
-  <script charset="utf-8" type="text/javascript" src="https://g.alicdn.com/apsara-media-box/imp-web-player/2.25.1/aliplayer-min.js"></script>  //（必须）引入js文件。
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="IE=edge" >
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"/>
+  <title>Aliplayer Functions</title>
+  <link rel="stylesheet" href="https://g.alicdn.com/apsara-media-box/imp-web-player/2.29.1/skins/default/aliplayer-min.css" />
+  <script type="text/javascript" charset="utf-8" src="https://g.alicdn.com/apsara-media-box/imp-web-player/2.29.1/aliplayer-min.js"></script>
+  <!-- 请下载之后使用 -->
+  <script type="text/javascript" charset="utf-8" src="./aliplayercomponents-1.1.4.min.js"></script>
 </head>
-
 <body>
-  <div id="J_prismPlayer"></div>
-
-  <script>
-    var player = new Aliplayer({
-        id: 'J_prismPlayer',
-        source: 'https://cn-shanghai-aliyun-cloudauth-1299893808154152.oss-cn-shanghai.aliyuncs.com/vod-19cecd/sv/5e1c33ea-1943ec80fe4/5e1c33ea-1943ec80fe4.mp4?Expires=1737538463&OSSAccessKeyId=STS.NSvT9HRBZBDc19aVfL85fSg5x&Signature=BqdHSu6w%2BLlVDKFRKIRJoq5itfY%3D&security-token=CAISlAR1q6Ft5B2yfSjIr5DDH4P8v5179YaIMx%2FQsmYZNLpKvKKemjz2IHhMe3lqBusfvvUynmxT5vgalrIqEc4UFR2fPZMgt8kLqF77JoHbvNeu0bsHhZv9r5cjxb%2BhjqHoeOzcYI73kJ3PAgm2AkYRrJL%2BcTK9JWjHVbSClZ9gaPkOQwC8dkAoLdxKJwxk2uN4U3zKLqSNPxfmpWDSAUF02HN7kngtxqmj5cee5xHCqVDmw41toJ%2FqcLepc%2B5mPpp0T%2F6e%2BI4TcbHaggFd9z9A9qp9kNa4kFWhhNyGBERL6BirKvfd9sYVTDV0fa8nAaVJ3uiexPRzob7UjJ%2BliUQPb%2BpTFj%2FfTYavwMLFXeqtN8ckc%2FPwP3PQ3tmSKpmw6ll1MCJKb1MSK4N8diYtU35%2FQzrBeKi84wKIMEXxQK7Ay6E%2F15V1xlSt9N6LNkWJBr6d1jsUM4IgbwZxbU9HjT26IvdWKlEQKg49QPS3NdwpPUEO%2BPi45V2LC3E5kytt0qegN6%2BMiMc2cp7iW59K640ZaaldvnEiJ1aNEOr21RdOKzc8EecLivW2acHn8sOsxOSCfOj4Ldwrt1tTbDTNlS2JRGPv%2BY4FWhz1ArDx2bMyrMSkm%2FsIeGOlFs9Ov6L%2BX%2FzZDk20TtpT%2FpXiER7ZKASO1EAWFCdW0Xch5yUqMFmKrWE8sNC82F7UVc0T%2FKFzMLr2E5TpExQRGoABVMchCwm1twMsh8CXdp%2BU9lhYZAkpqJ75hy0xXKSJqk%2Bw1w%2B2TD6OW%2Bzr%2FYr%2B%2Bh8xbyawPL7CgqTxqMc7HDuj0iGBLH8PHEwXCVq8Iec2mfNMvUkJ489nnT%2B%2FdM7ZWJcvs%2FrLcvDMqhVWbu81c4uIP9F8Vte3KktIQFVkjMRAZ2ogAA%3D%3D',
-        components: [{
-          name: 'BulletScreenComponent',
-          type: AliPlayerComponent.BulletScreenComponent,
-          /** Descriptions of the scrolling text component parameters: text, style, bulletPosition 
-           * text: The scrolling text
-           * style: The style of the scrolling text
-           * bulletPosition: The position of the scrolling text. Valid values: 'top', 'bottom', and 'random'. The default is 'random'.
-           */
-          args: ['Welcome to use Aliplayer', {fontSize: '16px', color: '#00c1de'}, 'random']
-        }]
-      },function(player){
-        console.log('The player is created.')
-     });  
-  </script>
+<div id="player-con"></div>
+<script>
+  var player = new Aliplayer({
+    id: "player-con",
+    source: "./回音.mp4",
+    width: "100%",
+    height: "500px",
+    autoplay: true,
+    isLive: false,
+    components: [{
+      name: 'BulletScreenComponent',
+      type: AliPlayerComponent.BulletScreenComponent,
+      /** Descriptions of the scrolling text component parameters: text, style, bulletPosition 
+       * text: The scrolling text
+       * style: The style of the scrolling text
+       * bulletPosition: The position of the scrolling text. Valid values: 'top', 'bottom', and 'random'. The default is 'random'.
+       */
+      args: ['廖马林 廖马林 ...', {fontSize: '16px', color: '#00c1de'}, 'random']
+    }]
+  }, function (player) {
+    console.log("The player is created");
+  });
+</script>
 </body>
-
-
-
 </html>
