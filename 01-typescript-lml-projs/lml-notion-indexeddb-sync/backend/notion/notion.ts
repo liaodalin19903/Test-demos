@@ -26,18 +26,26 @@ interface SyncC2NRequest {
   };
 }
 
+
 // 获取数据
-export const getdata_n2c = async (req: Request<{}, {}, GetDataN2CRequest>, res: Response) => {
-  const { database_id, key } = req.body;
+export const getdata_n2c = async (req: Request<{}, {}, {}, GetDataN2CRequest>, res: Response) => {
+  const { database_id, key } = req.query;
+
+  console.log("database_id+key:", database_id, key);
+  console.log("req:", req);
+
+  if (!database_id || !key) {
+    return res.status(400).json({ message: 'database_id and key are required' });
+  }
 
   try {
     // 查询数据库
     const response = await notion.databases.query({
-      database_id,
+      database_id: database_id as string,
       filter: {
         property: 'key',
         title: {
-          equals: key,
+          equals: key as string,
         },
       },
     });
@@ -61,8 +69,9 @@ export const getdata_n2c = async (req: Request<{}, {}, GetDataN2CRequest>, res: 
 
 // 同步数据
 export const sync_c2n = async (req: Request<{}, {}, SyncC2NRequest>, res: Response) => {
-  console.log('req.body: ', req.body);
-  const { database_id, key, value } = req.body;
+  //console.log('req.body: ', req.body);
+  
+  const { database_id, key, value } = req.query;
 
   try {
     // 查询数据库

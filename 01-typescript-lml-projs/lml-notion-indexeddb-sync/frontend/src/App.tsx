@@ -67,6 +67,21 @@ function App() {
     }
   };
 
+  // 从 Notion 获取数据
+  const getDataFromNotion = async () => {
+    try {
+      const params = {
+        database_id: '1acdeaa8cb4b806a8cfdcef50b72bf89', // 替换为你的 Notion 数据库 ID
+        key: '6', // 替换为你想要查询的 key
+      };
+
+      const response = await axios.get('http://localhost:3000/getdata_n2c', { params });
+      console.log('Data from Notion:', response.data);
+    } catch (error) {
+      console.error('Failed to get data from Notion', error);
+    }
+  };
+
   return (
     <>
 
@@ -75,6 +90,7 @@ function App() {
       <button onClick={addProduct}>Add Product</button>
       <button onClick={modifyUser}>Modify User</button>
       <button onClick={syncToNotion}>Sync to Notion</button>
+      <button onClick={getDataFromNotion}>Get Data from Notion</button>
     </>
   )
 }
