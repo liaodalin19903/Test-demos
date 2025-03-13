@@ -1,0 +1,2 @@
+
+export { trpc } from './trpcClient'
