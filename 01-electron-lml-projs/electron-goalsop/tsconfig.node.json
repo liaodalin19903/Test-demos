@@ -7,6 +7,7 @@
     "src/preload/**/*",
   ],
   "compilerOptions": {
+    "jsx": "react",
     "composite": true,
     "types": ["electron-vite/node"],
     "emitDecoratorMetadata": true,

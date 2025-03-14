@@ -1,16 +1,17 @@
-import { usersApi, userCreateApi } from './common/apis'
+
+import Prepare from '@renderer/components/Prepare'
+
+import Main from './layout/Main'
 
 function App(): JSX.Element {
-  const handleClick = async () => {
-    const users = await usersApi()
-
-    console.log(users)
-  }
+  const ipcHandle = (): void => window.electron.ipcRenderer.send('ping')
 
   return (
     <>
-      112233
-      <button onClick={handleClick}>点击打印users</button>
+      <div style={{  }}>
+        <Main></Main>
+        <Prepare></Prepare>
+      </div>
     </>
   )
 }
