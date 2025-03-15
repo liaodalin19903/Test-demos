@@ -11,7 +11,7 @@ import { Breadcrumb, Layout, Menu, theme } from 'antd'
 
 import { useBreadcrumbContetInfo, useBreadcrumbPathInfo } from './hooks/useBreadcrumbInfo'
 
-import { db } from '@renderer/common/db'
+import { db } from '@renderer/common/dexieDB'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { ProjSettings } from '@shared/@types'
 

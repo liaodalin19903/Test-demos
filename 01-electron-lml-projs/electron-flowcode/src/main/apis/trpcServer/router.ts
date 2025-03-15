@@ -13,12 +13,12 @@ const t = initTRPC.create({
   transformer: superjson
 })
 
-import { usersApi, userByIdApi, userCreateApi } from '..'
 
-export const appRouter = t.router({
-  usersApi: usersApi,
-  userByIdApi: userByIdApi,
-  userCreateApi: userCreateApi
-})
+import * as apis from '..'
+
+// 直接使用 apis 对象来配置 t.router
+export const appRouter = t.router(apis);
 
 export type AppRouter = typeof appRouter
+
+

@@ -1,6 +1,6 @@
 import { databasesApi } from '@renderer/common/apis'
 import React, { useEffect } from 'react'
-import { db } from '@renderer/common/db'
+import { db } from '@renderer/common/dexieDB'
 
 
 export default function Prepare() {

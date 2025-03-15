@@ -1,6 +1,8 @@
 import { Flex, Splitter, Typography } from 'antd'
 import React from 'react'
 
+import { Left } from './Left/Left'
+
 const Desc: React.FC<Readonly<{ text?: string | number }>> = (props) => (
   <Flex justify="center" align="center" style={{ height: '100%' }}>
     <Typography.Title type="secondary" level={5} style={{ whiteSpace: 'nowrap' }}>
@@ -13,7 +15,6 @@ const Desc: React.FC<Readonly<{ text?: string | number }>> = (props) => (
 export default function ProjDesign() {
   return (
     <div>
-      1234
       <Splitter
         //onResize={setSizes}
         style={{
@@ -25,7 +26,11 @@ export default function ProjDesign() {
           defaultSize={'200'}
           collapsible
         >
-          <Desc text="Left" />
+
+
+          <Left/>
+
+
         </Splitter.Panel>
         <Splitter.Panel
           resizable={false}
