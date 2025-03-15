@@ -6,6 +6,8 @@ import { DownOutlined } from '@ant-design/icons';
 import './Left.css'
 
 import { getDirTreeApi } from '@renderer/common/apis';
+import { getSelectedProjApi } from '@renderer/common/apis/projApi.dexie'
+
 
 const { Search } = Input;
 
@@ -55,19 +57,38 @@ export const Left: React.FC = () => {
   const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
 
 
-    // 获取树形数据
-    useEffect(() => {
-      const fetchTreeData = async () => {
-        try {
-          const data = await getDirTreeApi('/Users/markleo/Desktop/Test-demos/01-electron-lml-projs/electron-flowcode/src');
-          setTreeData(data);
-        } catch (error) {
-          console.error('Failed to fetch tree data:', error);
-        }
-      };
+  // 获取树形数据
+  // useEffect(() => {
+  //   const fetchTreeData = async () => {
+  //     try {
+  //       const data = await getDirTreeApi('/Users/markleo/Desktop/Test-demos/01-electron-lml-projs/electron-flowcode/src');
+  //       setTreeData(data);
+  //     } catch (error) {
+  //       console.error('Failed to fetch tree data:', error);
+  //     }
+  //   };
 
-      fetchTreeData();
-    }, []);
+  //   fetchTreeData();
+  // }, []);
+
+  useEffect(() => {
+    const fetchSelectedProjAndTreeData = async () => {
+      try {
+        const selectedProj = await getSelectedProjApi();
+        console.log('selectedProj: ', selectedProj)
+        if (selectedProj && selectedProj.path) {
+          const data = await getDirTreeApi(selectedProj.path);
+          setTreeData(data);
+        } else {
+          console.warn('No selected project or path found.');
+        }
+      } catch (error) {
+        console.error('Failed to fetch selected project or tree data:', error);
+      }
+    };
+
+    fetchSelectedProjAndTreeData();
+  }, []);
 
   // 搜索框变化事件
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {

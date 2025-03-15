@@ -45,7 +45,7 @@ export const rowSelection: TableProps<Proj>['rowSelection'] = {
     await db.projs.toArray().then((projs) => {
       const updates = projs.map((proj) => ({
         key: proj.id,
-        changes:{isSelected: false,}
+        changes:{isSelected: 0,}
       }));
 
       return db.projs.bulkUpdate(updates);
@@ -55,7 +55,7 @@ export const rowSelection: TableProps<Proj>['rowSelection'] = {
     // 2、更新选中项的数据
     const proj = {
       ...selectedRows[0],
-      isSelected: true
+      isSelected: 1
     }
 
     // 排除 key 属性

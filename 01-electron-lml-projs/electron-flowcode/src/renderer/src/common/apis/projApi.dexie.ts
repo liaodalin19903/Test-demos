@@ -7,7 +7,7 @@ import { db } from '@renderer/common/dexieDB'
 export const addProjApi = async (proj: Proj) => {
   const projUpdated: Proj = {
     ...proj,
-    isSelected: false
+    isSelected: 0
   }
 
   db.projs.add(projUpdated).then(id => {
@@ -31,4 +31,15 @@ export const updateProjApi = async (proj: Proj) => {
 
 export const deleteProjApi = async (projId: number) => {
   await db.projs.delete(projId)
+};
+
+// 新增的 getSelectedProjApi
+export const getSelectedProjApi = async (): Promise<Proj | undefined> => {
+  try {
+    const selectedProj = await db.projs.where('isSelected').equals(1).first();
+    return selectedProj;
+  } catch (error) {
+    console.error('Unable to get selected project:', error);
+    return undefined;
+  }
 };

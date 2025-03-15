@@ -13,7 +13,7 @@ export interface Proj {
   name: string
   desc?: string
   path: string
-  isSelected: boolean
+  isSelected: number
   created_time?: string
   updated_time?: string
 }
