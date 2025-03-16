@@ -1,8 +1,7 @@
 // 配置参考定义的entity
-// import { Proj } from '@shared/db-entities/ProjMod';
 
 import type { CRUDModalProps } from '@renderer/components/CRUDModal'
-import { Proj, ProjMod } from '@shared/db-entities/Proj'
+import { ProjMod } from '@shared/db-entities/Proj'
 
 import { addProjMod, deleteProjMod, updateProjMod } from '@renderer/common/apis/proj'
 import { useProjStore } from '@renderer/common/store'
@@ -74,6 +73,8 @@ const useGetProps = (type: CRUDModalProps['type'], fetchProjMods: (projId: numbe
 
   return props
 }
+
+//===========================
 
 // 新增
 export const useCreateProjModProps = (fetchProjMods: (projId: number) => Promise<void>): CRUDModalProps => {

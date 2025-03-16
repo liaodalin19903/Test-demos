@@ -1,5 +1,5 @@
 {
-  "extends": "@electron-toolkit/tsconfig/tsconfig.node.json",
+  "extends": "@electron-toolkit/tsconfig/tsconfig.web.json",
   "include": [
     "src/main/**/*",
     "src/renderer/src/**/*",
@@ -7,11 +7,8 @@
     "src/preload/**/*",
   ],
   "compilerOptions": {
-    "jsx": "react",
     "composite": true,
-    "types": ["electron-vite/node"],
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
+    "jsx": "react-jsx",
     "baseUrl": ".",
     "paths": {
       "@main/*": ["src/main/*"],
@@ -20,5 +17,7 @@
       "@prelaod/*": ["src/preload/*"],
       "@types/*": ["src/shared/@types/*"]
     },
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
   }
 }
