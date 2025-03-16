@@ -1,22 +1,41 @@
 import { Client } from '@notionhq/client';
 
-const NOTION_TOKEN = 'ntn_111597715054833VgFVtnUaFvR6C62bam4UVJEFMRrkPhu8RE222'
+const NOTION_TOKEN = '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';
+const DATABASE_ID = '1acdeaa8cb4b8098a2ace32e51ba6508';
 
 const notion = new Client({
   auth: NOTION_TOKEN,
 });
 
+async function queryPagesUpdatedAfter() {
+  try {
+    // 构建查询参数
+    const query = {
+      database_id: DATABASE_ID,
+      filter: {
+        "timestamp": "last_edited_time",
+        "last_edited_time": {
+          "on_or_before": "2025-03-07"
+        }
+      }
+    };
 
-const PAGE_ID = '182deaa8cb4b80aa98b7dd9769a6df02'
+    // 执行数据库查询
+    const response = await notion.databases.query(query);
 
-//182deaa8-cb4b-800d-bad2-c1790f00a4af
+    // 处理查询结果
+    const pages = response.results;
+    console.log(`找到 ${pages.length} 个更新时间大于 2025-03-07 的页面：`);
+    pages.forEach((page) => {
+      console.log(`页面 ID: ${page.id}, 最后编辑时间: ${page.last_edited_time}`);
+    });
 
+    return pages;
+  } catch (error) {
+    console.error('查询页面时出错:', error);
+    return [];
+  }
+}
 
-const page_blocks = await notion.blocks.children.list({
-  block_id: PAGE_ID
-})
-
-
-console.log(JSON.stringify(page_blocks) )
-
-
+// 调用函数执行查询
+queryPagesUpdatedAfter();

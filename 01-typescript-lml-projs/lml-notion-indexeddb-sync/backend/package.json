@@ -6,7 +6,7 @@
   "module": "es2022",
   "type": "commonjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest",
     "dev": "ts-node-dev app.ts"
   },
   "keywords": [],
@@ -18,7 +18,12 @@
   },
   "devDependencies": {
     "@types/express": "^5.0.0",
+    "@types/jest": "^29.5.14",
+    "@types/supertest": "^6.0.2",
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.8"
   }
 }

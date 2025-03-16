@@ -19,3 +19,15 @@ export interface Products {
   name: string,
   price: number,
 }
+
+// src/common/types.ts
+export interface SyncInfo {
+  database_id: string;
+  store_name: string;
+  store_key: string;
+  sync_date: string;
+  content: {
+    n2c: number[];
+    c2n: number[];
+  };
+}
