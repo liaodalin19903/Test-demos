@@ -46,22 +46,22 @@ export const Left: React.FC = () => {
 
   const [modal, contextHolder] = Modal.useModal();
 
-  useEffect(() => {
-    const fetchSelectedProjAndTreeData = async () => {
-      try {
-        const selectedProj = await getSelectedProjApi();
+  const fetchSelectedProjAndTreeData = async () => {
+    try {
+      const selectedProj = await getSelectedProjApi();
 
-        if (selectedProj && selectedProj.path) {
-          const data = await getDirTreeApi(selectedProj.path);
-          setTreeData(data);
-        } else {
-          console.warn('No selected project or path found.');
-        }
-      } catch (error) {
-        console.error('Failed to fetch selected project or tree data:', error);
+      if (selectedProj && selectedProj.path) {
+        const data = await getDirTreeApi(selectedProj.path);
+        setTreeData(data);
+      } else {
+        console.warn('No selected project or path found.');
       }
-    };
+    } catch (error) {
+      console.error('Failed to fetch selected project or tree data:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchSelectedProjAndTreeData();
   }, []);
 
@@ -168,10 +168,7 @@ export const Left: React.FC = () => {
           onClick: () => {
             console.log('创建flowcode文件', rightClickNode);
             // 在这里添加创建文件的逻辑
-
-            handleCreate(rightClickNode.key)
-
-
+            handleCreate(rightClickNode!.key as string)
           },
         },
       ]}
@@ -204,7 +201,7 @@ export const Left: React.FC = () => {
   };
 
   const handleCreate = (path: string) => {
-    const props = useCreateFlowcodeFileProps(path)
+    const props = useCreateFlowcodeFileProps(path, fetchSelectedProjAndTreeData)
     CUDModal(modal, props)
   }
 

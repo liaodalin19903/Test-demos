@@ -9,7 +9,7 @@ import { ipcRequestHandler } from './apis/trpcServer/ipcRequestHandler'
 function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 900,
+    width: 1260,
     height: 670,
     show: false,
     autoHideMenuBar: true,

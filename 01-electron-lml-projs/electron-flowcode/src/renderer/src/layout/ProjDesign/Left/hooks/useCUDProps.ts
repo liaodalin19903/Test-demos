@@ -15,7 +15,7 @@ import { addFlowcodeFileApi} from '@renderer/common/apis/dirApi'
  * 生成props
  * @param flowcodeCreateData
  */
-const getProps = (type: CUDModalProps['type'], path: string, flowcodeCreateData?: FlowcodeCreateSchema): CUDModalProps => {
+const getProps = (type: CUDModalProps['type'], path: string, cb: Function, flowcodeCreateData?: FlowcodeCreateSchema): CUDModalProps => {
 
   const onConfirm = async (formData: unknown) => {
     console.log('接受到回调：', formData as FlowcodeCreateSchema)
@@ -23,6 +23,7 @@ const getProps = (type: CUDModalProps['type'], path: string, flowcodeCreateData?
       console.log('点击创建')
       console.log('formData: ', formData)
       await addFlowcodeFileApi(formData as FlowcodeCreateSchema)
+      cb()
     }
   }
 
@@ -53,9 +54,9 @@ const getProps = (type: CUDModalProps['type'], path: string, flowcodeCreateData?
 }
 
 // 生成项目基础配置创建 的props
-export const useCreateFlowcodeFileProps = (path: string): CUDModalProps => {
+export const useCreateFlowcodeFileProps = (path: string, cb: Function): CUDModalProps => {
 
-  const props: CUDModalProps = getProps('create', path)
+  const props: CUDModalProps = getProps('create', path, cb)
   return props
 }
 
