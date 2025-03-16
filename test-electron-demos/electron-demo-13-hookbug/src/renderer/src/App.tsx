@@ -5,7 +5,7 @@ function App(): JSX.Element {
   const data: string[]  = usePrepareData()  // 1、先执行hooks里面的useEffect
 
   useEffect(() => {
-    console.log('exe: App.ts')  // 2、再执行组件里面的useEffect
+    console.log('exe: App.ts')  // 2、再执行组件里面的useEffectpnpm add -D vitest @vitest/runner @vitest/ui jsdompnpm add -D vitest @vitest/runner @vitest/ui jsdom
   }, [])
 
   return (
