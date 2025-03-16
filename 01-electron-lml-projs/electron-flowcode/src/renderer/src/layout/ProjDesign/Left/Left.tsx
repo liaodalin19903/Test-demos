@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Input, Tree } from 'antd';
+import { Input, Tree, Menu } from 'antd';
+import { Dropdown } from 'antd';
 import type { TreeDataNode, TreeProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 
@@ -7,37 +8,20 @@ import './Left.css'
 
 import { getDirTreeApi } from '@renderer/common/apis';
 import { getSelectedProjApi } from '@renderer/common/apis/projApi.dexie'
+import { DataNode } from 'antd/es/tree';
+import { isDirectory } from './utils/utils';
 
+import { useCreateFlowcodeFileProps } from './hooks/useCUDProps';
+import { Modal } from 'antd'
+import CUDModal from '@renderer/components/CUDModal'
 
 const { Search } = Input;
-
-// 预定义的静态树形数据
-/*
-const treeData: TreeDataNode[] = [
-  {
-    title: 'parent 0',
-    key: '0-0',
-    children: [
-      { title: 'leaf 0-0', key: '0-0-0', isLeaf: true },
-      { title: 'leaf 0-1', key: '0-0-1', isLeaf: true },
-    ],
-  },
-  {
-    title: 'parent 1',
-    key: '0-1',
-    children: [
-      { title: 'leaf 1-0', key: '0-1-0', isLeaf: true },
-      { title: 'leaf 1-1', key: '0-1-1', isLeaf: true },
-    ],
-  },
-];
-*/
 
 // 获取父节点 Key
 const getParentKey = (key: React.Key, tree: TreeDataNode[]): React.Key | null => {
   for (const node of tree) {
     if (node.children) {
-      if (node.children.some((item) => item.key === key)) {
+      if ( node.children.some((item) => item.key === key)) {
         return node.key;
       }
       const parentKey = getParentKey(key, node.children);
@@ -49,33 +33,24 @@ const getParentKey = (key: React.Key, tree: TreeDataNode[]): React.Key | null =>
   return null;
 };
 
+
+
 export const Left: React.FC = () => {
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
   const [searchValue, setSearchValue] = useState('');
   const [autoExpandParent, setAutoExpandParent] = useState(true);
   const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
+  const [rightClickNode, setRightClickNode] = useState<TreeDataNode | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-
-  // 获取树形数据
-  // useEffect(() => {
-  //   const fetchTreeData = async () => {
-  //     try {
-  //       const data = await getDirTreeApi('/Users/markleo/Desktop/Test-demos/01-electron-lml-projs/electron-flowcode/src');
-  //       setTreeData(data);
-  //     } catch (error) {
-  //       console.error('Failed to fetch tree data:', error);
-  //     }
-  //   };
-
-  //   fetchTreeData();
-  // }, []);
+  const [modal, contextHolder] = Modal.useModal();
 
   useEffect(() => {
     const fetchSelectedProjAndTreeData = async () => {
       try {
         const selectedProj = await getSelectedProjApi();
-        console.log('selectedProj: ', selectedProj)
+
         if (selectedProj && selectedProj.path) {
           const data = await getDirTreeApi(selectedProj.path);
           setTreeData(data);
@@ -164,16 +139,74 @@ export const Left: React.FC = () => {
 
   // 勾选事件
   const onCheck: TreeProps['onCheck'] = (checkedKeysValue) => {
-    console.log('onCheck', checkedKeysValue);
+    //console.log('onCheck', checkedKeysValue);
     setCheckedKeys(checkedKeysValue as React.Key[]);
   };
 
   // 展开事件
   const onExpand: TreeProps['onExpand'] = (newExpandedKeys) => {
-    console.log('onExpand', newExpandedKeys);
+    //console.log('onExpand', newExpandedKeys);
     setExpandedKeys(newExpandedKeys);
     setAutoExpandParent(false);
   };
+
+  const handleRigthClick = ({ event, node }: { event: React.MouseEvent; node: TreeDataNode }) => {
+    event.preventDefault();
+    const isDir = isDirectory(node);
+    if (isDir) {
+      setRightClickNode(node);
+      setIsDropdownOpen(true);
+    }
+  };
+
+  const menu = (
+    <Menu
+      items={[
+        {
+          key: 'add',
+          label: <span>创建flowcode文件</span>,
+          onClick: () => {
+            console.log('创建flowcode文件', rightClickNode);
+            // 在这里添加创建文件的逻辑
+
+            handleCreate(rightClickNode.key)
+
+
+          },
+        },
+      ]}
+    />
+  );
+
+  const titleRender = (nodeData: DataNode) => {
+    // 确保 title 是 ReactNode 类型
+    const getTitle = (): React.ReactNode => {
+      if (typeof nodeData.title === 'function') {
+        return (nodeData.title as (data: DataNode) => React.ReactNode)(nodeData);
+      }
+      return nodeData.title;
+    };
+
+    const title = getTitle()
+
+    const isDir = isDirectory(nodeData)
+
+    if(isDir) {
+      return (
+        <Dropdown menu={{ items: menu.props.items }} trigger={['contextMenu']}>
+          <div>{title}</div>
+        </Dropdown>
+      );
+    }
+
+    return <div>{title}</div>
+
+  };
+
+  const handleCreate = (path: string) => {
+    const props = useCreateFlowcodeFileProps(path)
+    CUDModal(modal, props)
+  }
 
   return (
     <div>
@@ -188,8 +221,14 @@ export const Left: React.FC = () => {
         onCheck={onCheck}
         checkedKeys={checkedKeys}
         treeData={filteredTreeData}
-        titleRender={(nodeData) => nodeData.displayTitle}
+        titleRender={titleRender}
+        onRightClick={handleRigthClick}
+        onClick={(e) => {
+          e.preventDefault();
+          setIsDropdownOpen(false);
+        }}
       />
+    {contextHolder}
     </div>
   );
 };

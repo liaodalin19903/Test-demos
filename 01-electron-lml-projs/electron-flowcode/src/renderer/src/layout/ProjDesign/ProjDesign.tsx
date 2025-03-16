@@ -26,11 +26,7 @@ export default function ProjDesign() {
           defaultSize={'200'}
           collapsible
         >
-
-
           <Left/>
-
-
         </Splitter.Panel>
         <Splitter.Panel
           resizable={false}

@@ -4,8 +4,8 @@
 export interface ProjSettings {
   id?: number
   selectedNavMenuKey: string // 左侧栏nav menu选中的key
-  created_time: string
-  updated_time: string
+  created_time?: string
+  updated_time?: string
 }
 
 export interface Proj {

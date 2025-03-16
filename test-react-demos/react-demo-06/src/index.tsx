@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+import App from './App2';
 import reportWebVitals from './reportWebVitals';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -15,10 +15,7 @@ const root = ReactDOM.createRoot(
 export const queryClient = new QueryClient()
 
 root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-
+  <App />
 );
 
 // If you want to start measuring performance in your app, pass a function

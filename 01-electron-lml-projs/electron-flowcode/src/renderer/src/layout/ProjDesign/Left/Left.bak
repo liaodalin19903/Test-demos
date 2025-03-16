@@ -1,7 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Input, Tree, Menu, Popover, Button } from 'antd';
+import { Input, Tree, Dropdown, Menu } from 'antd';
 import type { TreeDataNode, TreeProps } from 'antd';
-import { DownOutlined, AppstoreOutlined, MailOutlined, SettingOutlined } from '@ant-design/icons';
+import { DownOutlined } from '@ant-design/icons';
+
+import './Left.css'
+
+import { getDirTreeApi } from '@renderer/common/apis';
+import { getSelectedProjApi } from '@renderer/common/apis/projApi.dexie'
+
 
 const { Search } = Input;
 
@@ -21,6 +27,7 @@ const getParentKey = (key: React.Key, tree: TreeDataNode[]): React.Key | null =>
   return null;
 };
 
+
 const isDirectory = (node: TreeDataNode): boolean => {
   // 检查 node 是否有 children 属性
   if (node.children && node.children.length > 0) {
@@ -37,81 +44,33 @@ const isDirectory = (node: TreeDataNode): boolean => {
   return true;
 };
 
-// 给定的 treeData
-const givenTreeData: TreeDataNode[] = [
-  {
-    title: 'Folder 1',
-    key: '1',
-    children: [
-      {
-        title: 'File 1',
-        key: '1-1'
-      },
-      {
-        title: 'File 2',
-        key: '1-2'
-      }
-    ]
-  },
-  {
-    title: 'Folder 2',
-    key: '2',
-    children: [
-      {
-        title: 'File 3',
-        key: '2-1'
-      }
-    ]
-  }
-];
-
-// 定义菜单项
-const menuItems = [
-  {
-    key: '1',
-    label: (
-      <span>
-        <MailOutlined />
-        Option 1
-      </span>
-    ),
-  },
-  {
-    key: '2',
-    label: (
-      <span>
-        <AppstoreOutlined />
-        Option 2
-      </span>
-    ),
-  },
-  {
-    key: 'submenu',
-    label: 'Submenu',
-    icon: <SettingOutlined />,
-    children: [
-      {
-        key: '3',
-        label: 'Option 3',
-      },
-      {
-        key: '4',
-        label: 'Option 4',
-      },
-    ],
-  },
-];
-
-
-const App: React.FC = () => {
+export const Left: React.FC = () => {
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
   const [checkedKeys, setCheckedKeys] = useState<React.Key[]>([]);
   const [searchValue, setSearchValue] = useState('');
   const [autoExpandParent, setAutoExpandParent] = useState(true);
-  const [treeData] = useState<TreeDataNode[]>(givenTreeData);
-  const [open, setOpen] = useState(false);
-  const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
-  const [selectedNode, setSelectedNode] = useState<TreeDataNode | null>(null);
+  const [treeData, setTreeData] = useState<TreeDataNode[]>([]);
+  const [rightClickNode, setRightClickNode] = useState<TreeDataNode | null>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchSelectedProjAndTreeData = async () => {
+      try {
+        const selectedProj = await getSelectedProjApi();
+        console.log('selectedProj: ', selectedProj)
+        if (selectedProj && selectedProj.path) {
+          const data = await getDirTreeApi(selectedProj.path);
+          setTreeData(data);
+        } else {
+          console.warn('No selected project or path found.');
+        }
+      } catch (error) {
+        console.error('Failed to fetch selected project or tree data:', error);
+      }
+    };
+
+    fetchSelectedProjAndTreeData();
+  }, []);
 
   // 搜索框变化事件
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -198,92 +157,64 @@ const App: React.FC = () => {
     setAutoExpandParent(false);
   };
 
-  // 处理 Tree 节点右键点击事件
-  // @ts-ignore
-  const handleRigthClick = ( e )=> {
-    
-    const { event, node } = e
-    
+  const handleRigthClick = ({ event, node }: { event: React.MouseEvent; node: TreeDataNode }) => {
+
     event.preventDefault();
-    setOpen(true);
-    setContextMenuPosition({ x: event.clientX, y: event.clientY });
-    setSelectedNode(node);
 
+    const isDir = isDirectory(node)
 
-    const isDir = isDirectory(node);
-    if (isDir) {
-      console.log('isDir:', node);
-      // 这里需要进行弹出`右键Menu`
-
-
-    } else {
-      console.log('isFile:', node);
+    if(isDir) {
+      setRightClickNode(node);
+      setIsDropdownOpen(true);
     }
 
-    
   };
 
-  // 处理菜单项点击事件
-  const handleMenuItemClick = (e: { key: string }) => {
-    setOpen(false);
-    if (selectedNode) {
-      console.log('Selected node:', selectedNode);
-      console.log('Selected menu item key:', e.key);
-      // 根据菜单项和节点信息执行相应操作
-      switch (e.key) {
-        case '1':
-          console.log('Option 1 clicked on node:', selectedNode);
-          break;
-        case '2':
-          console.log('Option 2 clicked on node:', selectedNode);
-          break;
-        case '3':
-          console.log('Option 3 clicked on node:', selectedNode);
-          break;
-        case '4':
-          console.log('Option 4 clicked on node:', selectedNode);
-          break;
-        default:
-          console.log('Unknown option clicked');
-      }
-    }
+  const menu = {
+    items: [
+      {
+        key: 'add',
+        label: <span>创建flowcode文件</span>,
+        onClick: () => {
+          //console.log('创建flowcode文件', rightClickNode);
+          //setIsDropdownOpen(true);
+        },
+      },
+    ]
   };
 
   return (
     <div>
       <Search style={{ marginBottom: 8 }} placeholder="Search" onChange={onChange} />
-      <Tree
-        showLine
-        checkable
-        switcherIcon={<DownOutlined />}
-        onExpand={onExpand}
-        expandedKeys={expandedKeys}
-        autoExpandParent={autoExpandParent}
-        onCheck={onCheck}
-        checkedKeys={checkedKeys}
-        treeData={filteredTreeData}
-        //@ts-ignore
-        titleRender={(nodeData) => nodeData.displayTitle}
-        //@ts-ignore
-        onRightClick={handleRigthClick}
-      />
-
-      <Popover
-        content={
-          <Menu items={menuItems} onClick={handleMenuItemClick} />
-        }
-        trigger="contextMenu"
-        open={open}
-        onOpenChange={(newOpen) => setOpen(newOpen)}
-        placement="bottomLeft"
-        getPopupContainer={() => document.body}
-        style={{ left: contextMenuPosition.x, top: contextMenuPosition.y }}
+      <Dropdown
+        menu={menu}
+        trigger={['contextMenu']}
+        open={isDropdownOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            setRightClickNode(null);
+          }
+        }}
       >
-        {/* 这里的 Button 只是占位，实际不会显示 */}
-        <Button style={{ display: 'none' }} />
-      </Popover>
+        <Tree
+          showLine
+          checkable
+          switcherIcon={<DownOutlined />}
+          onExpand={onExpand}
+          expandedKeys={expandedKeys}
+          autoExpandParent={autoExpandParent}
+          onCheck={onCheck}
+          checkedKeys={checkedKeys}
+          treeData={filteredTreeData}
+          // @ts-ignore
+          titleRender={(nodeData) => nodeData.displayTitle}
+          onRightClick={handleRigthClick}
+          onClick={(e)=> {
+            e.preventDefault()
+            setIsDropdownOpen(false);
+          }}
+        />
+      </Dropdown>
     </div>
   );
 };
-
-export default App;

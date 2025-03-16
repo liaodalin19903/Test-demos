@@ -1,6 +1,6 @@
 import * as z from 'zod';
 import { publicProcedure } from './trpcServer/procedure';
-import { readDirectoryRecursively } from '../utils/fileUtils'; // 假设有一个工具函数用于递归读取目录
+import { readDirectoryRecursively, createFile } from '../utils/fileUtils'; // 假设有一个工具函数用于递归读取目录
 
 // 定义输入参数的验证规则
 const getDirTreeInputSchema = z.object({
@@ -25,3 +25,20 @@ export const getDirTreeApi = publicProcedure
       throw new Error(`Failed to read directory: ${error}`);
     }
   });
+
+export const addFlowcodeFileApi = publicProcedure
+.input(
+  z.object({
+      path: z.string(),
+      filename: z.string()
+  })
+) // 验证输入参数
+.mutation(async ({ input: { path, filename } }) => {
+  console.log('path, filename: ', path, filename)
+
+  try {
+    createFile(path, filename, '{}');
+  } catch (error) {
+    console.error('文件创建过程中出现错误:', error);
+  }
+})
