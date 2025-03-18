@@ -1,6 +1,3 @@
-# 功能
-用于 经典使用XFlow （dnd + 其他功能）
-
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
