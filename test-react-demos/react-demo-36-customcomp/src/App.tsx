@@ -1,6 +1,6 @@
 import './App.css'
 
-import FlowcodeStepCollapsible from './components/FlowcodeStepCollapsible'
+import FlowcodeStepCollapsible from './components/FlowcodeStepCollapsible/index.tsx'
 
 function App() {
 
