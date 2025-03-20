@@ -1,6 +1,6 @@
 import './App.css'
 
-import XFlowComp from './components/XFlowComp'
+import XFlowComp from './components/XFlowComp2ForStepNode'
 function App() {
 
   return (
