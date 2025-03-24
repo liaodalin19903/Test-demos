@@ -1,4 +1,4 @@
-import { XFlow, XFlowGraph, Background, Control } from '@antv/xflow';
+import { XFlow, XFlowGraph, Background, Control, History } from '@antv/xflow';
 import React, { useState } from 'react';
 import { useHistory } from '@antv/xflow';
 import InitData from './InitData';
@@ -9,6 +9,7 @@ export default function XFlowComp() {
     <div className="xflow-container">
       <XFlow>
         {/* 将按钮和 history 控制逻辑移到 XFlow 内部 */}
+        <History/>
         <HistoryControls />
         <div className="xflow-control-content-graph">
           <InitData />

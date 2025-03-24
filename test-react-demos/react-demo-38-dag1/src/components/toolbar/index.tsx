@@ -16,23 +16,9 @@ const Toolbar = () => {
   const graph = useGraphInstance();
   const { undo, redo, canUndo, canRedo } = useHistory();
 
-  // const { copy, paste } = useClipboard();
-  // const nodes = useGraphStore((state) => state.nodes);
   const updateNode = useGraphStore((state) => state.updateNode);
   const updateEdge = useGraphStore((state) => state.updateEdge);
-  // const removeNodes = useGraphStore((state) => state.removeNodes);
 
-  
-
-  // useKeyboard('ctrl+c', () => onCopy());
-
-  // useKeyboard('ctrl+v', () => onPaste());
-
-  // useKeyboard('backspace', () => {
-  //   const selected = nodes.filter((node) => node.selected);
-  //   const ids: string[] = selected.map((node) => node.id || '');
-  //   removeNodes(ids);
-  // });
 
   useGraphEvent('cell:changed', (cell) => {
     //console.log('cell:changed', cell);
@@ -40,9 +26,6 @@ const Toolbar = () => {
 
 
   useGraphEvent('node:change:data', ({ node }) => {
-
-    //console.log('node:change:data', node);
-
   
     if (graph) {
       const edges = graph.getIncomingEdges(node);
@@ -90,20 +73,8 @@ const Toolbar = () => {
     }
   };
 
-  // const onCopy = () => {
-  //   const selected = nodes.filter((node) => node.selected);
-  //   const ids: string[] = selected.map((node) => node.id || '');
-  //   copy(ids);
-  // };
-
-  // const onPaste = () => {
-  //   paste();
-  // };
-
   const onUndo = () => {
-    console.log('点击撤销')
 
-    console.log(canUndo,canRedo)  // 一直是false，不管怎么修改node的title和移动位置
     if(canUndo) {
       console.log('canUndo')
       undo();
@@ -112,7 +83,6 @@ const Toolbar = () => {
   };
 
   const onRedo = () => {
-    console.log('点击重做')
     if(canRedo) {
       console.log('canRedo')
       redo();

@@ -1,4 +1,4 @@
-import { XFlow, XFlowGraph, Clipboard, Minimap, Control } from '@antv/xflow';
+import { XFlow, XFlowGraph, Clipboard, Minimap, Control, History } from '@antv/xflow';
 
 import { ConfigDrawer } from '../components/config-drawer/index';
 import { Connect } from '../components/connect';
@@ -20,6 +20,7 @@ const Index = () => {
           <div className={styles.center}>
             <div className={styles.toolbar}>
               <Toolbar />
+              <History/>
             </div>
             <div className={styles.graph}>
               <XFlowGraph
