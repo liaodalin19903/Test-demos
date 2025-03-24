@@ -6,31 +6,48 @@ import {
   useGraphEvent,
   useGraphStore,
   useKeyboard,
+  useHistory
 } from '@antv/xflow';
+
 import { Button, Space } from 'antd';
+
 
 const Toolbar = () => {
   const graph = useGraphInstance();
-  const { copy, paste } = useClipboard();
-  const nodes = useGraphStore((state) => state.nodes);
+  const { undo, redo, canUndo, canRedo } = useHistory();
+
+  // const { copy, paste } = useClipboard();
+  // const nodes = useGraphStore((state) => state.nodes);
   const updateNode = useGraphStore((state) => state.updateNode);
   const updateEdge = useGraphStore((state) => state.updateEdge);
-  const removeNodes = useGraphStore((state) => state.removeNodes);
+  // const removeNodes = useGraphStore((state) => state.removeNodes);
 
-  useKeyboard('ctrl+c', () => onCopy());
+  
 
-  useKeyboard('ctrl+v', () => onPaste());
+  // useKeyboard('ctrl+c', () => onCopy());
 
-  useKeyboard('backspace', () => {
-    const selected = nodes.filter((node) => node.selected);
-    const ids: string[] = selected.map((node) => node.id || '');
-    removeNodes(ids);
-  });
+  // useKeyboard('ctrl+v', () => onPaste());
+
+  // useKeyboard('backspace', () => {
+  //   const selected = nodes.filter((node) => node.selected);
+  //   const ids: string[] = selected.map((node) => node.id || '');
+  //   removeNodes(ids);
+  // });
+
+  useGraphEvent('cell:changed', (cell) => {
+    //console.log('cell:changed', cell);
+  })
+
 
   useGraphEvent('node:change:data', ({ node }) => {
+
+    //console.log('node:change:data', node);
+
+  
     if (graph) {
       const edges = graph.getIncomingEdges(node);
       const { status } = node.data;
+
       edges?.forEach((edge: Edge) => {
         if (status === 'running') {
           updateEdge(edge.id, {
@@ -43,6 +60,7 @@ const Toolbar = () => {
         }
       });
     }
+
   });
 
   const handleExecute = () => {
@@ -72,15 +90,34 @@ const Toolbar = () => {
     }
   };
 
-  const onCopy = () => {
-    const selected = nodes.filter((node) => node.selected);
-    const ids: string[] = selected.map((node) => node.id || '');
-    copy(ids);
+  // const onCopy = () => {
+  //   const selected = nodes.filter((node) => node.selected);
+  //   const ids: string[] = selected.map((node) => node.id || '');
+  //   copy(ids);
+  // };
+
+  // const onPaste = () => {
+  //   paste();
+  // };
+
+  const onUndo = () => {
+    console.log('点击撤销')
+
+    console.log(canUndo,canRedo)  // 一直是false，不管怎么修改node的title和移动位置
+    if(canUndo) {
+      console.log('canUndo')
+      undo();
+    }
+    
   };
 
-  const onPaste = () => {
-    paste();
-  };
+  const onRedo = () => {
+    console.log('点击重做')
+    if(canRedo) {
+      console.log('canRedo')
+      redo();
+    }
+  }
 
   return (
     <Space>
@@ -93,13 +130,13 @@ const Toolbar = () => {
         <PlayCircleOutlined />
         全部执行
       </Button>
-      <Button type="primary" size="small" style={{ fontSize: 12 }} onClick={onCopy}>
+      <Button type="primary" size="small" style={{ fontSize: 12 }} onClick={onUndo}>
         <CopyOutlined />
-        复制
+        撤销
       </Button>
-      <Button type="primary" size="small" style={{ fontSize: 12 }} onClick={onPaste}>
+      <Button type="primary" size="small" style={{ fontSize: 12 }} onClick={onRedo}>
         <CopyOutlined />
-        粘贴
+        重做
       </Button>
     </Space>
   );
