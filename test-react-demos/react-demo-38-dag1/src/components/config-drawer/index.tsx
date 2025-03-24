@@ -50,7 +50,7 @@ const ConfigDrawer = () => {
       <Drawer
         width={300}
         open={open}
-        title="组件信息"
+        title="节点信息"
         destroyOnClose
         mask={false}
         onClose={onClose}
@@ -66,10 +66,10 @@ const ConfigDrawer = () => {
         <Form form={form} layout="vertical" requiredMark={false} autoComplete="off">
           <Form.Item
             name="label"
-            label="组件名"
-            rules={[{ required: true, message: '请填写组件名称' }]}
+            label="节点名"
+            rules={[{ required: true, message: '请填写节点名称' }]}
           >
-            <Input placeholder="请填写组件名称" />
+            <Input placeholder="请填写节点名称" />
           </Form.Item>
         </Form>
       </Drawer>
