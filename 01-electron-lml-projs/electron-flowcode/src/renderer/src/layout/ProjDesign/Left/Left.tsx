@@ -17,6 +17,8 @@ import CUDModal from '@renderer/components/CUDModal'
 
 const { Search } = Input;
 
+import { db } from '@renderer/common/dexieDB';
+
 // 获取父节点 Key
 const getParentKey = (key: React.Key, tree: TreeDataNode[]): React.Key | null => {
   for (const node of tree) {
@@ -32,8 +34,6 @@ const getParentKey = (key: React.Key, tree: TreeDataNode[]): React.Key | null =>
   }
   return null;
 };
-
-
 
 export const Left: React.FC = () => {
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
@@ -63,6 +63,8 @@ export const Left: React.FC = () => {
 
   useEffect(() => {
     fetchSelectedProjAndTreeData();
+
+
   }, []);
 
   // 搜索框变化事件
@@ -205,6 +207,21 @@ export const Left: React.FC = () => {
     CUDModal(modal, props)
   }
 
+  const findNodeByKey = (data: TreeDataNode[], key: React.Key): TreeDataNode | null => {
+    for (const node of data) {
+      if (node.key === key) {
+        return node;
+      }
+      if (node.children) {
+        const found = findNodeByKey(node.children, key);
+        if (found) {
+          return found;
+        }
+      }
+    }
+    return null;
+  };
+
   return (
     <div>
       <Search style={{ marginBottom: 8 }} placeholder="Search" onChange={onChange} />
@@ -212,20 +229,32 @@ export const Left: React.FC = () => {
         showLine
         checkable
         switcherIcon={<DownOutlined />}
-        onExpand={onExpand}
         expandedKeys={expandedKeys}
         autoExpandParent={autoExpandParent}
-        onCheck={onCheck}
         checkedKeys={checkedKeys}
         treeData={filteredTreeData}
         titleRender={titleRender}
+        onExpand={onExpand}
+        onCheck={onCheck}
         onRightClick={handleRigthClick}
-        onClick={(e) => {
-          e.preventDefault();
+        onClick={(event) => {
+          event.preventDefault();
           setIsDropdownOpen(false);
         }}
+        onSelect={async (selectedKeys, e) => {
+
+          const settings = await db.settings.toArray()
+
+          const setting = settings[0]
+          setting.editingFilePath = selectedKeys[0] as string
+
+          db.settings.update(setting.id, setting).then((res) => {
+            console.log(res)
+          })
+        }}
+
       />
-    {contextHolder}
+      {contextHolder}
     </div>
   );
 };

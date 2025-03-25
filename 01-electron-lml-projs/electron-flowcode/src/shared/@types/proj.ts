@@ -4,6 +4,7 @@
 export interface ProjSettings {
   id?: number
   selectedNavMenuKey: string // 左侧栏nav menu选中的key
+  editingFilePath? : string // 正在编辑的fc.json（路径）
   created_time?: string
   updated_time?: string
 }

@@ -3,6 +3,8 @@ import React from 'react'
 
 import { Left } from './Left/Left'
 
+import XFlowComp from './XFlowComp/index'
+
 const Desc: React.FC<Readonly<{ text?: string | number }>> = (props) => (
   <Flex justify="center" align="center" style={{ height: '100%' }}>
     <Typography.Title type="secondary" level={5} style={{ whiteSpace: 'nowrap' }}>
@@ -16,7 +18,6 @@ export default function ProjDesign() {
   return (
     <div>
       <Splitter
-        //onResize={setSizes}
         style={{
           height: 'calc(100vh - 270px)',
           boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'
@@ -31,7 +32,9 @@ export default function ProjDesign() {
         <Splitter.Panel
           resizable={false}
         >
-          <Desc text="Main" />
+          {/* <Desc text="Main" /> */}
+
+          <XFlowComp/>
         </Splitter.Panel>
         <Splitter.Panel
           defaultSize={'200'}

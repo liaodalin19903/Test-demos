@@ -95,6 +95,11 @@ const Main: React.FC = () => {
     title: path
   }));
 
+  const test = () => {
+    console.log('test');
+    
+  };
+
   return (
     <div style={{ width: '100vw', height: '100vh' }}>
       <Layout style={{ minHeight: '100vh' }}>
@@ -126,6 +131,7 @@ const Main: React.FC = () => {
           </Content>
           <Footer style={{ textAlign: 'center' }}>
             Ant Design ©{new Date().getFullYear()} Created by Ant UED
+            <button onClick={test()}>测试</button>
           </Footer>
         </Layout>
       </Layout>

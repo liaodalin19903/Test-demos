@@ -2,20 +2,24 @@ import { useGraphStore, useGraphEvent } from '@antv/xflow';
 import { Drawer as AntdDrawer, Space, Button, Form, Input } from 'antd';
 import { useState } from 'react';
 
+const { TextArea } = Input;
+
 // 类型断言
 const Drawer = AntdDrawer as unknown as React.ComponentType<any>;
 
-interface NodeData {
-  id: string;
-  label?: string;
-  status?: 'default' | 'running' | 'success' | 'failed';
-}
+// interface NodeData {
+//   id: string;
+//   label?: string;
+//   status?: 'default' | 'running' | 'success' | 'failed';
+// }
+
+import { ExecStepNodeType } from '../node';
 
 const ConfigDrawer = () => {
   const [form] = Form.useForm();
   const updateNode = useGraphStore((state) => state.updateNode);
   const [open, setOpen] = useState(false);
-  const [nodeData, setNodeData] = useState<NodeData>();
+  const [nodeData, setNodeData] = useState<ExecStepNodeType>();
 
   const onClose = () => {
     setOpen(false);
@@ -35,11 +39,7 @@ const ConfigDrawer = () => {
   };
 
   useGraphEvent('node:click', ({ node }) => {
-    console.log('node信息：', node)
     const { data, id } = node;
-
-    console.log('data: ', data)
-
     setOpen(true);
     setNodeData({ ...data, id });
     form.setFieldsValue(data);
@@ -74,6 +74,20 @@ const ConfigDrawer = () => {
             rules={[{ required: true, message: '请填写节点名称' }]}
           >
             <Input placeholder="请填写节点名称" />
+          </Form.Item>
+          <Form.Item
+            name="desc"
+            label="节点描述"
+            rules={[{ required: false, message: '请填写节点描述' }]}
+          >
+            <TextArea placeholder="请填写节点描述" />
+          </Form.Item>
+          <Form.Item
+            name="output"
+            label="输出"
+            rules={[{ required: false, message: '请填写节点输出' }]}
+          >
+            <TextArea placeholder="请填写节点输出描述" />
           </Form.Item>
         </Form>
       </Drawer>

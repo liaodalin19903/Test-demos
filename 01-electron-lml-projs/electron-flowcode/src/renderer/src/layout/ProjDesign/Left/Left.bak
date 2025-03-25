@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Input, Tree, Dropdown, Menu } from 'antd';
+import { Input, Tree, Menu } from 'antd';
+import { Dropdown } from 'antd';
 import type { TreeDataNode, TreeProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 
@@ -7,7 +8,12 @@ import './Left.css'
 
 import { getDirTreeApi } from '@renderer/common/apis';
 import { getSelectedProjApi } from '@renderer/common/apis/projApi.dexie'
+import { DataNode } from 'antd/es/tree';
+import { isDirectory } from './utils/utils';
 
+import { useCreateFlowcodeFileProps } from './hooks/useCUDProps';
+import { Modal } from 'antd'
+import CUDModal from '@renderer/components/CUDModal'
 
 const { Search } = Input;
 
@@ -15,7 +21,7 @@ const { Search } = Input;
 const getParentKey = (key: React.Key, tree: TreeDataNode[]): React.Key | null => {
   for (const node of tree) {
     if (node.children) {
-      if (node.children.some((item) => item.key === key)) {
+      if ( node.children.some((item) => item.key === key)) {
         return node.key;
       }
       const parentKey = getParentKey(key, node.children);
@@ -28,21 +34,6 @@ const getParentKey = (key: React.Key, tree: TreeDataNode[]): React.Key | null =>
 };
 
 
-const isDirectory = (node: TreeDataNode): boolean => {
-  // 检查 node 是否有 children 属性
-  if (node.children && node.children.length > 0) {
-    return true;
-  }
-
-  // 检查 node.key 是否有后缀
-  const keyParts = (node.key as string).split('/');
-  const lastPart = keyParts[keyParts.length - 1];
-  if (lastPart.includes('.')) {
-    return false;
-  }
-
-  return true;
-};
 
 export const Left: React.FC = () => {
   const [expandedKeys, setExpandedKeys] = useState<React.Key[]>([]);
@@ -53,22 +44,24 @@ export const Left: React.FC = () => {
   const [rightClickNode, setRightClickNode] = useState<TreeDataNode | null>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  useEffect(() => {
-    const fetchSelectedProjAndTreeData = async () => {
-      try {
-        const selectedProj = await getSelectedProjApi();
-        console.log('selectedProj: ', selectedProj)
-        if (selectedProj && selectedProj.path) {
-          const data = await getDirTreeApi(selectedProj.path);
-          setTreeData(data);
-        } else {
-          console.warn('No selected project or path found.');
-        }
-      } catch (error) {
-        console.error('Failed to fetch selected project or tree data:', error);
-      }
-    };
+  const [modal, contextHolder] = Modal.useModal();
 
+  const fetchSelectedProjAndTreeData = async () => {
+    try {
+      const selectedProj = await getSelectedProjApi();
+
+      if (selectedProj && selectedProj.path) {
+        const data = await getDirTreeApi(selectedProj.path);
+        setTreeData(data);
+      } else {
+        console.warn('No selected project or path found.');
+      }
+    } catch (error) {
+      console.error('Failed to fetch selected project or tree data:', error);
+    }
+  };
+
+  useEffect(() => {
     fetchSelectedProjAndTreeData();
   }, []);
 
@@ -146,75 +139,95 @@ export const Left: React.FC = () => {
 
   // 勾选事件
   const onCheck: TreeProps['onCheck'] = (checkedKeysValue) => {
-    console.log('onCheck', checkedKeysValue);
+    //console.log('onCheck', checkedKeysValue);
     setCheckedKeys(checkedKeysValue as React.Key[]);
   };
 
   // 展开事件
   const onExpand: TreeProps['onExpand'] = (newExpandedKeys) => {
-    console.log('onExpand', newExpandedKeys);
+    //console.log('onExpand', newExpandedKeys);
     setExpandedKeys(newExpandedKeys);
     setAutoExpandParent(false);
   };
 
   const handleRigthClick = ({ event, node }: { event: React.MouseEvent; node: TreeDataNode }) => {
-
     event.preventDefault();
-
-    const isDir = isDirectory(node)
-
-    if(isDir) {
+    const isDir = isDirectory(node);
+    if (isDir) {
       setRightClickNode(node);
       setIsDropdownOpen(true);
     }
-
   };
 
-  const menu = {
-    items: [
-      {
-        key: 'add',
-        label: <span>创建flowcode文件</span>,
-        onClick: () => {
-          //console.log('创建flowcode文件', rightClickNode);
-          //setIsDropdownOpen(true);
+  const menu = (
+    <Menu
+      items={[
+        {
+          key: 'add',
+          label: <span>创建flowcode文件</span>,
+          onClick: () => {
+            console.log('创建flowcode文件', rightClickNode);
+            // 在这里添加创建文件的逻辑
+            handleCreate(rightClickNode!.key as string)
+          },
         },
-      },
-    ]
+      ]}
+    />
+  );
+
+  const titleRender = (nodeData: DataNode) => {
+    // 确保 title 是 ReactNode 类型
+    const getTitle = (): React.ReactNode => {
+      if (typeof nodeData.title === 'function') {
+        return (nodeData.title as (data: DataNode) => React.ReactNode)(nodeData);
+      }
+      return nodeData.title;
+    };
+
+    const title = getTitle()
+
+    const isDir = isDirectory(nodeData)
+
+    if(isDir) {
+      return (
+        <Dropdown menu={{ items: menu.props.items }} trigger={['contextMenu']}>
+          <div>{title}</div>
+        </Dropdown>
+      );
+    }
+
+    return <div>{title}</div>
+
   };
+
+  const handleCreate = (path: string) => {
+    const props = useCreateFlowcodeFileProps(path, fetchSelectedProjAndTreeData)
+    CUDModal(modal, props)
+  }
 
   return (
     <div>
       <Search style={{ marginBottom: 8 }} placeholder="Search" onChange={onChange} />
-      <Dropdown
-        menu={menu}
-        trigger={['contextMenu']}
-        open={isDropdownOpen}
-        onOpenChange={(open) => {
-          if (!open) {
-            setRightClickNode(null);
-          }
+      <Tree
+        showLine
+        checkable
+        switcherIcon={<DownOutlined />}
+        onExpand={onExpand}
+        expandedKeys={expandedKeys}
+        autoExpandParent={autoExpandParent}
+        onCheck={onCheck}
+        checkedKeys={checkedKeys}
+        treeData={filteredTreeData}
+        titleRender={titleRender}
+        onRightClick={handleRigthClick}
+        onClick={(e) => {
+          e.preventDefault();
+          setIsDropdownOpen(false);
+
+          console.log('点击了左侧item: ', e)
         }}
-      >
-        <Tree
-          showLine
-          checkable
-          switcherIcon={<DownOutlined />}
-          onExpand={onExpand}
-          expandedKeys={expandedKeys}
-          autoExpandParent={autoExpandParent}
-          onCheck={onCheck}
-          checkedKeys={checkedKeys}
-          treeData={filteredTreeData}
-          // @ts-ignore
-          titleRender={(nodeData) => nodeData.displayTitle}
-          onRightClick={handleRigthClick}
-          onClick={(e)=> {
-            e.preventDefault()
-            setIsDropdownOpen(false);
-          }}
-        />
-      </Dropdown>
+      />
+    {contextHolder}
     </div>
   );
 };
