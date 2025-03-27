@@ -154,7 +154,6 @@ const InitShape = () => {
 
   const handleFilePathChange = (newPath: string | undefined) => {
     if (newPath) {
-      console.log('editingFilePath 发生了变化:', newPath);
       loadInitialData(newPath);
     }
   };

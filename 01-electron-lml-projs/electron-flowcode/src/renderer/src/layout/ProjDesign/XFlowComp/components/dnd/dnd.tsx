@@ -153,10 +153,24 @@ const Dnd = () => {
         },
         e,
       );
+    }else if(item.key === '3') {
+      startDrag(
+        {
+          id: id.toString(),
+          shape: DAG_EXEC_NODE,
+          data: {
+            id: id.toString(),
+            label: item.title,
+            status: 'default',
+          },
+          ports: item.ports,
+        },
+        e,
+      );
     }
 
-    
-    
+
+
   };
 
   const [searchComponents, setSearchComponents] = React.useState<ComponentTreeItem[]>(
