@@ -1,7 +1,9 @@
 import { Flex, Splitter, Typography } from 'antd'
 import React from 'react'
+import { useEditingFilePath } from './XFlowComp/components/hooks/useEditingFilePath'
 
 import { Left } from './Left/Left'
+import { Right } from './Right/Right'
 
 import XFlowComp from './XFlowComp/index'
 
@@ -15,6 +17,9 @@ const Desc: React.FC<Readonly<{ text?: string | number }>> = (props) => (
 
 
 export default function ProjDesign() {
+
+  const editingFilePath = useEditingFilePath()
+
   return (
     <div>
       <Splitter
@@ -32,15 +37,19 @@ export default function ProjDesign() {
         <Splitter.Panel
           resizable={false}
         >
-          {/* <Desc text="Main" /> */}
 
-          <XFlowComp/>
+          {
+            editingFilePath ? <XFlowComp/> : <Desc text="请选择fc.json文件" />
+          }
+
         </Splitter.Panel>
         <Splitter.Panel
           defaultSize={'200'}
           collapsible
         >
-          <Desc text="Right" />
+          {/* <Desc text="Right" /> */}
+
+          <Right></Right>
         </Splitter.Panel>
       </Splitter>
     </div>

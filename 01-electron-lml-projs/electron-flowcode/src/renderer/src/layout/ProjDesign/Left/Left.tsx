@@ -4,26 +4,27 @@ import { Dropdown } from 'antd';
 import type { TreeDataNode, TreeProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 
-import './Left.css'
+import './Left.css';
 
 import { getDirTreeApi } from '@renderer/common/apis';
-import { getSelectedProjApi } from '@renderer/common/apis/projApi.dexie'
+import { getSelectedProjApi } from '@renderer/common/apis/projApi.dexie';
 import { DataNode } from 'antd/es/tree';
 import { isDirectory } from './utils/utils';
 
 import { useCreateFlowcodeFileProps } from './hooks/useCUDProps';
-import { Modal } from 'antd'
-import CUDModal from '@renderer/components/CUDModal'
+import { Modal } from 'antd';
+import CUDModal from '@renderer/components/CUDModal';
 
 const { Search } = Input;
 
 import { db } from '@renderer/common/dexieDB';
+import { useEditingFilePath } from '../XFlowComp/components/hooks/useEditingFilePath';
 
 // 获取父节点 Key
 const getParentKey = (key: React.Key, tree: TreeDataNode[]): React.Key | null => {
   for (const node of tree) {
     if (node.children) {
-      if ( node.children.some((item) => item.key === key)) {
+      if (node.children.some((item) => item.key === key)) {
         return node.key;
       }
       const parentKey = getParentKey(key, node.children);
@@ -33,6 +34,22 @@ const getParentKey = (key: React.Key, tree: TreeDataNode[]): React.Key | null =>
     }
   }
   return null;
+};
+
+// 获取所有父节点 Key
+const getAllParentKeys = (key: React.Key, tree: TreeDataNode[]): React.Key[] => {
+  const parentKeys: React.Key[] = [];
+  let currentKey = key;
+  while (currentKey) {
+    const parentKey = getParentKey(currentKey, tree);
+    if (parentKey) {
+      parentKeys.push(parentKey);
+      currentKey = parentKey;
+    } else {
+      break;
+    }
+  }
+  return parentKeys;
 };
 
 export const Left: React.FC = () => {
@@ -46,12 +63,15 @@ export const Left: React.FC = () => {
 
   const [modal, contextHolder] = Modal.useModal();
 
+  const editingFilePath: string | undefined = useEditingFilePath();
+  const [selectedKeys, setSelectedKeys] = useState<React.Key[]>([]);
+
   const fetchSelectedProjAndTreeData = async () => {
     try {
       const selectedProj = await getSelectedProjApi();
 
-      if (selectedProj && selectedProj.path) {
-        const data = await getDirTreeApi(selectedProj.path);
+      if (selectedProj && selectedProj.codePath) {
+        const data = await getDirTreeApi(selectedProj.codePath);
         setTreeData(data);
       } else {
         console.warn('No selected project or path found.');
@@ -63,9 +83,20 @@ export const Left: React.FC = () => {
 
   useEffect(() => {
     fetchSelectedProjAndTreeData();
-
-
   }, []);
+
+  // 监听 editingFilePath 的变化
+  useEffect(() => {
+    if (editingFilePath) {
+      setSelectedKeys([editingFilePath]);
+      const parentKeys = getAllParentKeys(editingFilePath, treeData);
+      setExpandedKeys([...parentKeys, editingFilePath]);
+      setAutoExpandParent(true);
+    } else {
+      setSelectedKeys([]);
+      setExpandedKeys([]);
+    }
+  }, [editingFilePath, treeData]);
 
   // 搜索框变化事件
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -141,13 +172,11 @@ export const Left: React.FC = () => {
 
   // 勾选事件
   const onCheck: TreeProps['onCheck'] = (checkedKeysValue) => {
-    //console.log('onCheck', checkedKeysValue);
     setCheckedKeys(checkedKeysValue as React.Key[]);
   };
 
   // 展开事件
   const onExpand: TreeProps['onExpand'] = (newExpandedKeys) => {
-    //console.log('onExpand', newExpandedKeys);
     setExpandedKeys(newExpandedKeys);
     setAutoExpandParent(false);
   };
@@ -170,7 +199,7 @@ export const Left: React.FC = () => {
           onClick: () => {
             console.log('创建flowcode文件', rightClickNode);
             // 在这里添加创建文件的逻辑
-            handleCreate(rightClickNode!.key as string)
+            handleCreate(rightClickNode!.key as string);
           },
         },
       ]}
@@ -178,7 +207,6 @@ export const Left: React.FC = () => {
   );
 
   const titleRender = (nodeData: DataNode) => {
-    // 确保 title 是 ReactNode 类型
     const getTitle = (): React.ReactNode => {
       if (typeof nodeData.title === 'function') {
         return (nodeData.title as (data: DataNode) => React.ReactNode)(nodeData);
@@ -186,11 +214,11 @@ export const Left: React.FC = () => {
       return nodeData.title;
     };
 
-    const title = getTitle()
+    const title = getTitle();
 
-    const isDir = isDirectory(nodeData)
+    const isDir = isDirectory(nodeData);
 
-    if(isDir) {
+    if (isDir) {
       return (
         <Dropdown menu={{ items: menu.props.items }} trigger={['contextMenu']}>
           <div>{title}</div>
@@ -198,14 +226,13 @@ export const Left: React.FC = () => {
       );
     }
 
-    return <div>{title}</div>
-
+    return <div>{title}</div>;
   };
 
   const handleCreate = (path: string) => {
-    const props = useCreateFlowcodeFileProps(path, fetchSelectedProjAndTreeData)
-    CUDModal(modal, props)
-  }
+    const props = useCreateFlowcodeFileProps(path, fetchSelectedProjAndTreeData);
+    CUDModal(modal, props);
+  };
 
   const findNodeByKey = (data: TreeDataNode[], key: React.Key): TreeDataNode | null => {
     for (const node of data) {
@@ -223,7 +250,7 @@ export const Left: React.FC = () => {
   };
 
   return (
-    <div>
+    <div style={{ padding: '16px' }}>
       <Search style={{ marginBottom: 8 }} placeholder="Search" onChange={onChange} />
       <Tree
         showLine
@@ -242,17 +269,16 @@ export const Left: React.FC = () => {
           setIsDropdownOpen(false);
         }}
         onSelect={async (selectedKeys, e) => {
+          const settings = await db.projSettings.toArray();
 
-          const settings = await db.settings.toArray()
+          const setting = settings[0];
+          setting.editingFilePath = selectedKeys[0] as string;
 
-          const setting = settings[0]
-          setting.editingFilePath = selectedKeys[0] as string
-
-          db.settings.update(setting.id, setting).then((res) => {
-            console.log(res)
-          })
+          db.projSettings.update(setting.id, setting).then((res) => {
+            console.log('res:', res);
+          });
         }}
-
+        selectedKeys={selectedKeys} // 设置 selectedKeys 属性
       />
       {contextHolder}
     </div>

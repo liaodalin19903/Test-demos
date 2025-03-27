@@ -3,7 +3,7 @@ import { db } from '@renderer/common/dexieDB'
 import { useLiveQuery } from 'dexie-react-hooks'
 import React from 'react'
 
-import { columns, rowSelection } from './tableData'
+import { genColumns, rowSelection } from './tableData'
 import { Proj} from '@shared/@types'
 import { Button, Table } from 'antd'
 
@@ -23,10 +23,9 @@ export default function Projs() {
         key: proj.id
     }));
 
-
     const filteredIds = dataSource.filter(item => item.isSelected).map(item => item.id);
 
-    console.log('filteredIds: ', filteredIds)
+    //console.log('filteredIds: ', filteredIds)
     return {
       dataSource: dataSource,
       selectedDatabaseKey: filteredIds[0]
@@ -38,9 +37,10 @@ export default function Projs() {
     CUDModal(modal, props)
   }
 
-  const handleUpdate = (proj: Proj) => {
-
+  const handleEdit = (proj: Proj) => {
+    console.log('handleEdit: ', proj)
     const props = useUpdateProjProps(proj)
+    console.log('props: ', props)
     CUDModal(modal, props)
   }
 
@@ -59,8 +59,10 @@ export default function Projs() {
           ...rowSelection,
           selectedRowKeys: [data?.selectedDatabaseKey!]
          }}
-        columns={columns}
+        columns={genColumns(handleEdit, handleDelete)}
         dataSource={data?.dataSource}
+        scroll={{ x: '100%' }}
+        style={{ width: '100%' }}
       />
 
     <Button type='primary' onClick={handleCreate}>创建项目</Button>

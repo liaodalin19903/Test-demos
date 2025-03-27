@@ -15,7 +15,7 @@ const getProps = (type: CUDModalProps['type'], proj?: Proj): CUDModalProps => {
   const onConfirm = async (formData: unknown) => {
     console.log('接受到回调：', formData as Proj)
     if(type === 'create') {
-      console.log('点击创建')
+      //console.log('点击创建')
       await addProjApi(formData as Proj)
     } else if(type === 'update') {
       await updateProjApi(formData as Proj)
@@ -49,7 +49,7 @@ const getProps = (type: CUDModalProps['type'], proj?: Proj): CUDModalProps => {
         type: 'string',
         placeholder: 'eg. 项目名称',
         required: true,
-        data: proj?.name
+        data: proj?.projName
       },
       'desc': {
         label: '项目描述',
@@ -57,11 +57,17 @@ const getProps = (type: CUDModalProps['type'], proj?: Proj): CUDModalProps => {
         required: false,
         data: proj?.desc
       },
-      'path': {
+      'projPath': {
         label: '项目路径（绝对路径）',
         type: 'string',
         required: true,
-        data: proj?.path
+        data: proj?.projPath
+      },
+      'codePath': {
+        label: '项目代码路径（绝对路径）',
+        type: 'string',
+        required: true,
+        data: proj?.codePath
       },
     }
   }
@@ -78,7 +84,7 @@ export const useCreateProjProps = (): CUDModalProps => {
 
 // 生成项目基础配置修改 的props
 export const useUpdateProjProps = (proj: Proj): CUDModalProps => {
-
+  console.log('lml-proj:', proj)
   const props: CUDModalProps = getProps('update', proj)
   return props
 }

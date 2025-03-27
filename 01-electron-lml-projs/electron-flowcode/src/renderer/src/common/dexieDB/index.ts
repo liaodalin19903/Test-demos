@@ -3,13 +3,13 @@ import { ProjSettings, Proj } from '@shared/@types'
 
 // Database declaration
 export const db = new Dexie('FlowcodeDatabase') as Dexie & {
-  settings: EntityTable<ProjSettings, 'id'>
+  projSettings: EntityTable<ProjSettings, 'id'>
   projs: EntityTable<Proj, 'id'>
 }
 
 // 这里是定义版本 以及里面的索引字段（索引可以和表结构的子集）
 db.version(1).stores({
-  settings: '++id',
+  projSettings: '++id, editingFilePath',
   projs: '++id,name,desc,path,isSelected'
 })
 
@@ -31,6 +31,6 @@ function addTimestampsHook(table: Dexie.Table<any, any>) {
 }
 
 // 为每个表应用钩子
-addTimestampsHook(db.settings);
+addTimestampsHook(db.projSettings);
 addTimestampsHook(db.projs);
 

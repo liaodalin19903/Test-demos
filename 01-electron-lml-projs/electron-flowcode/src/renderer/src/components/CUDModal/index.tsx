@@ -113,6 +113,8 @@ const CUDModal = (modal: HookAPI, props: CUDModalProps) => {
   const title = getTitle(props)
   const content = genForm(props)
 
+  //console.log('content: ', content)
+
   const ModalpProps = {
     width: 680,
     title: title,

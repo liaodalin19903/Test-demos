@@ -21,6 +21,8 @@
     "axios": "^1.7.9",
     "cors": "^2.8.5",
     "dexie-react-hooks": "^1.1.7",
+    "loadsh": "^0.0.4",
+    "lodash": "^4.17.21",
     "notion-blocks-chakra-ui": "^0.0.15",
     "notion-client": "^7.1.6",
     "react": "^18.3.1",
@@ -59,6 +61,7 @@
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
+    "@types/lodash": "^4.17.16",
     "vitest": "^2.1.4"
   }
 }

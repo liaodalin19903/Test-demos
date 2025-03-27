@@ -52,16 +52,16 @@ const Main: React.FC = () => {
   } = theme.useToken();
 
   const noSettings = useLiveQuery(async () => {
-    const count = await db.settings.count();
+    const count = await db.projSettings.count();
     return count === 0;
   }, []);
 
   const settings: ProjSettings | undefined = useLiveQuery(async () => {
-    const count = await db.settings.count();
+    const count = await db.projSettings.count();
     if (count === 0) {
       return undefined;
     } else {
-      const setttingsArr = await db.settings.toArray();
+      const setttingsArr = await db.projSettings.toArray();
       return setttingsArr[0];
     }
   });
@@ -72,14 +72,14 @@ const Main: React.FC = () => {
       const newSettings: ProjSettings = {
         selectedNavMenuKey: e.key,
       };
-      db.settings.add(newSettings);
+      db.projSettings.add(newSettings);
     } else {
       const newSettings = {
         ...settings,
         selectedNavMenuKey: e.key
       };
 
-      db.settings.update(settings, newSettings);
+      db.projSettings.update(settings, newSettings);
     }
   };
 
@@ -95,9 +95,9 @@ const Main: React.FC = () => {
     title: path
   }));
 
-  const test = () => {
-    console.log('test');
-    
+  const buttomButtonTest = () => {
+    console.log('buttom button test');
+
   };
 
   return (
@@ -107,7 +107,7 @@ const Main: React.FC = () => {
           <div className="demo-logo-vertical" />
           <Menu
             theme="dark"
-            defaultSelectedKeys={['1']}
+            defaultSelectedKeys={['2']}
             mode="inline"
             items={items}
             onSelect={onSelectMenu}
@@ -131,7 +131,7 @@ const Main: React.FC = () => {
           </Content>
           <Footer style={{ textAlign: 'center' }}>
             Ant Design ©{new Date().getFullYear()} Created by Ant UED
-            <button onClick={test()}>测试</button>
+            <button onClick={buttomButtonTest}>测试</button>
           </Footer>
         </Layout>
       </Layout>

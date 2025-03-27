@@ -11,9 +11,10 @@ export interface ProjSettings {
 
 export interface Proj {
   id?: number
-  name: string
+  projName: string
   desc?: string
-  path: string
+  projPath: string  // 项目根目录
+  codePath: string  // 项目代码目录
   isSelected: number
   created_time?: string
   updated_time?: string

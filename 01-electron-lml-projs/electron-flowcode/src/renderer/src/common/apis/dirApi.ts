@@ -42,3 +42,19 @@ export const readJsonFileApi = async (path: string) => {
     throw error; // 或者根据需求处理错误
   }
 };
+
+/**
+ * 存储
+ * @param path: 替换文件路径
+ * @param content: 替换的内容
+ */
+export const saveJsonFileApi = async (path: string, jsonData: object) => {
+  try {
+    // 确保调用的属性名与后端路由一致
+    const content = JSON.stringify(jsonData);
+    await trpc.saveJsonFileApi.mutate({path, content});
+  } catch (error) {
+    console.error('Failed to fetch directory tree:', error);
+    throw error; // 或者根据需求处理错误
+  }
+};

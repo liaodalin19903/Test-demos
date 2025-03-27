@@ -83,3 +83,37 @@ export const readFile = async (filePath: string): Promise<string> => {
     });
   });
 };
+
+/**
+ * 判断文件是否存在。
+ * @param filePath - 文件的完整路径。
+ * @returns 文件是否存在。
+ */
+export const fileExists = (filePath: string): boolean => {
+  return fs.existsSync(filePath);
+};
+
+/**
+ * 替换文件内容。
+ * @param filePath - 文件的完整路径。
+ * @param content - 新的内容。
+ * @throws 如果路径无效或文件替换失败，会抛出错误。
+ */
+export const replaceFileContent = (
+  filePath: string,
+  content: string
+): void => {
+  try {
+    // 检查文件是否存在
+    if (!fs.existsSync(filePath)) {
+      throw new Error(`文件不存在: ${filePath}`);
+    }
+
+    // 写入新内容到文件
+    fs.writeFileSync(filePath, content, { encoding: 'utf-8' });
+    console.log(`文件内容替换成功: ${filePath}`);
+  } catch (error) {
+    console.error('文件内容替换失败:', error);
+    throw error; // 抛出错误以便调用方处理
+  }
+};
