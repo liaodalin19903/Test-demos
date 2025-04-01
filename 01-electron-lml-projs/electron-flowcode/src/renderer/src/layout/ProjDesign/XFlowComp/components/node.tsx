@@ -209,9 +209,10 @@ const InitShape = () => {
     )
   }
 
-  const throttledHandleSaveFcJson = _.throttle(handleSaveFcJson, 1500)
+  const throttledHandleSaveFcJson = _.debounce(handleSaveFcJson, 1500)
 
   useGraphEvent('cell:changed', (cell) => {
+    console.log('cell:changed', cell);
     throttledHandleSaveFcJson()
   })
 

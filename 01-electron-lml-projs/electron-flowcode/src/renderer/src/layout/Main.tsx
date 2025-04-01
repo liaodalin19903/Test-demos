@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   DesktopOutlined,
   FileOutlined,
+  FunctionOutlined,
   PieChartOutlined,
   TeamOutlined,
   UserOutlined
@@ -41,8 +42,15 @@ const items: MenuItem[] = [
     getItem('Bill', '4'),
     getItem('Alex', '5')
   ]),
-  getItem('Team', 'sub2', <TeamOutlined />, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
-  getItem('Files', '9', <FileOutlined />)
+  getItem('Team', 'sub2', <TeamOutlined />, [
+    getItem('Team 1', '6'),
+    getItem('Team 2', '8')
+  ]),
+  getItem('功能函数', 'sub3', <FunctionOutlined />, [
+    getItem('函数<=>字符串', '11'),
+    getItem('Bill', '12'),
+    getItem('Alex', '13')
+  ])
 ];
 
 const Main: React.FC = () => {
@@ -107,7 +115,7 @@ const Main: React.FC = () => {
           <div className="demo-logo-vertical" />
           <Menu
             theme="dark"
-            defaultSelectedKeys={['2']}
+            defaultSelectedKeys={['1']}
             mode="inline"
             items={items}
             onSelect={onSelectMenu}

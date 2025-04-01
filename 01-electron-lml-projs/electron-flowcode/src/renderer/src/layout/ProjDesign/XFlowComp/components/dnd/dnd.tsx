@@ -3,12 +3,22 @@ import { useDnd } from '@antv/xflow';
 import { Popover, Tree } from 'antd';
 import React from 'react';
 
-import { DAG_EXEC_NODE, DAG_JUDGE_NODE } from '../shape';
+import { DAG_EXEC_NODE, DAG_JUDGE_NODE, DAG_TEST_NODE } from '../shape';
 
 import styles from './dnd.module.less';
 import SearchInput from './search';
 
 const { DirectoryTree } = Tree;
+
+/**
+ *  获取唯一ID（时间戳 + 3位随机数字）
+ * @returns
+ */
+const getUniqueId = () => {
+  const timestamp = Date.now().toString();
+  const randomNum = Math.floor(100 + Math.random() * 900).toString();
+  return timestamp + randomNum;
+}
 
 type ComponentTreeItem = {
   category: string;
@@ -40,6 +50,10 @@ const componentTreeData = [
         ports: [
           {
             id: '1-1',
+            group: 'top',
+          },
+          {
+            id: '1-2',
             group: 'bottom',
           },
         ],
@@ -83,10 +97,6 @@ const componentTreeData = [
         ports: [
           {
             id: '3-1',
-            group: 'top',
-          },
-          {
-            id: '3-2',
             group: 'bottom',
           },
         ],
@@ -128,7 +138,7 @@ const Dnd = () => {
     if(item.key === '1') {
       startDrag(
         {
-          id: id.toString(),
+          id: getUniqueId().toString(),
           shape: DAG_EXEC_NODE,
           data: {
             id: id.toString(),
@@ -142,7 +152,7 @@ const Dnd = () => {
     }else if(item.key === '2') {
       startDrag(
         {
-          id: id.toString(),
+          id: getUniqueId().toString(),
           shape: DAG_JUDGE_NODE,
           data: {
             id: id.toString(),
@@ -156,8 +166,8 @@ const Dnd = () => {
     }else if(item.key === '3') {
       startDrag(
         {
-          id: id.toString(),
-          shape: DAG_EXEC_NODE,
+          id: getUniqueId().toString(),
+          shape: DAG_TEST_NODE,
           data: {
             id: id.toString(),
             label: item.title,
@@ -168,8 +178,6 @@ const Dnd = () => {
         e,
       );
     }
-
-
 
   };
 
