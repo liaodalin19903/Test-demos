@@ -41,7 +41,7 @@ async function fetchAllBlocks(pageId: string): Promise<BlockObjectResponse[]> {
 (async () => {
   try {
     const blockList = await fetchAllBlocks(pageId);
-     // 过滤出 toggle 类型的块
+    // 过滤出 toggle 类型的块
      const toggleBlocks = filterBlocksByType(blockList, 'toggle');
      console.log('Toggle Blocks:', toggleBlocks);
  
