@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  AppstoreOutlined,
   DesktopOutlined,
   FileOutlined,
   FunctionOutlined,
@@ -34,6 +35,7 @@ function getItem(
   } as MenuItem;
 }
 
+// 注：内容更新处见 breadcrumbItems 和 ContentComp
 const items: MenuItem[] = [
   getItem('项目管理', '1', <PieChartOutlined />),
   getItem('项目设计', '2', <DesktopOutlined />),
@@ -42,9 +44,9 @@ const items: MenuItem[] = [
     getItem('Bill', '4'),
     getItem('Alex', '5')
   ]),
-  getItem('Team', 'sub2', <TeamOutlined />, [
-    getItem('Team 1', '6'),
-    getItem('Team 2', '8')
+  getItem('八字算命', 'sub2', <AppstoreOutlined />, [
+    getItem('八字算命', '6'),
+    getItem('八字案例', '7')
   ]),
   getItem('功能函数', 'sub3', <FunctionOutlined />, [
     getItem('函数<=>字符串', '11'),

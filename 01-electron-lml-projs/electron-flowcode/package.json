@@ -19,8 +19,32 @@
     "build:win": "npm run build && electron-builder --win",
     "build:mac": "electron-vite build && electron-builder --mac",
     "build:linux": "electron-vite build && electron-builder --linux",
+    "build:all": "electron-builder --mac --win --linux",
     "test": "vitest",
     "test:ui": "vitest --ui"
+  },
+  "build": {
+    "appId": "com.markleo.flowcode",
+    "productName": "Flowcode",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "**/*",
+      "!dist"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "build/icon.icns"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "build"
+    }
   },
   "dependencies": {
     "@ant-design/icons": "^5.6.1",
@@ -32,6 +56,7 @@
     "await-to-js": "^3.0.0",
     "dexie": "^4.0.11",
     "dexie-react-hooks": "^1.1.7",
+    "dotenv": "^16.5.0",
     "electron-trpc": "^0.7.1",
     "fix-esm": "^1.0.1",
     "less": "^4.2.2",

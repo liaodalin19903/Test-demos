@@ -16,6 +16,10 @@ export const useBreadcrumbPathInfo = (key: string | undefined) => {
     return ['项目', '项目管理']
   } else if (key === '2') {
     return ['项目', '项目设计']
+  } else if (key === '6') {
+    return ['八字', '八字算命']
+  } else if (key === '7') {
+    return ['八字', '八字案例']
   } else if (key === '11') {
     return ['函数', '函数<=>字符串']
   } else {
@@ -32,6 +36,10 @@ export const useBreadcrumbContetInfo = (key: string | undefined): JSX.Element =>
     return <Projs></Projs>
   } else if (key === '2') {
     return <ProjDesign></ProjDesign>
+  } else if (key === '6') {
+    return <></>
+  } else if (key === '7') {
+    return <></>
   } else if (key === '11') {
     return <FuncString></FuncString>
   } else {

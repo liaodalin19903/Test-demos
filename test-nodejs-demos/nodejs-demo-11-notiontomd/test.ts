@@ -1,17 +1,21 @@
+// 引入 dotenv 包以加载环境变量
+import 'dotenv/config';
+
 // 引入 Notion 客户端
 import { Client } from "@notionhq/client";
 import { BlockObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import { filterBlocksByType } from "./utils/notion-sdk-js-util";
 
-// 初始化 Notion 客户端
+// 初始化 Notion 客户端，使用环境变量中的 API 密钥
 const notion = new Client({
-  auth: 'ntn_111597715054833VgFVtnUaFvR6C62bam4UVJEFMRrkPhu8RE222', // 使用环境变量存储 API 密钥
+  auth: process.env.AUTH_TOKEN, // 使用环境变量存储 API 密钥
 });
 
 //const pageId = '1cbdeaa8cb4b80c18c1afee578754cc9'  // test
+//const pageId = '1cbdeaa8cb4b80f4bd41dcffa7ad330d'  // test2
+//const pageId = '1b1deaa8cb4b80f284bbfdd4115df4d5';  //ok  测试页面/页面-01
 
-const pageId = '1cbdeaa8cb4b80f4bd41dcffa7ad330d'  // test2
-//const pageId = '1b1deaa8cb4b80f284bbfdd4115df4d5';  //ok
+const pageId = '1d2deaa8cb4b805cbe91df328de3b216';  // 测试页面/页面-02
 
 // 定义异步函数以获取所有块
 async function fetchAllBlocks(pageId: string): Promise<BlockObjectResponse[]> {
@@ -84,6 +88,7 @@ function extractRichText(blocks: BlockObjectResponse[]): string[] {
 (async () => {
   try {
     const blockList = await fetchAllBlocks(pageId);
+    console.log('Block List:', blockList);
     // 过滤出 toggle 类型的块
     const toggleBlocks = filterBlocksByType(blockList, 'toggle');
     //console.log('Toggle Blocks:', toggleBlocks);

@@ -14,6 +14,7 @@
   "dependencies": {
     "@nodejs-demo-04-npmpackage/person": "^0.0.1",
     "@notionhq/client": "^2.2.15",
+    "ali-oss": "^6.22.0",
     "await-to-done": "^1.1.1",
     "chai": "4",
     "git-diff-from": "^1.1.40",
