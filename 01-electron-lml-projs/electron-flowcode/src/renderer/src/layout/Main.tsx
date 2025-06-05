@@ -107,7 +107,6 @@ const Main: React.FC = () => {
 
   const buttomButtonTest = () => {
     console.log('buttom button test');
-
   };
 
   return (

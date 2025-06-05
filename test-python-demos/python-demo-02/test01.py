@@ -1,14 +1,8 @@
 
 
 
+str = '123456'
 
-class Person:
-  def __init__(self, name, age):
-    self.name = name
-    self.age = age 
-    pass
+str.replace(2, 'B')
 
-p = Person()
-
-print(p.name, p.age)
-
+print(str)

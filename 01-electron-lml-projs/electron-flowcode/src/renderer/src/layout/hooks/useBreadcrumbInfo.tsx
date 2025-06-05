@@ -3,6 +3,9 @@ import React from 'react'
 import ProjDesign from '@renderer/layout/ProjDesign/ProjDesign'
 import Projs from '@renderer/layout/Projs/Projs'
 import FuncString from '@renderer/layout/Funcs/FuncString'
+import FateTell from '@renderer/layout/EightChars/FateTell'
+import EightCharsCase from '@renderer/layout/EightChars/EightCharsCase'
+
 
 
 export type BreadcrumbPathInfo = string[]
@@ -37,9 +40,9 @@ export const useBreadcrumbContetInfo = (key: string | undefined): JSX.Element =>
   } else if (key === '2') {
     return <ProjDesign></ProjDesign>
   } else if (key === '6') {
-    return <></>
+    return <FateTell></FateTell>
   } else if (key === '7') {
-    return <></>
+    return <EightCharsCase></EightCharsCase>
   } else if (key === '11') {
     return <FuncString></FuncString>
   } else {
