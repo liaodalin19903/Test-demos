@@ -61,6 +61,7 @@
     "fix-esm": "^1.0.1",
     "less": "^4.2.2",
     "lodash": "^4.17.21",
+    "lunar-typescript": "^1.8.0",
     "superjson": "^2.2.2",
     "zod": "^3.24.2"
   },

@@ -1,19 +1,41 @@
-import React from 'react'
-import _ from 'lodash'
+import { Row, Tag } from 'antd';
+import React, { useState } from 'react'
 export default function App3() {
 
-  const throttledClick = _.throttle(() => {
-    console.log('Button clicked!');
-  }, 5000)
 
+  let [testDom, setTestDom] = useState(<>111</>)
   const handleClick = () => {
-    throttledClick();
+    console.log('111')
+
+    setTestDom(<>222</>)
   };
+
 
   return (
     <div>
-      <button onClick={handleClick}>点击</button>
+    <Row>
+          <Tag bordered={false}>Tag 1</Tag>
+          <Tag bordered={false}>Tag 2</Tag>
+          <Tag bordered={false} >
+            Tag 3
+          </Tag>
+          <Tag bordered={false} >
+            Tag 4
+          </Tag>
+    </Row>
 
+    <Row>
+          <Tag bordered={false}>Tag 1</Tag>
+          <Tag bordered={false}>Tag 2</Tag>
+          <Tag bordered={false} style={{ visibility: 'hidden' }}>
+            Tag 3
+          </Tag>
+          <Tag bordered={false} >
+            Tag 4
+          </Tag>
+    </Row>
     </div>
   )
 }
+
+
