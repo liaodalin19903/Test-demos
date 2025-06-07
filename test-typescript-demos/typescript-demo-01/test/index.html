@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WebOffice PDF Viewer</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        #weboffice-zone {
+            width: 100%;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+<div id="weboffice-zone"></div>
+
+<script>
+    let webofficeSDKLoaded = false;
+
+    async function loadAliyunSDK() {
+        return new Promise((resolve) => {
+            const script = document.createElement('script');
+            script.src = 'https://g.alicdn.com/IMM/office-js/1.1.19/aliyun-web-office-sdk.min.js';
+            script.onload = () => {
+                webofficeSDKLoaded = true;
+                resolve();
+            };
+            document.head.appendChild(script);
+        });
+    }
+
+    async function initWebOffice1(data) {
+        if (!webofficeSDKLoaded) {
+            await loadAliyunSDK();
+        }
+        weboffice(data);
+    }
+
+    function weboffice(tokenInfo) {
+        const mount = document.getElementById('weboffice-zone');
+        if (window.aliyun) {
+            const ins = window.aliyun.config({
+                mount,
+                isShowDocMap: false,
+                isBestScale: false,
+                isShowBottomStatusBar: false,
+                mobile: {
+                    isOpenIntoEdit: false,
+                    isShowHoverToolbars: false,
+                    isVoiceCommentEnabled: false,
+                    showFontDownloadNotice: false,
+                },
+                pdfOptions: {
+                    isShowComment: false,
+                    isInSafeMode: true,
+                    isBestScale: true,
+                    isShowBottomStatusBar: true,
+                    disBackScrollPos: true,
+                },
+                pptOptions: {
+                    isShowBottomStatusBar: false,
+                    isShowRemarkView: false,
+                    isShowInsertMedia: false,
+                    isShowComment: false,
+                    mobile: {
+                        isOpenIntoEdit: false,
+                        showPrevTipWhilePlay: false,
+                        isShowReviewLogo: false,
+                    },
+                },
+                commandBars: [
+                    {
+                        cmbId: 'HeaderLeft',
+                        attributes: {
+                            visible: false,
+                            enable: false,
+                        },
+                    },
+                ],
+                isCooperUsersAvatarVisible: false,
+                commonOptions: {
+                    isShowTopArea: true,
+                    isShowHeader: true,
+                    isBrowserViewFullscreen: true,
+                    isIframeViewFullscreen: true,
+                    acceptVisualViewportResizeEvent: true,
+                },
+                url: tokenInfo.webofficeURL,
+            });
+            ins.setToken({ token: tokenInfo.accessToken });
+        } else {
+            console.error('Aliyun SDK not loaded');
+        }
+    }
+
+    // 模拟加载数据
+    window.onload = () => {
+        const data = {
+        "accessToken": "32acebd761314b05b2806dfb12d2e99cv3",
+        "accessTokenExpiredTime": "2025-06-07T07:49:40.305332902Z",
+        "refreshToken": "67f45e92b3ec490794e71ef9a37a94dev3",
+        "refreshTokenExpiredTime": "2025-06-08T07:19:40.305332902Z",
+        "requestId": "DF219F4A-DEC8-52CB-A667-3E815594BB6B",
+        "webofficeURL": "https://office-cn-shanghai.imm.aliyuncs.com/office/f/b2a84f1e686a1228fd5c003ea6bcf8d91be2e683?_w_tokentype=1&hidecmb=1&simple=1&cache_preview=1"
+        }
+        initWebOffice1(data);
+    };
+</script>
+</body>
+</html>

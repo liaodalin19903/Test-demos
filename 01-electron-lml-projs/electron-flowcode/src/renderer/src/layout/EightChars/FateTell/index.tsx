@@ -1,12 +1,22 @@
 import { Button, Card, Col, Modal, Radio, Row } from 'antd'
 import React, { useState } from 'react'
 import { InputNumber, Space } from 'antd';
-import { Input } from 'antd';
+import { Input, Image } from 'antd';
 import { Divider, Flex, Tag } from 'antd';
 import { TianGanDizhiColor } from '@renderer/common/utils'
 import { CheckboxGroupProps } from 'antd/es/checkbox';
 
-import { genTianGanShishenNode, genDizhiCangGanShishenNode } from './hooks/eightcharHooks';
+import {
+  genTianGanShishenNode,
+  genDizhiCangGanShishenNode,
+  calculateECZhangSheng,
+  genCangGan,
+  CangGan,
+  convertZhangShengStage
+ } from './hooks/eightcharHooks';
+
+// 1. 导入图片
+import shierchangshengImg from '@renderer/assets/images/12长生.jpeg'; // 调整相对路径
 
 // 定义状态类型
 export type EightCharInfo = {
@@ -27,6 +37,7 @@ export type EightCharInfo = {
     tianGanShiShen: string[]; // 显式声明为字符串数组
     dizhiShiShen: string[][];   // 显式声明为字符串数组
   };
+  zhangSheng: string[]  // 地址的十二长生
 };
 export default function index() {
 
@@ -50,7 +61,8 @@ export default function index() {
     shishen: {
       tianGanShiShen: [],
       dizhiShiShen: []
-    }
+    },
+    zhangSheng: ['长生', '长生', '长生', '长生'],
   })
 
   const [tianGanShishenNode, setTianGanShishenNode] = useState(
@@ -126,10 +138,19 @@ export default function index() {
       }
     }));
   };
+
+  const updateZhangSheng = (zhangSheng: string[]) => {
+    setEightCharInfo(prev => ({
+      ...prev,
+      zhangSheng
+    }));
+  };
+
   const onBrithYearChange = (value: number | null) => {
     console.log('changed', value);
     updateBirthYear(value as number)
   };
+
 
   const onClickChar = (index: number) => {
     console.log('clicked', index);
@@ -161,13 +182,32 @@ export default function index() {
   const handleClickPaiPan = () => {
     console.log('点击排盘')
 
+    // 1.更新天干地支十神
+    const cg: CangGan = genCangGan(eightCharInfo.eightChar)
+    updateTianGanShishen(cg.TianGanCangGan)
+    updateDiZhiShishen(cg.DizhiCangGan)
+
+    // 2.更新天干地支十神的Node
     const tianGanShiShenNode = genTianGanShishenNode(eightCharInfo.eightChar)
     const diZhiShiShenNode = genDizhiCangGanShishenNode(eightCharInfo.eightChar)
 
     setTianGanShishenNode(tianGanShiShenNode)
     setDizhiShishenNode(diZhiShiShenNode)
+
+    // 3.计算十二长生
+    const zhangSheng = calculateECZhangSheng(eightCharInfo.eightChar)
+    updateZhangSheng(zhangSheng)
+
   }
 
+  const zhangShengNode = (
+    <Row>
+      <Tag bordered={false} style={{ textAlign: 'center', width: '48px' }}>{convertZhangShengStage(eightCharInfo.zhangSheng[0])}</Tag>
+      <Tag bordered={false} style={{ textAlign: 'center', width: '48px' }}>{convertZhangShengStage(eightCharInfo.zhangSheng[1])}</Tag>
+      <Tag bordered={false} style={{ textAlign: 'center', width: '48px' }}>{convertZhangShengStage(eightCharInfo.zhangSheng[2])}</Tag>
+      <Tag bordered={false} style={{ textAlign: 'center', width: '48px' }}>{convertZhangShengStage(eightCharInfo.zhangSheng[3])}</Tag>
+    </Row>
+  )
 
 
   return (
@@ -264,6 +304,8 @@ export default function index() {
                   </Row>
 
                   {diZhiShishenNode}
+
+                  {zhangShengNode}
                   </Space>
                 </Col>
               </Row>
@@ -272,8 +314,14 @@ export default function index() {
             </Card>
           </Col>
           <Col span={8}>
-            <Card title="Card title" variant="borderless">
-              Card content
+            <Card title="十二长生" variant="borderless">
+              {/* <Row>十二长生</Row> */}
+              <Row>
+                <Image width={500}  src={shierchangshengImg}  />
+                胎0↑ 养1↑ 长生2↑ 沐浴3↑ 冠带4↑ 临官5↑ 帝旺6 衰4↓ 病3↓ 死2↓ 墓1↓ 绝0
+              </Row>
+
+
             </Card>
           </Col>
           <Col span={8}>
