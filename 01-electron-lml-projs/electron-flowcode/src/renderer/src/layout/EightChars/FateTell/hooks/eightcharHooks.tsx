@@ -1,4 +1,5 @@
 import { Row, Space, Tag } from "antd";
+import { Solar, Lunar, EightChar as LTEightChar } from "lunar-typescript";
 
 import { TianGanDizhiColor } from '@renderer/common/utils'
 
@@ -68,6 +69,7 @@ const SHI_SHEN_RELATION: Record<string, Record<string, string>> = {
 };
 
 /**
+ * 从1开始
  * eg.
     eightChar: {
       1: '甲',
@@ -233,4 +235,17 @@ export function convertZhangShengStage(stage) {
   };
 
   return stageValues[stage] || `未知阶段: ${stage}`;
+}
+
+
+/**
+ * 从八字中获取阳历信息
+ * @param {EightChar} eightChar - 八字对象
+ * @returns {Solar[]} - 阳历信息数组 (1800~今)
+ */
+export function getSolarsFromEightChar(eightChar: EightChar): Solar[] {
+
+  const solars = Solar.fromBaZi(eightChar[1] + eightChar[5], eightChar[2] + eightChar[6], eightChar[3] + eightChar[7], eightChar[4] + eightChar[8], 2, 1800)
+
+  return solars
 }

@@ -1,10 +1,14 @@
 import { Dexie, type EntityTable } from 'dexie'
 import { ProjSettings, Proj } from '@shared/@types'
+import { EightCharInfo } from '@shared/@types/eightChar/eightCharInfo'
+
 
 // Database declaration
 export const db = new Dexie('FlowcodeDatabase') as Dexie & {
   projSettings: EntityTable<ProjSettings, 'id'>
   projs: EntityTable<Proj, 'id'>
+
+  eightCharEdtingEightChar: EntityTable<EightCharInfo>
 }
 
 // 这里是定义版本 以及里面的索引字段（索引可以和表结构的子集）

@@ -1,4 +1,4 @@
-import { Button, Card, Col, Modal, Radio, Row } from 'antd'
+import { Button, Card, Col, Descriptions, Modal, Radio, RadioChangeEvent, Row } from 'antd'
 import React, { useState } from 'react'
 import { InputNumber, Space } from 'antd';
 import { Input, Image } from 'antd';
@@ -12,41 +12,25 @@ import {
   calculateECZhangSheng,
   genCangGan,
   CangGan,
-  convertZhangShengStage
+  convertZhangShengStage,
+  getSolarsFromEightChar
  } from './hooks/eightcharHooks';
 
 // 1. 导入图片
 import shierchangshengImg from '@renderer/assets/images/12长生.jpeg'; // 调整相对路径
+import { EightCharInfo } from '@shared/@types/eightChar/eightCharInfo'
+import { Solar } from 'lunar-typescript';
 
-// 定义状态类型
-export type EightCharInfo = {
-  sex: string;
-  year: number;
-  editingIndex: number;
-  eightChar: {
-    1: string;
-    2: string;
-    3: string;
-    4: string;
-    5: string;
-    6: string;
-    7: string;
-    8: string;
-  };
-  shishen: {
-    tianGanShiShen: string[]; // 显式声明为字符串数组
-    dizhiShiShen: string[][];   // 显式声明为字符串数组
-  };
-  zhangSheng: string[]  // 地址的十二长生
-};
 export default function index() {
+
+  const [modal, contextHolder] = Modal.useModal();
 
   const [isModalOpenTianGan, setIsModalOpenTianGan] = useState(false);
   const [isModalOpenDizhi, setIsModalOpenDizhi] = useState(false);
 
   const [eightCharInfo, setEightCharInfo] = useState<EightCharInfo>({
-    sex: '男',
-    year: 1900,
+    gender: '男',
+    birthdaySolar: '', // 阳历生日
     editingIndex: 0,
     eightChar: {
       1: '甲',
@@ -63,6 +47,8 @@ export default function index() {
       dizhiShiShen: []
     },
     zhangSheng: ['长生', '长生', '长生', '长生'],
+    kongWang: ['空亡', '空亡', '空亡', '空亡'],
+    daYunLiuNian: []
   })
 
   const [tianGanShishenNode, setTianGanShishenNode] = useState(
@@ -89,17 +75,17 @@ export default function index() {
     { label: '女', value: '女' },
   ];
 
-  const updateSex = (sex: string) => {
+  const updateGender = (gender: string) => {
     setEightCharInfo(prev => ({
       ...prev,
-      sex: sex
+      gender: gender
     }));
   }
 
-  const updateBirthYear = (year: number) => {
+  const updateBirthdaySolar = (birthdaySolar: string) => {
     setEightCharInfo(prev => ({
       ...prev,
-      updateBirthYear: year
+      birthdaySolar: birthdaySolar
     }));
   };
   const updateEditingIndex = (index: number) => {
@@ -146,9 +132,8 @@ export default function index() {
     }));
   };
 
-  const onBrithYearChange = (value: number | null) => {
-    console.log('changed', value);
-    updateBirthYear(value as number)
+  const onBrithYearChange = (birthdaySolar: string | null) => {
+    updateBirthdaySolar(birthdaySolar as string)
   };
 
 
@@ -180,24 +165,77 @@ export default function index() {
   }
 
   const handleClickPaiPan = () => {
-    console.log('点击排盘')
 
-    // 1.更新天干地支十神
-    const cg: CangGan = genCangGan(eightCharInfo.eightChar)
-    updateTianGanShishen(cg.TianGanCangGan)
-    updateDiZhiShishen(cg.DizhiCangGan)
+    try {
+      // 0.反推阳历时间，弹出modal让选择的出生的时间
+      const solars = getSolarsFromEightChar(eightCharInfo.eightChar)
+      showSelectSolarModal(solars)
 
-    // 2.更新天干地支十神的Node
-    const tianGanShiShenNode = genTianGanShishenNode(eightCharInfo.eightChar)
-    const diZhiShiShenNode = genDizhiCangGanShishenNode(eightCharInfo.eightChar)
+      // 1.更新天干地支十神
+      const cg: CangGan = genCangGan(eightCharInfo.eightChar)
+      updateTianGanShishen(cg.TianGanCangGan)
+      updateDiZhiShishen(cg.DizhiCangGan)
 
-    setTianGanShishenNode(tianGanShiShenNode)
-    setDizhiShishenNode(diZhiShiShenNode)
+      // 2.更新天干地支十神的Node
+      const tianGanShiShenNode = genTianGanShishenNode(eightCharInfo.eightChar)
+      const diZhiShiShenNode = genDizhiCangGanShishenNode(eightCharInfo.eightChar)
 
-    // 3.计算十二长生
-    const zhangSheng = calculateECZhangSheng(eightCharInfo.eightChar)
-    updateZhangSheng(zhangSheng)
+      setTianGanShishenNode(tianGanShiShenNode)
+      setDizhiShishenNode(diZhiShiShenNode)
 
+      // 3.计算十二长生
+      const zhangSheng = calculateECZhangSheng(eightCharInfo.eightChar)
+      updateZhangSheng(zhangSheng)
+    } catch (error) {
+        const config = {
+          title: '温馨提示',
+          content: (
+            <div>请选择八字</div>
+          ),
+        };
+      modal.warning(config)
+    }
+
+  }
+
+  // 展示选择出生的阳历时间
+  const showSelectSolarModal = (solars: Solar[]) => {
+
+    const style: React.CSSProperties = {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 8,
+    };
+
+    const option = solars.map(solar => {
+      return {
+        label: solar.toYmdHms(),
+        value: solar.toYmdHms()
+      }
+    })
+
+    const onChangeSolar = (e: RadioChangeEvent) => {
+      console.log('选中阳历:', e.target.value)
+      updateBirthdaySolar(e.target.value)
+      modalInstance.destroy()
+    }
+
+    const modalInstance = modal.confirm({
+      title: '选择出生的阳历时间',
+      content: (
+        <div>
+          <Radio.Group
+            style={style}
+            defaultValue={solars.at(-1)?.toYmdHms()}
+            onChange={onChangeSolar}
+            options={option}
+          />
+        </div>
+      ),
+      onOk: () => {
+        updateBirthdaySolar(solars.at(-1)?.toYmdHms() as string)
+      }
+    })
   }
 
   const zhangShengNode = (
@@ -279,8 +317,8 @@ export default function index() {
             <Card title="八字信息" variant="borderless">
 
               <Space direction='vertical' size={8}>
-              <Row>性别：<Radio.Group block options={sexOptions} defaultValue="男" onChange={(e) => {updateSex(e.target.value)}} /></Row>
-              <Row>出生年：<InputNumber size="small" defaultValue={1900} onChange={onBrithYearChange}></InputNumber> <Button color="primary" variant="filled" size='small' onClick={() => {handleClickPaiPan()}} >排盘</Button></Row>
+              <Row>性别：<Radio.Group block options={sexOptions} defaultValue="男" onChange={(e) => {updateGender(e.target.value)}} /> <Button color="primary" variant="filled" size='small' onClick={() => {handleClickPaiPan()}} >排盘</Button> </Row>
+              {/* <Row>出生年：<InputNumber size="small" defaultValue={1900} onChange={onBrithYearChange}></InputNumber> </Row> */}
               <Row><br></br></Row>
               <Row>
                 <Col>
@@ -325,14 +363,15 @@ export default function index() {
             </Card>
           </Col>
           <Col span={8}>
-            <Card title="Card title" variant="borderless">
-              Card content
+            <Card title="纳音五行&命宫身宫" variant="borderless">
+              <Descriptions title="纳音五行" items={getNayinWuXingItems()}/>
+
             </Card>
           </Col>
         </Row>
       </div>
 
-
+     {contextHolder}
     </div>
   )
 }
