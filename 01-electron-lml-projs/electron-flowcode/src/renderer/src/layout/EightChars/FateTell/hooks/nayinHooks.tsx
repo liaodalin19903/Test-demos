@@ -1,5 +1,7 @@
 import { EightCharInfo, NaYin } from '@shared/@types/eightChar/eightCharInfo';
-import { DescriptionsProps } from 'antd';
+import { DescriptionsProps, Space, Typography } from 'antd';
+const { Paragraph, Text } = Typography;
+
 
 import { EightChar as LTEightChar, Lunar, Solar } from "lunar-typescript";
 
@@ -43,7 +45,7 @@ const getNaYinInfo = (birthdaySolar: string): NaYin => {
       "命宫": `${ec.getMingGong()} ${ec.getMingGongNaYin()}`
     };
   } catch (error) {
-    console.error("获取八字纳音信息时出错:", error);
+    //console.error("获取八字纳音信息时出错:", error);
     // 返回默认值或抛出错误
     return {
       "年柱": "",
@@ -72,25 +74,76 @@ export const getNayinWuXingItems = (eightCharInfo: EightCharInfo): DescriptionsP
   {
     key: '1',
     label: '年柱',
-    children: 'Zhou Maomao',
+    children:
+    <Space direction="vertical">
+      <Text>{nayinInfo.年柱.split(' ')[0]}</Text>
+      <Text code={true}>{nayinInfo.年柱.split(' ')[1]}</Text>
+    </Space>,
   },
   {
     key: '2',
     label: '月柱',
-    children: '1810000000',
+    children:
+     <Space direction="vertical">
+      <Text>{nayinInfo.年柱.split(' ')[0]}</Text>
+      <Text code={true}>{nayinInfo.年柱.split(' ')[1]}</Text>
+    </Space>,
   },
   {
     key: '3',
     label: '日柱',
-    children: 'Hangzhou, Zhejiang',
+    children:
+     <Space direction="vertical">
+      <Text>{nayinInfo.日柱.split(' ')[0]}</Text>
+      <Text code={true}>{nayinInfo.日柱.split(' ')[1]}</Text>
+    </Space>,
   },
   {
     key: '4',
     label: '时柱',
-    span: 2,
-    children: 'No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China',
-  }]
+    children:
+     <Space direction="vertical">
+      <Text>{nayinInfo.时柱.split(' ')[0]}</Text>
+      <Text code={true}>{nayinInfo.时柱.split(' ')[1]}</Text>
+    </Space>,
+  },
+  {
+    key: '5',
+    label: '胎息',
+    children:
+     <Space direction="vertical">
+      <Text>{nayinInfo.胎息.split(' ')[0]}</Text>
+      <Text code={true}>{nayinInfo.胎息.split(' ')[1]}</Text>
+    </Space>,
+  },
+  {
+    key: '6',
+    label: '胎元',
+    children:
+     <Space direction="vertical">
+      <Text>{nayinInfo.胎元.split(' ')[0]}</Text>
+      <Text code={true}>{nayinInfo.胎元.split(' ')[1]}</Text>
+    </Space>,
+  },
+  {
+    key: '7',
+    label: '命宫',
+    children:
+     <Space direction="vertical">
+      <Text>{nayinInfo.命宫.split(' ')[0]}</Text>
+      <Text code={true}>{nayinInfo.命宫.split(' ')[1]}</Text>
+    </Space>,
+  },
+  {
+    key: '8',
+    label: '身宫',
+    children:
+     <Space direction="vertical">
+      <Text>{nayinInfo.身宫.split(' ')[0]}</Text>
+      <Text code={true}>{nayinInfo.身宫.split(' ')[1]}</Text>
+    </Space>,
+  },
+]
 
   return items
-
 }

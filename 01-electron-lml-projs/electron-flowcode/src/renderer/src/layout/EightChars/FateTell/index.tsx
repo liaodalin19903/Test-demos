@@ -16,6 +16,11 @@ import {
   getSolarsFromEightChar
  } from './hooks/eightcharHooks';
 
+import {
+  getNayinWuXingItems,
+  getNayinWuXing
+} from './hooks/nayinHooks'
+
 // 1. 导入图片
 import shierchangshengImg from '@renderer/assets/images/12长生.jpeg'; // 调整相对路径
 import { EightCharInfo } from '@shared/@types/eightChar/eightCharInfo'
@@ -364,7 +369,7 @@ export default function index() {
           </Col>
           <Col span={8}>
             <Card title="纳音五行&命宫身宫" variant="borderless">
-              <Descriptions title="纳音五行" items={getNayinWuXingItems()}/>
+              <Descriptions layout="vertical" column={4} bordered title="纳音五行" items={getNayinWuXingItems(eightCharInfo)}/>
 
             </Card>
           </Col>
