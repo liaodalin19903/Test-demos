@@ -1,3 +1,38 @@
+import { DaYunItem, EightChar } from "@shared/@types/eightChar/eightCharInfo";
+
+// 计算四柱的十二长生状态（返回数组）
+export const calculateECZhangSheng = (eightChar: EightChar ): string[] => {
+  const riZhuTianGan = eightChar[3]; // 获取日主
+
+  const ZhangShengOrder = [
+    '长生', '沐浴', '冠带', '临官',
+    '帝旺', '衰', '病', '死',
+    '墓', '绝', '胎', '养'
+  ];
+
+  const ZhangShengStart = {
+    '甲': '亥', '丙': '寅', '戊': '寅', '庚': '巳', '壬': '申',
+    '乙': '午', '丁': '酉', '己': '酉', '辛': '子', '癸': '卯'
+  };
+
+  const isYangGan = ['甲', '丙', '戊', '庚', '壬'].includes(riZhuTianGan);
+  const startDiZhi = ZhangShengStart[riZhuTianGan];
+  const diZhiOrder = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+
+  // 直接返回数组，按年、月、日、时顺序
+  return [5, 6, 7, 8].map((position) => {
+    const diZhi = eightChar[position];
+    const startIndex = diZhiOrder.indexOf(startDiZhi);
+    const currentIndex = diZhiOrder.indexOf(diZhi);
+
+    const offset = isYangGan
+      ? (currentIndex - startIndex + 12) % 12
+      : (startIndex - currentIndex + 12) % 12;
+
+    return ZhangShengOrder[offset];
+  });
+};
+
 /**
  * 计算单个地支相对于日元的十二长生状态
  * @param tianGan 日元天干（甲、乙、丙、丁、戊、己、庚、辛、壬、癸）
@@ -28,10 +63,10 @@ export const getTianGanDiZhiZhangSheng = (tianGan: string, diZhi: string): strin
 
   // 判断天干是阳干还是阴干
   const isYangGan = ['甲', '丙', '戊', '庚', '壬'].includes(tianGan);
-  
+
   // 获取该天干的起始地支
   const startDiZhi = zhangShengStart[tianGan];
-  
+
   // 计算起始地支和当前地支在地支顺序中的索引
   const startIndex = diZhiOrder.indexOf(startDiZhi);
   const currentIndex = diZhiOrder.indexOf(diZhi);
@@ -45,35 +80,29 @@ export const getTianGanDiZhiZhangSheng = (tianGan: string, diZhi: string): strin
   return zhangShengOrder[offset];
 };
 
-// 使用示例
-// const exampleResult = getTianGanDiZhiZhangSheng('辛', '未');
-// console.log(`甲在子的十二长生状态是: ${exampleResult}`); // 输出应该是 "沐浴"
+/**
+ * 将十二长生阶段名称转换为对应的数值和趋势标识
+ * @param {string} stage - 十二长生阶段名称（如："长生", "沐浴"等）
+ * @returns {string} - 转换后的结果（如："长生2↑", "衰4↓"等）
+ */
+export function convertZhangShengStage(stage) {
+  const stageValues = {
+    '胎': '胎0↑',
+    '养': '养1↑',
+    '长生': '长生2↑',
+    '沐浴': '沐浴3↑',
+    '冠带': '冠带4↑',
+    '临官': '临官5↑',
+    '帝旺': '帝旺6',
+    '衰': '衰4↓',
+    '病': '病3↓',
+    '死': '死2↓',
+    '墓': '墓1↓',
+    '绝': '绝0'
+  };
 
-
-export type EightChar = {
-  1: string; // 年干
-  2: string; // 月干
-  3: string; // 日干
-  4: string; // 时干
-  5: string; // 年支
-  6: string; // 月支
-  7: string; // 日支
-  8: string; // 时支
+  return stageValues[stage] || `未知阶段: ${stage}`;
 }
-
-  // 定义大运流年数据结构
-export interface DaYunItem {
-    dayunName: string;
-    liunians: LiuNianItem[];
-  }
-
-export interface LiuNianItem {
-    liunianYear: number;
-    liunianGanzhi: string;
-  }
-
-
-
 
 /**
  * 计算大运名称的十二长生状态（每个大运对应一个长生字）
@@ -82,16 +111,16 @@ export interface LiuNianItem {
  * @returns 包含每个大运名称十二长生状态的数组
  */
 export const calculateDayunNameZhangSheng = (
-  dayunLiunians: DaYunItem[], 
+  dayunLiunians: DaYunItem[],
   eightChar: EightChar
 ): string[] => {
   // 获取日元（日干）
   const riYuan = eightChar[3];
-  
+
   // 计算结果数组
   return dayunLiunians.map(dayun => {
     let tianGan: string, diZhi: string;
-    
+
     // 处理大运名称
     if (dayun.dayunName === '运前') {
       // 运前使用月柱的天干和地支
@@ -102,73 +131,8 @@ export const calculateDayunNameZhangSheng = (
       //tianGan = dayun.dayunName.charAt(0);
       diZhi = dayun.dayunName.charAt(1);
     }
-    
+
     // 计算并返回十二长生状态
     return getTianGanDiZhiZhangSheng(riYuan, diZhi);
   });
 };
-
-
-const dayunLiunians: DaYunItem[] = [
-  {
-    "dayunName": "运前",
-    "liunians": []
-  },
-    {
-    "dayunName": "丙子",
-    "liunians": []
-  },
-    {
-    "dayunName": "乙亥",
-    "liunians": []
-  },
-    {
-    "dayunName": "甲戌",
-    "liunians": []
-  },
-    {
-    "dayunName": "癸酉",
-    "liunians": []
-  },
-    {
-    "dayunName": "壬申",
-    "liunians": []
-  },
-    {
-    "dayunName": "辛未",
-    "liunians": []
-  },
-    {
-    "dayunName": "庚午",
-    "liunians": []
-  },
-    {
-    "dayunName": "己巳",
-    "liunians": []
-  },
-    {
-    "dayunName": "戊辰",
-    "liunians": []
-  },
-   {
-    "dayunName": "丁卯",
-    "liunians": []
-  },
-
-] 
-
-const eightChar = {
-  1: '己',
-  2: '丁',
-  3: '甲',
-  4: '甲',
-  5: '巳',
-  6: '丑',
-  7: '午',
-  8: '子' 
-}
-
-// 使用示例
-const results = calculateDayunNameZhangSheng(dayunLiunians, eightChar);
-console.log("大运名称的十二长生状态:", results);
-// 输出示例: ['长生', '沐浴', '冠带', ...]（共11个）

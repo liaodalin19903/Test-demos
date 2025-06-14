@@ -1,7 +1,7 @@
-import { EightCharInfo, NaYin } from '@shared/@types/eightChar/eightCharInfo';
+import { DaYunItem, EightChar, EightCharInfo, NaYin } from '@shared/@types/eightChar/eightCharInfo';
 import { DescriptionsProps, Space, Typography } from 'antd';
 const { Paragraph, Text } = Typography;
-
+import { naYinTable } from '@shared/@types/eightChar/nayin';
 
 import { EightChar as LTEightChar, Lunar, Solar } from "lunar-typescript";
 
@@ -147,3 +147,45 @@ export const getNayinWuXingItems = (eightCharInfo: EightCharInfo): DescriptionsP
 
   return items
 }
+
+/**
+ * 计算天干地支组合的纳音
+ * @param tianGan 天干
+ * @param diZhi 地支
+ * @returns 对应的纳音
+ */
+export const getNaYin = (tianGan: string, diZhi: string): string => {
+  return naYinTable[tianGan + diZhi] || "未知纳音";
+};
+
+/**
+ * 计算大运名称的纳音（每个大运对应一个纳音）
+ * @param dayunLiunians 大运流年数组
+ * @param eightChar 八字信息
+ * @returns 包含每个大运名称纳音的数组
+ */
+export const calculateDayunNameNaYin = (
+  dayunLiunians: DaYunItem[],
+  eightChar: EightChar
+): string[] => {
+  // 计算结果数组
+  return dayunLiunians.map(dayun => {
+    let tianGan: string, diZhi: string;
+
+    // 处理大运名称
+    if (dayun.dayunName === '运前') {
+      // 运前使用月柱的天干和地支
+      tianGan = eightChar[2]; // 月干
+      diZhi = eightChar[6];   // 月支
+    } else {
+      // 正常大运名称（如"癸巳"），分解为天干和地支
+      tianGan = dayun.dayunName.charAt(0);
+      diZhi = dayun.dayunName.charAt(1);
+    }
+
+    // 计算并返回纳音
+    return getNaYin(tianGan, diZhi);
+  });
+};
+
+

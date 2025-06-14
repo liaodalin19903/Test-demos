@@ -1,5 +1,7 @@
 
 
-const str1 = '子 藏干'
+const str = "1970-01-01 00:00:00"
 
-console.log(str1[0])
+const d = new Date(str)
+
+console.log(d)

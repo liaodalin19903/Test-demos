@@ -11,14 +11,14 @@ export type NaYin = {
 
 
 export type EightChar = {
-  1: string;
-  2: string;
-  3: string;
-  4: string;
-  5: string;
-  6: string;
-  7: string;
-  8: string;
+  1: string; // 年干
+  2: string; // 月干
+  3: string; // 日干
+  4: string; // 时干
+  5: string; // 年支
+  6: string; // 月支
+  7: string; // 日支
+  8: string; // 时支
 }
 
 // 定义状态类型
@@ -33,5 +33,16 @@ export type EightCharInfo = {
   };
   zhangSheng: string[],  // 地支的十二长生
   kongWang: string[],  // 空亡
-  daYunLiuNian: string[][],  // 大运流年
+  dayunLiunians: DaYunItem[],  // 大运流年
 };
+
+  // 定义大运流年数据结构
+export interface DaYunItem {
+    dayunName: string;
+    liunians: LiuNianItem[];
+  }
+
+export interface LiuNianItem {
+    liunianYear: number;
+    liunianGanzhi: string;
+  }

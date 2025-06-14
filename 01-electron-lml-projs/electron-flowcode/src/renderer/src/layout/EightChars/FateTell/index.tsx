@@ -9,21 +9,30 @@ import { CheckboxGroupProps } from 'antd/es/checkbox';
 import {
   genTianGanShishenNode,
   genDizhiCangGanShishenNode,
-  calculateECZhangSheng,
+
   genCangGan,
   CangGan,
-  convertZhangShengStage,
+
   getSolarsFromEightChar
  } from './hooks/eightcharHooks';
 
 import {
+  calculateECZhangSheng,
+  convertZhangShengStage,
+} from './hooks/zhangshengHooks'
+
+import {
   getNayinWuXingItems,
-  getNayinWuXing
 } from './hooks/nayinHooks'
+
+import {
+  getDayunLiunian,
+  genDayunLiunianNode
+} from './hooks/dayunLiunianHooks'
 
 // 1. 导入图片
 import shierchangshengImg from '@renderer/assets/images/12长生.jpeg'; // 调整相对路径
-import { EightCharInfo } from '@shared/@types/eightChar/eightCharInfo'
+import { DaYunItem, EightCharInfo } from '@shared/@types/eightChar/eightCharInfo'
 import { Solar } from 'lunar-typescript';
 
 export default function index() {
@@ -53,7 +62,7 @@ export default function index() {
     },
     zhangSheng: ['长生', '长生', '长生', '长生'],
     kongWang: ['空亡', '空亡', '空亡', '空亡'],
-    daYunLiuNian: []
+    dayunLiunians: []
   })
 
   const [tianGanShishenNode, setTianGanShishenNode] = useState(
@@ -75,7 +84,7 @@ export default function index() {
     </Space>
   )
 
-   const sexOptions: CheckboxGroupProps<string>['options'] = [
+  const sexOptions: CheckboxGroupProps<string>['options'] = [
     { label: '男', value: '男' },
     { label: '女', value: '女' },
   ];
@@ -137,6 +146,13 @@ export default function index() {
     }));
   };
 
+  const updateDayunLiunian = (dayunLiunians: DaYunItem[]) => {
+    setEightCharInfo(prev => ({
+      ...prev,
+      dayunLiunians: dayunLiunians
+    }));
+  };
+
   const onBrithYearChange = (birthdaySolar: string | null) => {
     updateBirthdaySolar(birthdaySolar as string)
   };
@@ -169,6 +185,7 @@ export default function index() {
     updateEditingIndex(0)
   }
 
+  // 排盘
   const handleClickPaiPan = () => {
 
     try {
@@ -191,6 +208,11 @@ export default function index() {
       // 3.计算十二长生
       const zhangSheng = calculateECZhangSheng(eightCharInfo.eightChar)
       updateZhangSheng(zhangSheng)
+
+      // 4.大运流年
+      const dayunLiunian = getDayunLiunian(eightCharInfo)
+      updateDayunLiunian(dayunLiunian)
+
     } catch (error) {
         const config = {
           title: '温馨提示',
@@ -251,6 +273,8 @@ export default function index() {
       <Tag bordered={false} style={{ textAlign: 'center', width: '48px' }}>{convertZhangShengStage(eightCharInfo.zhangSheng[3])}</Tag>
     </Row>
   )
+
+
 
 
   return (
@@ -323,7 +347,6 @@ export default function index() {
 
               <Space direction='vertical' size={8}>
               <Row>性别：<Radio.Group block options={sexOptions} defaultValue="男" onChange={(e) => {updateGender(e.target.value)}} /> <Button color="primary" variant="filled" size='small' onClick={() => {handleClickPaiPan()}} >排盘</Button> </Row>
-              {/* <Row>出生年：<InputNumber size="small" defaultValue={1900} onChange={onBrithYearChange}></InputNumber> </Row> */}
               <Row><br></br></Row>
               <Row>
                 <Col>
@@ -371,6 +394,14 @@ export default function index() {
             <Card title="纳音五行&命宫身宫" variant="borderless">
               <Descriptions layout="vertical" column={4} bordered title="纳音五行" items={getNayinWuXingItems(eightCharInfo)}/>
 
+            </Card>
+          </Col>
+        </Row>
+
+        <Row gutter={16}>
+          <Col span={24}>
+            <Card title="大运流年" variant="borderless">
+              {genDayunLiunianNode(eightCharInfo)}
             </Card>
           </Col>
         </Row>

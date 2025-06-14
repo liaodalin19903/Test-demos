@@ -2,6 +2,7 @@ import { Row, Space, Tag } from "antd";
 import { Solar, Lunar, EightChar as LTEightChar } from "lunar-typescript";
 
 import { TianGanDizhiColor } from '@renderer/common/utils'
+import { DaYunItem } from "@shared/@types/eightChar/eightCharInfo";
 
 export const CANG_GAN_MAP: Record<string, string[]> = {
   '子': ['癸'],
@@ -180,62 +181,6 @@ export const genDizhiCangGanShishenNode = (eightChar: EightChar) => {
 }
 
 
-// 计算四柱的十二长生状态（返回数组）
-export const calculateECZhangSheng = (eightChar: EightChar ): string[] => {
-  const riZhuTianGan = eightChar[3]; // 获取日主
-
-  const ZhangShengOrder = [
-    '长生', '沐浴', '冠带', '临官',
-    '帝旺', '衰', '病', '死',
-    '墓', '绝', '胎', '养'
-  ];
-
-  const ZhangShengStart = {
-    '甲': '亥', '丙': '寅', '戊': '寅', '庚': '巳', '壬': '申',
-    '乙': '午', '丁': '酉', '己': '酉', '辛': '子', '癸': '卯'
-  };
-
-  const isYangGan = ['甲', '丙', '戊', '庚', '壬'].includes(riZhuTianGan);
-  const startDiZhi = ZhangShengStart[riZhuTianGan];
-  const diZhiOrder = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
-
-  // 直接返回数组，按年、月、日、时顺序
-  return [5, 6, 7, 8].map((position) => {
-    const diZhi = eightChar[position];
-    const startIndex = diZhiOrder.indexOf(startDiZhi);
-    const currentIndex = diZhiOrder.indexOf(diZhi);
-
-    const offset = isYangGan
-      ? (currentIndex - startIndex + 12) % 12
-      : (startIndex - currentIndex + 12) % 12;
-
-    return ZhangShengOrder[offset];
-  });
-};
-
-/**
- * 将十二长生阶段名称转换为对应的数值和趋势标识
- * @param {string} stage - 十二长生阶段名称（如："长生", "沐浴"等）
- * @returns {string} - 转换后的结果（如："长生2↑", "衰4↓"等）
- */
-export function convertZhangShengStage(stage) {
-  const stageValues = {
-    '胎': '胎0↑',
-    '养': '养1↑',
-    '长生': '长生2↑',
-    '沐浴': '沐浴3↑',
-    '冠带': '冠带4↑',
-    '临官': '临官5↑',
-    '帝旺': '帝旺6',
-    '衰': '衰4↓',
-    '病': '病3↓',
-    '死': '死2↓',
-    '墓': '墓1↓',
-    '绝': '绝0'
-  };
-
-  return stageValues[stage] || `未知阶段: ${stage}`;
-}
 
 
 /**
