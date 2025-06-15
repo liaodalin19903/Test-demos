@@ -1,20 +1,23 @@
 // 大运流年
-import { JSX } from "react";
+import { JSX, useEffect, useState } from "react";
 
 import { EightCharInfo, DaYunItem, LiuNianItem } from "@shared/@types/eightChar/eightCharInfo";
 import { EightChar, EightChar as LTEightChar, Lunar, Solar } from "lunar-typescript";
 import { getTianGanDiZhiZhangSheng, calculateDayunNameZhangSheng } from "./zhangshengHooks"
 import { calculateDayunNameNaYin } from "./nayinHooks";
 import { calculateDayunNameShiShen } from "./shishenHooks";
-import { Col, Row } from "antd";
 
+
+let dayunLiunians: DaYunItem[] = []
 
 export const getDayunLiunian = (eightCharInfo: EightCharInfo): DaYunItem[] => {
+
+  //console.log('eightCharInfo.birthdaySolar: ', eightCharInfo.birthdaySolar)
 
   // 做出ec实例
   const eightChar = new LTEightChar(Lunar.fromSolar(Solar.fromDate(new Date(eightCharInfo.birthdaySolar))))
 
-  const yun = eightChar.getYun(Number(eightCharInfo.gender), 2)  // 八字排盘宝使用的是流派2
+  const yun = eightChar.getYun(eightCharInfo.gender === '女' ? 0 : 1, 1)  // 八字排盘宝使用的是流派2
 
   // 修改原代码，添加类型注解
   const daYunItems: DaYunItem[] = []; // 显式定义数组类型
@@ -25,7 +28,10 @@ export const getDayunLiunian = (eightCharInfo: EightCharInfo): DaYunItem[] => {
       "liunians": [] // 这里会被正确推断为LiuNianItem[]
     }
 
+    //console.log('dayun.getLiuNian(): ', dayun.getLiuNian())
+
     dayun.getLiuNian().forEach(liunian => {
+      //console.log('liunian.getGanZhi(): ', liunian.getGanZhi(), liunian.getYear())
       dayunLiunianItem.liunians.push({
         "liunianYear": liunian.getYear(),
         "liunianGanzhi": liunian.getGanZhi(),
@@ -39,63 +45,26 @@ export const getDayunLiunian = (eightCharInfo: EightCharInfo): DaYunItem[] => {
   return daYunItems
 }
 
-export const genDayunLiunianNode = (eightCharInfo: EightCharInfo): JSX.Element => {
-
-  const zhangsheng = getZhangshengs(eightCharInfo)
-
-  return <>
-      <div
-        style={{
-          overflow: 'auto',
-          width: '100%',
-          backgroundColor: 'red',
-          padding: 8,
-        }}
-      >
-        <Row
-          gutter={8}
-          style={{
-            flexWrap: 'nowrap',
-            minWidth: 'max-content',
-          }}
-        >
-          <Col style={{ minWidth: 80 }}>长生:</Col>
-          <Col style={{ minWidth: 80 }}>{zhangsheng[0]}</Col>
-          <Col style={{ minWidth: 80 }}>{zhangsheng[1]}</Col>
-          <Col style={{ minWidth: 80 }}>{zhangsheng[2]}</Col>
-          <Col style={{ minWidth: 80 }}>{zhangsheng[3]}</Col>
-          <Col style={{ minWidth: 80 }}>{zhangsheng[4]}</Col>
-          <Col style={{ minWidth: 80 }}>{zhangsheng[5]}</Col>
-          <Col style={{ minWidth: 80 }}>{zhangsheng[6]}</Col>
-          <Col style={{ minWidth: 80 }}>{zhangsheng[7]}</Col>
-          <Col style={{ minWidth: 80 }}>{zhangsheng[8]}</Col>
-          <Col style={{ minWidth: 80 }}>{zhangsheng[9]}</Col>
-
-        </Row>
-      </div>
-
-
-  </>
-}
-
 export const getZhangshengs = (eightCharInfo: EightCharInfo): string[] => {
+
+  dayunLiunians = getDayunLiunian(eightCharInfo)
+
   // 获得12长生（11个）
-  const dayunZhangsheng: string[] = calculateDayunNameZhangSheng(eightCharInfo.dayunLiunians, eightCharInfo.eightChar)
+  const dayunZhangsheng: string[] = calculateDayunNameZhangSheng(dayunLiunians, eightCharInfo.eightChar)
   return dayunZhangsheng
 }
 
 export const getNayins = (eightCharInfo: EightCharInfo): string[] => {
-  const dayunNayin: string[] = calculateDayunNameNaYin(eightCharInfo.dayunLiunians, eightCharInfo.eightChar)
+  const dayunNayin: string[] = calculateDayunNameNaYin(dayunLiunians, eightCharInfo.eightChar)
   return dayunNayin
 }
 
 export const getShishens = (eightCharInfo: EightCharInfo): string[] => {
-  const shishen: string[] = calculateDayunNameShiShen(eightCharInfo.dayunLiunians, eightCharInfo.eightChar)
+  const shishen: string[] = calculateDayunNameShiShen(dayunLiunians, eightCharInfo.eightChar)
   return shishen
 }
 
-export const getDayuns = (eightCharInfo: EightCharInfo): string[] => {
-  const dayunLiunians = eightCharInfo.dayunLiunians
+export const getDayuns = (): string[] => {
   if (!dayunLiunians || dayunLiunians.length === 0) {
     return [];
   }
@@ -108,9 +77,7 @@ export const getDayuns = (eightCharInfo: EightCharInfo): string[] => {
  * @param dayunLiunians 大运流年数组
  * @returns 包含11个年龄的数组
  */
-export const getDayunAges = (eightCharInfo: EightCharInfo): number[] => {
-
-  const dayunLiunians: DaYunItem[] = eightCharInfo.dayunLiunians
+export const getDayunAges = (): number[] => {
 
 
   const ages: number[] = [0]; // 第一个年龄固定为0
@@ -136,7 +103,6 @@ export const getDayunAges = (eightCharInfo: EightCharInfo): number[] => {
  */
 export const getDayunYears = (eightCharInfo: EightCharInfo): number[] => {
   const birthdaySolar = eightCharInfo.birthdaySolar
-  const dayunLiunians: DaYunItem[] = eightCharInfo.dayunLiunians
 
   if (dayunLiunians.length !== 11) {
     throw new Error("大运数组长度必须为11");
@@ -168,9 +134,7 @@ export const getDayunYears = (eightCharInfo: EightCharInfo): number[] => {
  * @param dayunLiunians 大运流年数组
  * @returns 嵌套数组，每个子数组包含对应大运的所有流年干支
  */
-export const getLiunianGanzhis = (eightCharInfo: EightCharInfo): string[][] => {
-
-  const dayunLiunians: DaYunItem[] = eightCharInfo.dayunLiunians
+export const getLiunianGanzhis = (): string[][] => {
 
   return dayunLiunians.map(dayun => {
     // 提取当前大运下所有流年的干支信息

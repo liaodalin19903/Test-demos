@@ -34,6 +34,7 @@ import {
 import shierchangshengImg from '@renderer/assets/images/12长生.jpeg'; // 调整相对路径
 import { DaYunItem, EightCharInfo } from '@shared/@types/eightChar/eightCharInfo'
 import { Solar } from 'lunar-typescript';
+import { DayunLiunianNode } from './components/DayunLiunianNode';
 
 export default function index() {
 
@@ -214,13 +215,15 @@ export default function index() {
       updateDayunLiunian(dayunLiunian)
 
     } catch (error) {
+      /*
         const config = {
           title: '温馨提示',
           content: (
-            <div>请选择八字</div>
+            <div>请选择出生时间</div>
           ),
         };
       modal.warning(config)
+      */
     }
 
   }
@@ -379,7 +382,16 @@ export default function index() {
 
             </Card>
           </Col>
-          <Col span={8}>
+
+          <Col span={16}>
+            <Card title="纳音五行&命宫身宫" variant="borderless">
+              <Descriptions layout="vertical" column={4} bordered title="纳音五行" items={getNayinWuXingItems(eightCharInfo)}/>
+
+            </Card>
+          </Col>
+        </Row>
+        <Row gutter={16}>
+          <Col span={12}>
             <Card title="十二长生" variant="borderless">
               {/* <Row>十二长生</Row> */}
               <Row>
@@ -390,18 +402,15 @@ export default function index() {
 
             </Card>
           </Col>
-          <Col span={8}>
-            <Card title="纳音五行&命宫身宫" variant="borderless">
-              <Descriptions layout="vertical" column={4} bordered title="纳音五行" items={getNayinWuXingItems(eightCharInfo)}/>
-
-            </Card>
-          </Col>
         </Row>
 
         <Row gutter={16}>
           <Col span={24}>
             <Card title="大运流年" variant="borderless">
-              {genDayunLiunianNode(eightCharInfo)}
+
+              {eightCharInfo.birthdaySolar && eightCharInfo.birthdaySolar !== '' && (
+                <DayunLiunianNode eightCharInfo={eightCharInfo} />
+              )}
             </Card>
           </Col>
         </Row>
