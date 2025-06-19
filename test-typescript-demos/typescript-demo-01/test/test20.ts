@@ -54,7 +54,7 @@ function updateDayunLiunian(dayunLiunian: string[][], birthdaySolar: string): st
   return updatedData;
 }
 
-const dayunLiunian: string[][] = [
+const dayunLiunian_liaomalin: string[][] = [
     [
         "庚午",
         "辛未",
@@ -187,5 +187,6 @@ const dayunLiunian: string[][] = [
 ]
 
 // 假设原始数据和生日
-const updatedData = updateDayunLiunian(dayunLiunian, "1990-01-01 00:00:00");
+const updatedData = updateDayunLiunian(dayunLiunian_liaomalin, "1990-01-29 00:00:00");
 console.log(updatedData); // 输出更新后的数据
+

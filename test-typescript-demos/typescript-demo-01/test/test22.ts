@@ -1,5 +1,3 @@
-
-
 /**
  * 获取天干相对于日主的十神
  * @param riZhuTianGan 日主天干
@@ -25,6 +23,11 @@ export const getShiShen = (riZhuTianGan: string, targetTianGan: string): string 
   const shengMap: Record<string, string> = {
     '木': '火', '火': '土', '土': '金', '金': '水', '水': '木'
   };
+  
+  // 五行相克关系（克者 → 被克者）
+  const keMap: Record<string, string> = {
+    '金': '木', '木': '土', '土': '水', '水': '火', '火': '金'
+  };
 
   // 日主天干的阴阳和五行
   const riZhuIsYang = yinYangMap[riZhuTianGan];
@@ -34,33 +37,37 @@ export const getShiShen = (riZhuTianGan: string, targetTianGan: string): string 
   const targetIsYang = yinYangMap[targetTianGan];
   const targetWuXing = wuXingMap[targetTianGan];
 
-  // 十神关系计算逻辑
+  // 1. 同五行关系（比劫）
   if (riZhuWuXing === targetWuXing) {
-    // 比劫
     return riZhuIsYang === targetIsYang ? '比肩' : '劫财';
-  } else if (shengMap[riZhuWuXing] === targetWuXing) {
-    // 食伤
+  } 
+  // 2. 相生关系（食伤/印绶）
+  else if (shengMap[riZhuWuXing] === targetWuXing) {
     return riZhuIsYang === targetIsYang ? '食神' : '伤官';
-  } else if (shengMap[targetWuXing] === riZhuWuXing) {
-    // 印绶
+  } 
+  else if (shengMap[targetWuXing] === riZhuWuXing) {
     return riZhuIsYang === targetIsYang ? '偏印' : '正印';
-  } else if (
-    (riZhuIsYang && targetIsYang) ||
-    (!riZhuIsYang && !targetIsYang)
-  ) {
-    // 七杀、偏财
-    return riZhuWuXing === '土' && targetWuXing === '水'
-      ? '偏财'  // 土日主见水（阳土见阳水为偏财）
-      : '七杀'; // 其他阴阳相同的克关系为七杀
-  } else {
-    // 正官、正财
-    return riZhuWuXing === '土' && targetWuXing === '水'
-      ? '正财'  // 土日主见水（阴土见阴水为正财）
-      : '正官'; // 其他阴阳不同的克关系为正官
+  } 
+  // 3. 相克关系（分我克/克我两种情况）
+  else {
+    // 3.1 日主克目标（我克者 → 财星）
+    if (keMap[riZhuWuXing] === targetWuXing) {
+      return riZhuIsYang === targetIsYang ? '偏财' : '正财';
+    } 
+    // 3.2 目标克日主（克我者 → 官杀）
+    else if (keMap[targetWuXing] === riZhuWuXing) {
+      return riZhuIsYang === targetIsYang ? '七杀' : '正官';
+    }
   }
+  
+  // 理论上不会执行到这里（五行关系完备）
+  return '未知';
 };
 
+// 测试用例
+const result1 = getShiShen('甲', '己'); // 阳木克阴土 → 正财
+const result2 = getShiShen('甲', '戊'); // 阳木克阳土 → 偏财
+const result3 = getShiShen('甲', '庚'); // 阳金克阳木 → 七杀
+const result4 = getShiShen('甲', '辛'); // 阴金克阳木 → 正官
 
-const result1 = getShiShen('甲', '己') // 应该是正财，但是得到了正官
-const result2 = getShiShen('甲', '戊') // 应该是偏财，但是得到了七杀
-console.log(result1, result2)
+console.log(result1, result2, result3, result4); // 输出: 正财 偏财 七杀 正官

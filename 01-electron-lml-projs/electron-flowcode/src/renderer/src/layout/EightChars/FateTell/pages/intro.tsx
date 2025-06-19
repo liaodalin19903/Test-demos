@@ -1,10 +1,14 @@
-import { Button, Card, Col, Descriptions, Modal, Radio, RadioChangeEvent, Row } from 'antd'
+import { Button, Card, Col, Descriptions, Empty, Modal, Radio, RadioChangeEvent, Row } from 'antd'
 import React, { useState } from 'react'
 import { InputNumber, Space } from 'antd';
 import { Input, Image } from 'antd';
 import { Divider, Flex, Tag } from 'antd';
 import { TianGanDizhiColor } from '@renderer/common/utils'
 import { CheckboxGroupProps } from 'antd/es/checkbox';
+
+import { Typography } from 'antd';
+
+const { Title, Paragraph, Text, Link } = Typography;
 
 import {
   genTianGanShishenNode,
@@ -34,6 +38,7 @@ import shierchangshengImg from '@renderer/assets/images/12长生.jpeg'; // 调�
 import { DaYunItem, EightCharInfo } from '@shared/@types/eightChar/eightCharInfo'
 import { Solar } from 'lunar-typescript';
 import { DayunLiunianNode } from '../components/DayunLiunianNode';
+import { getShenqiangruoScore, getShenqiangruoTitle } from '../hooks/needJudge/shenqiangruo';
 
 export default function index() {
 
@@ -62,7 +67,8 @@ export default function index() {
     },
     zhangSheng: ['长生', '长生', '长生', '长生'],
     kongWang: ['空亡', '空亡', '空亡', '空亡'],
-    dayunLiunians: []
+    dayunLiunians: [],
+    shenqiangruo: undefined, // 身强身弱:1~5 从强~从弱
   })
 
   const [tianGanShishenNode, setTianGanShishenNode] = useState(
@@ -153,13 +159,19 @@ export default function index() {
     }));
   };
 
+  const updateShenqiangruo = (shenqiangruo: number) => {
+    setEightCharInfo(prev => ({
+      ...prev,
+      shenqiangruo: shenqiangruo
+    }));
+  };
+
   const onBrithYearChange = (birthdaySolar: string | null) => {
     updateBirthdaySolar(birthdaySolar as string)
   };
 
 
   const onClickChar = (index: number) => {
-    console.log('clicked', index);
     updateEditingIndex(index)
 
     if(index > 0 && index < 5) {
@@ -170,7 +182,6 @@ export default function index() {
   };
 
   const onChooseCharTianGan = (TianGan: string) => {
-    console.log('TianGan:', TianGan)
     // 1~10: 甲~癸
     setIsModalOpenTianGan(false)
     updateChar(eightCharInfo.editingIndex, TianGan)
@@ -178,7 +189,6 @@ export default function index() {
   }
 
   const onChooseCharDizhi = (Dizhi: string) => {
-    console.log('Dizhi:', Dizhi)
     // 1~12: 子~亥
     setIsModalOpenDizhi(false)
     updateChar(eightCharInfo.editingIndex, Dizhi)
@@ -383,12 +393,68 @@ export default function index() {
           </Col>
 
           <Col span={16}>
-            <Card title="纳音五行&命宫身宫" variant="borderless">
-              <Descriptions layout="vertical" column={4} bordered title="纳音五行" items={getNayinWuXingItems(eightCharInfo)}/>
+            <Card>
+              <Row>
+                <Col span={24}>
+                  <Card title={getShenqiangruoTitle(eightCharInfo.shenqiangruo)} variant="borderless">
+                    <Descriptions layout="vertical" column={2} >
+                      <Descriptions.Item label='判断方式1：50为界线法'>
+                        大于50:身强；小于50:身弱
+                      </Descriptions.Item>
+                      <Descriptions.Item label='判断方式2：四柱八字分值法'>
+                        小于40:身弱；40~60:中庸；大于60:身强
+                      </Descriptions.Item>
+                      <Descriptions.Item label='得分'><Text type='warning'>{getShenqiangruoScore(eightCharInfo.eightChar)}</Text></Descriptions.Item>
+                      <Descriptions.Item label='选择'>
+                      <Radio.Group
+                        value={eightCharInfo.shenqiangruo}
+                        options={[
+                          { value: 1, label: '从强' },
+                          { value: 2, label: '身强' },
+                          { value: 3, label: '均衡' },
+                          { value: 4, label: '身弱' },
+                          { value: 5, label: '从弱' },
+                        ]}
+                        onChange={(e) => {updateShenqiangruo(e.target.value)}}
+                      />
+                      </Descriptions.Item>
+                    </Descriptions>
+                  </Card>
+                </Col>
+              </Row>
 
+              <Row>
+                <Col span={24}>
+                  <Card title="格局" variant="borderless">
+                    <Descriptions layout="vertical" column={4} />
+                  </Card>
+                </Col>
+              </Row>
+
+              <Row>
+                <Col span={24}>
+                  <Card title="喜用神" variant="borderless">
+                    <Descriptions layout="vertical" column={4} />
+                  </Card>
+                </Col>
+              </Row>
+            </Card>
+          </Col>
+
+
+        </Row>
+        <Row gutter={16}>
+          <Col span={12}>
+            <Card title="纳音五行&命宫身宫" variant="borderless">
+
+              {
+                eightCharInfo.birthdaySolar === '' ? <Empty/> :
+                <Descriptions layout="vertical" column={4} bordered title="纳音五行" items={getNayinWuXingItems(eightCharInfo)}/>
+              }
             </Card>
           </Col>
         </Row>
+
         <Row gutter={16}>
           <Col span={12}>
             <Card title="十二长生" variant="borderless">
@@ -407,9 +473,9 @@ export default function index() {
           <Col span={24}>
             <Card title="大运流年" variant="borderless">
 
-              {eightCharInfo.birthdaySolar && eightCharInfo.birthdaySolar !== '' && (
-                <DayunLiunianNode eightCharInfo={eightCharInfo} />
-              )}
+              {
+                eightCharInfo.birthdaySolar === '' ? <Empty/> :  <DayunLiunianNode eightCharInfo={eightCharInfo} />
+              }
             </Card>
           </Col>
         </Row>

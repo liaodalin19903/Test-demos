@@ -34,6 +34,7 @@ export type EightCharInfo = {
   zhangSheng: string[],  // 地支的十二长生
   kongWang: string[],  // 空亡
   dayunLiunians: DaYunItem[],  // 大运流年
+  shenqiangruo: number | undefined,  // 身强身弱
 };
 
   // 定义大运流年数据结构

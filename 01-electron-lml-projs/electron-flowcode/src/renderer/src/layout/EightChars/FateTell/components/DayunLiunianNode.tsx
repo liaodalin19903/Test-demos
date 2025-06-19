@@ -93,7 +93,6 @@ export const DayunLiunianNode: React.FC<{ eightCharInfo: EightCharInfo }> = ({ e
   }
 
   // 数据准备好后执行计算
-  console.log('数据准备好后执行计算: ', eightCharInfo)
   const zhangsheng = getZhangshengs(eightCharInfo);
   const nayin = getNayins(eightCharInfo);
   const shishen = getShishens(eightCharInfo);
@@ -184,6 +183,7 @@ function updateDayunLiunian(dayunLiunian: string[][], birthdaySolar: string): st
   const [hour, minute, second] = (timePart || '00:00:00').split(':').map(Number);
 
   const birthSolar = Solar.fromYmdHms(year, month, day, hour, minute, second);
+  const birthYear = birthSolar.getYear();
 
   // 获取当前日期
   const now = new Date();
@@ -195,34 +195,47 @@ function updateDayunLiunian(dayunLiunian: string[][], birthdaySolar: string): st
     now.getMinutes(),
     now.getSeconds()
   );
+  const currentYear = currentSolar.getYear();
 
-  // 计算从出生到现在的总年数
-  let totalYears = currentSolar.getYear() - birthSolar.getYear();
+  // 判断当前时间是否已经过了当前自然年的立春（简化：立春为2月4日）
+  let isAfterLichun = false;
+  if (currentSolar.getMonth() > 2) {
+    isAfterLichun = true;
+  } else if (currentSolar.getMonth() === 2) {
+    if (currentSolar.getDay() >= 4) {
+      isAfterLichun = true;
+    }
+  }
 
-  // 如果当前日期还没过生日，减去1年
-  if (
-    currentSolar.getMonth() < birthSolar.getMonth() ||
-    (currentSolar.getMonth() === birthSolar.getMonth() && currentSolar.getDay() < birthSolar.getDay())
-  ) {
-    totalYears--;
+  // 计算流年对应的自然年
+  let liuNianYear = currentYear;
+  if (!isAfterLichun) {
+    liuNianYear = currentYear - 1;
+  }
+
+  // 计算索引：从出生年开始，出生年对应的流年是第0个
+  let index = liuNianYear - birthYear;
+  if (index < 0) {
+    // 如果流年年份小于出生年，则不标记
+    return dayunLiunian.map(period => [...period]);
   }
 
   // 遍历大运流年数组，找到对应的位置
   let count = 0;
   let found = false;
 
-  const updatedData = dayunLiunian.map((period, periodIndex) => {
-    return period.map((ganzhi, ganzhiIndex) => {
-      if (!found && count === totalYears) {
+  const updatedData = dayunLiunian.map(period => {
+    return period.map(ganzhi => {
+      if (!found && count === index) {
         found = true;
-        return `*${ganzhi}`; // 标记当前年份
+        return `*${ganzhi}`;
       }
       count++;
       return ganzhi;
     });
   });
 
+  // 如果没找到（index超出范围），则返回原数组
   return updatedData;
 }
-
 
