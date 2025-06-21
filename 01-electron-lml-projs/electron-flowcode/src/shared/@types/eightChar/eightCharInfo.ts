@@ -21,16 +21,26 @@ export type EightChar = {
   8: string; // 时支
 }
 
+
+/**
+ * eg.
+ * {
+ *   tianGanShiShen: ['正财', '伤官', '日元', '比肩'],
+ *   dizhiShiShen: [...]
+ * }
+ */
+export type Shishen = {
+  tianGanShiShen: string[],  // 天干十神
+  dizhiShiShen: string[][]   // 地支藏干十神
+}
+
 // 定义状态类型
 export type EightCharInfo = {
   gender: string;
   birthdaySolar: string;  // eg. 1990-01-01 00:00:00
   editingIndex: number;
   eightChar: EightChar;
-  shishen: {
-    tianGanShiShen: string[]; // 显式声明为字符串数组
-    dizhiShiShen: string[][];   // 显式声明为字符串数组
-  };
+  shishen: Shishen; // 十神
   zhangSheng: string[],  // 地支的十二长生
   kongWang: string[],  // 空亡
   dayunLiunians: DaYunItem[],  // 大运流年
