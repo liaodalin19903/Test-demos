@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Weboffice</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<style>
+iframe {
+width: 100%;
+height: 100%;
+}
+</style>
+</head>
+<body>
+<script src="https://cn-chengdu.office-static.aliyunpds.com/IMM/office-js/1.1.15/aliyun-web-office-sdk.min.js"></script>
+<div id="weboffice-zone"></div>
+<script>
+window.onload = init;
+async function init() {
+preview({
+"RefreshToken": "9ba1136974844465bd3cd75ef1c46ff0v3",
+"AccessToken": "52842ca1ff804992b956a6996bfcd743v3",
+"WebofficeURL": "https:\/\/cn-chengdu.office.imm.aliyuncs.com\/office\/w\/6c5bd041cf9161da46d7da97f2334679473dd4a3?_w_tokentype=1\u0026hidecmb=1\u0026simple=1"
+})
+}
+function preview(tokenInfo) {
+let mount = document.getElementById('#weboffice-zone');
+let ins = aliyun.config({
+mount,
+url: tokenInfo.WebofficeURL,
+});
+ins.setToken({ token: tokenInfo.AccessToken });
+}
+</script>
+</body>
+</html>

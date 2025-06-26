@@ -1,4 +1,4 @@
-// 拱、夹、暗带
+// 拱、夹、暗带（比较难，还没有学会）
 
 import { EightChar } from "@shared/@types/eightChar/eightCharInfo";
 
