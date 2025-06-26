@@ -114,11 +114,43 @@ export const getM5GeZhuanwang = (eightChar: EightChar): GeType[] => {
  * @param shishen 十神
  * @returns
  */
-export const getM5GeCongshi = (eightChar: EightChar, shishen: Shishen): GeType[] => {
+export const getM5GeCongruoCongshi = (eightChar: EightChar, shishen: Shishen): GeType[] => {
+    const result: GeType[] = [];
+    const { tianGanShiShen, dizhiShiShen } = shishen;
 
+    // 定义帮扶十神（比肩、劫财、正印、偏印）
+    const bangfuShishen = ['比肩', '劫财', '正印', '偏印'];
 
-  return []
-}
+    // 1. 检查地支藏干中是否有帮扶十神
+    const hasBangfuInDizhi = dizhiShiShen.some(zhiShishen => {
+        return zhiShishen.some(shiShen => bangfuShishen.includes(shiShen));
+    });
+
+    // 2. 统计天干中帮扶十神的数量（排除日主）
+    let bangfuCount = 0;
+    for (let i = 0; i < tianGanShiShen.length; i++) {
+        // 跳过日主位置（索引2）
+        if (i === 2) continue;
+
+        if (bangfuShishen.includes(tianGanShiShen[i])) {
+            bangfuCount++;
+        }
+    }
+
+    // 3. 判断是否满足从弱格条件
+    if (!hasBangfuInDizhi && bangfuCount <= 1) {
+        // 返回所有从弱格类型（供后续分析）
+        return [
+            '从财格',
+            '从官格',
+            '从煞格',
+            '从儿格',
+            '财官食伤均势格'
+        ];
+    }
+
+    return result;
+};
 
 /**
  * 从弱-从气格
