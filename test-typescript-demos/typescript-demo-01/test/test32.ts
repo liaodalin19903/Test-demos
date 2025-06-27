@@ -144,20 +144,23 @@ const getWuXingByTianGan = (tianGan: string): string => {
 };    
 
 const eightChar = {
-  1: '甲',
-  2: '戊',
-  3: '甲',
-  4: '戊',
-  5: '戌',
-  6: '戌',
-  7: '戌',
-  8: '戌' 
+  1: '癸',
+  2: '辛',
+  3: '乙',
+  4: '乙',
+  5: '酉',
+  6: '酉',
+  7: '酉',
+  8: '酉' 
 }
 
 const shishen = {
-  tianGanShiShen: [],
+  tianGanShiShen: ['偏印', '七杀', '日元', '比肩'],
   dizhiShiShen: [
-
+    ['七杀'],
+    ['七杀'],
+    ['七杀'],
+    ['七杀']
   ]
 }
 

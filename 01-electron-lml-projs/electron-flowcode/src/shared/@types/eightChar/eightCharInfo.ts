@@ -57,3 +57,37 @@ export interface LiuNianItem {
     liunianYear: number;
     liunianGanzhi: string;
   }
+
+
+
+// 五行与地支对应关系
+export const WUXING_DIZHI: Record<string, string> = {
+  '子': '水', '丑': '土', '寅': '木', '卯': '木', '辰': '土', '巳': '火',
+  '午': '火', '未': '土', '申': '金', '酉': '金', '戌': '土', '亥': '水'
+};
+
+// 三合局配置
+export const SANHE_JU: Record<string, string[]> = {
+  '火': ['寅', '午', '戌'],
+  '水': ['申', '子', '辰'],
+  '木': ['亥', '卯', '未'],
+  '金': ['巳', '酉', '丑'],
+  '土': ['辰', '戌', '丑', '未'] // 四库土
+};
+
+// 三会局配置
+export const SANHUI_JU: Record<string, string[]> = {
+  '火': ['巳', '午', '未'],
+  '水': ['亥', '子', '丑'],
+  '木': ['寅', '卯', '辰'],
+  '金': ['申', '酉', '戌']
+};
+
+// 辅助函数：根据天干获取五行
+export const getWuXingByTianGan = (tianGan: string): string => {
+  const map: Record<string, string> = {
+    '甲': '木', '乙': '木', '丙': '火', '丁': '火', '戊': '土',
+    '己': '土', '庚': '金', '辛': '金', '壬': '水', '癸': '水'
+  };
+  return map[tianGan] || '';
+};
