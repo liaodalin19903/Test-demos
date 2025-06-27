@@ -1,3 +1,5 @@
+import { GeType } from "./geju";
+
 export type NaYin = {
   "年柱": string,
   "月柱": string,
@@ -40,11 +42,26 @@ export type EightCharInfo = {
   birthdaySolar: string;  // eg. 1990-01-01 00:00:00
   editingIndex: number;
   eightChar: EightChar;
+  canggan: string[][]; // 地支藏干
   shishen: Shishen; // 十神
   zhangSheng: string[],  // 地支的十二长生
   kongWang: string[],  // 空亡
   dayunLiunians: DaYunItem[],  // 大运流年
   shenqiangruo: number | undefined,  // 身强身弱
+  geju: {
+    recommend: {  // 程序推荐格局
+      m1: GeType[];
+      m2: GeType[];
+      m3: GeType[];
+      m4: GeType[];
+      m5_1: GeType[]; // 专旺
+      m5_2: GeType[]; // 从弱-从势
+      m5_3: GeType[]; // 从弱-从气
+      m5_4: GeType[]; // 从化
+      m5_5: GeType[]; // 特殊格局
+    }
+    selected: GeType[]  // 我们选择的格局
+  };
 };
 
   // 定义大运流年数据结构

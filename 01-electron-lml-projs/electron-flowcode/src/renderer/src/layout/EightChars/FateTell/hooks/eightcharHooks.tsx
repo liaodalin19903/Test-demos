@@ -88,13 +88,14 @@ export interface EightChar {
 }
 
 
-export interface CangGan {
-  TianGanCangGan: string[];
-  DizhiCangGan: string[][];
+export interface CangGanShishen {
+  TianganShishen: string[];
+  DizhiCanggan: string[][];
+  DizhiShishen: string[][];
 }
 
 // 生成地支藏干的展示节点
-export const genCangGan = (eightChar: EightChar): CangGan => {
+export const genCangGan = (eightChar: EightChar): CangGanShishen => {
   // 提取天干 (1-4) 和地支 (5-8)
   const tianGan = [eightChar['1'], eightChar['2'], eightChar['3'], eightChar['4']];
   const diZhi = [eightChar['5'], eightChar['6'], eightChar['7'], eightChar['8']];
@@ -103,38 +104,38 @@ export const genCangGan = (eightChar: EightChar): CangGan => {
   const riYuan = tianGan[2];
 
   // 计算天干对应的十神
-  const tianGanCangGan = tianGan.map((gan, index) => {
-    if (index === 2) return '日元'; // 第三柱天干为日元
-    return SHI_SHEN_RELATION[riYuan][gan];
-  });
+  const tianGanShishen = tianGan.map((gan, index) =>
+    index === 2 ? '日元' : SHI_SHEN_RELATION[riYuan][gan]
+  );
 
   // 计算地支藏干及其十神
-  const diZhiCangGan = diZhi.map(diZhiChar => {
-    const cangGan = CANG_GAN_MAP[diZhiChar] || [];
-    return cangGan.map(gan => {
-      const shiShen = SHI_SHEN_RELATION[riYuan][gan];
-      return `${gan} ${shiShen}`;
-    });
-  });
+  const dizhiCangGan = diZhi.map(diZhiChar =>
+    CANG_GAN_MAP[diZhiChar] || []
+  );
+
+  const dizhiShishen = dizhiCangGan.map(cangGans =>
+    cangGans.map(gan => SHI_SHEN_RELATION[riYuan][gan])
+  );
 
   return {
-    TianGanCangGan: tianGanCangGan,
-    DizhiCangGan: diZhiCangGan
+    TianganShishen: tianGanShishen,
+    DizhiCanggan: dizhiCangGan,
+    DizhiShishen: dizhiShishen
   };
 };
 
 export const genTianGanShishenNode = (eightChar: EightChar) => {
 
    // 步骤1：通过八字 算出天干和地支的藏干
-  const cg: CangGan = genCangGan(eightChar)
+  const cg: CangGanShishen = genCangGan(eightChar)
 
   const tianganNode =
   (
     <Row>
-    <Tag bordered={false} style={{ width: '48px', textAlign: 'center' }}>{cg.TianGanCangGan[0]}</Tag>
-    <Tag bordered={false} style={{ width: '48px', textAlign: 'center' }}>{cg.TianGanCangGan[1]}</Tag>
-    <Tag bordered={false} style={{ width: '48px', textAlign: 'center' }}>{cg.TianGanCangGan[2]}</Tag>
-    <Tag bordered={false} style={{ width: '48px', textAlign: 'center' }}>{cg.TianGanCangGan[3]}</Tag>
+    <Tag bordered={false} style={{ width: '48px', textAlign: 'center' }}>{cg.TianganShishen[0]}</Tag>
+    <Tag bordered={false} style={{ width: '48px', textAlign: 'center' }}>{cg.TianganShishen[1]}</Tag>
+    <Tag bordered={false} style={{ width: '48px', textAlign: 'center' }}>{cg.TianganShishen[2]}</Tag>
+    <Tag bordered={false} style={{ width: '48px', textAlign: 'center' }}>{cg.TianganShishen[3]}</Tag>
     </Row>
   )
 
@@ -150,30 +151,30 @@ export const getCangGanColor = (canggan: string) => {
 
 export const genDizhiCangGanShishenNode = (eightChar: EightChar) => {
   // 步骤1：通过八字 算出天干和地支的藏干
-  const cg: CangGan = genCangGan(eightChar)
+  const cg: CangGanShishen = genCangGan(eightChar)
 
   // 步骤2：生成地支藏干节点
   const dizhiNode = (
     <Space direction="vertical" size={8}>
       <Row>
-      <Tag bordered={false} color={getCangGanColor(cg.DizhiCangGan[0][0])} style={{ fontSize: '10px', width: '48px' }}>{cg.DizhiCangGan[0][0]}</Tag>
-      <Tag bordered={false} color={cg.DizhiCangGan[1][0] ? getCangGanColor(cg.DizhiCangGan[1][0]) : ''} style={{ fontSize: '10px', width: '48px', visibility: cg.DizhiCangGan[1][0] ? 'visible' : 'hidden' }}>{cg.DizhiCangGan[1][0]}</Tag>
-      <Tag bordered={false} color={cg.DizhiCangGan[2][0] ? getCangGanColor(cg.DizhiCangGan[2][0]) : ''} style={{ fontSize: '10px', width: '48px', visibility: cg.DizhiCangGan[2][0] ? 'visible' : 'hidden' }}>{cg.DizhiCangGan[2][0]}</Tag>
-      <Tag bordered={false} color={cg.DizhiCangGan[3][0] ? getCangGanColor(cg.DizhiCangGan[3][0]) : ''} style={{ fontSize: '10px', width: '48px', visibility: cg.DizhiCangGan[3][0] ? 'visible' : 'hidden' }}>{cg.DizhiCangGan[3][0]}</Tag>
+      <Tag bordered={false} color={getCangGanColor(cg.DizhiCanggan[0][0])} style={{ fontSize: '10px', width: '48px' }}>{cg.DizhiCanggan[0][0]} {cg.DizhiShishen[0][0]}</Tag>
+      <Tag bordered={false} color={cg.DizhiCanggan[1][0] ? getCangGanColor(cg.DizhiCanggan[1][0]) : ''} style={{ fontSize: '10px', width: '48px', visibility: cg.DizhiCanggan[1][0] ? 'visible' : 'hidden' }}>{cg.DizhiCanggan[1][0]} {cg.DizhiShishen[1][0]}</Tag>
+      <Tag bordered={false} color={cg.DizhiCanggan[2][0] ? getCangGanColor(cg.DizhiCanggan[2][0]) : ''} style={{ fontSize: '10px', width: '48px', visibility: cg.DizhiCanggan[2][0] ? 'visible' : 'hidden' }}>{cg.DizhiCanggan[2][0]} {cg.DizhiShishen[2][0]}</Tag>
+      <Tag bordered={false} color={cg.DizhiCanggan[3][0] ? getCangGanColor(cg.DizhiCanggan[3][0]) : ''} style={{ fontSize: '10px', width: '48px', visibility: cg.DizhiCanggan[3][0] ? 'visible' : 'hidden' }}>{cg.DizhiCanggan[3][0]} {cg.DizhiShishen[3][0]}</Tag>
       </Row>
 
       <Row>
-      <Tag bordered={false} color={getCangGanColor(cg.DizhiCangGan[0][1])} style={{ fontSize: '10px', width: '48px' }}>{cg.DizhiCangGan[0][1]}</Tag>
-      <Tag bordered={false} color={cg.DizhiCangGan[1][1] ? getCangGanColor(cg.DizhiCangGan[1][1]) : ''} style={{ fontSize: '10px', width: '48px', visibility: cg.DizhiCangGan[1][1] ? 'visible' : 'hidden' }}>{cg.DizhiCangGan[1][1]}</Tag>
-      <Tag bordered={false} color={cg.DizhiCangGan[2][1] ? getCangGanColor(cg.DizhiCangGan[2][1]) : ''} style={{ fontSize: '10px', width: '48px', visibility: cg.DizhiCangGan[2][1] ? 'visible' : 'hidden' }}>{cg.DizhiCangGan[2][1]}</Tag>
-      <Tag bordered={false} color={cg.DizhiCangGan[3][1] ? getCangGanColor(cg.DizhiCangGan[3][1]) : ''} style={{ fontSize: '10px', width: '48px', visibility: cg.DizhiCangGan[3][1] ? 'visible' : 'hidden' }}>{cg.DizhiCangGan[3][1]}</Tag>
+      <Tag bordered={false} color={getCangGanColor(cg.DizhiCanggan[0][1])} style={{ fontSize: '10px', width: '48px' }}>{cg.DizhiCanggan[0][1]} {cg.DizhiShishen[0][1]}</Tag>
+      <Tag bordered={false} color={cg.DizhiCanggan[1][1] ? getCangGanColor(cg.DizhiCanggan[1][1]) : ''} style={{ fontSize: '10px', width: '48px', visibility: cg.DizhiCanggan[1][1] ? 'visible' : 'hidden' }}>{cg.DizhiCanggan[1][1]} {cg.DizhiShishen[1][1]}</Tag>
+      <Tag bordered={false} color={cg.DizhiCanggan[2][1] ? getCangGanColor(cg.DizhiCanggan[2][1]) : ''} style={{ fontSize: '10px', width: '48px', visibility: cg.DizhiCanggan[2][1] ? 'visible' : 'hidden' }}>{cg.DizhiCanggan[2][1]} {cg.DizhiShishen[2][1]}</Tag>
+      <Tag bordered={false} color={cg.DizhiCanggan[3][1] ? getCangGanColor(cg.DizhiCanggan[3][1]) : ''} style={{ fontSize: '10px', width: '48px', visibility: cg.DizhiCanggan[3][1] ? 'visible' : 'hidden' }}>{cg.DizhiCanggan[3][1]} {cg.DizhiShishen[3][1]}</Tag>
       </Row>
 
       <Row>
-      <Tag bordered={false} color={getCangGanColor(cg.DizhiCangGan[0][2])} style={{ fontSize: '10px', width: '48px' }}>{cg.DizhiCangGan[0][2]}</Tag>
-      <Tag bordered={false} color={cg.DizhiCangGan[1][2] ? getCangGanColor(cg.DizhiCangGan[1][2]) : ''} style={{ fontSize: '10px', width: '48px', visibility: cg.DizhiCangGan[1][2] ? 'visible' : 'hidden' }}>{cg.DizhiCangGan[1][2]}</Tag>
-      <Tag bordered={false} color={cg.DizhiCangGan[2][2] ? getCangGanColor(cg.DizhiCangGan[2][2]) : ''} style={{ fontSize: '10px', width: '48px', visibility: cg.DizhiCangGan[2][2] ? 'visible' : 'hidden' }}>{cg.DizhiCangGan[2][2]}</Tag>
-      <Tag bordered={false} color={cg.DizhiCangGan[3][2] ? getCangGanColor(cg.DizhiCangGan[3][2]) : ''} style={{ fontSize: '10px', width: '48px', visibility: cg.DizhiCangGan[3][2] ? 'visible' : 'hidden' }}>{cg.DizhiCangGan[3][2]}</Tag>
+      <Tag bordered={false} color={getCangGanColor(cg.DizhiCanggan[0][2])} style={{ fontSize: '10px', width: '48px' }}>{cg.DizhiCanggan[0][2]} {cg.DizhiShishen[0][2]}</Tag>
+      <Tag bordered={false} color={cg.DizhiCanggan[1][2] ? getCangGanColor(cg.DizhiCanggan[1][2]) : ''} style={{ fontSize: '10px', width: '48px', visibility: cg.DizhiCanggan[1][2] ? 'visible' : 'hidden' }}>{cg.DizhiCanggan[1][2]} {cg.DizhiShishen[1][2]}</Tag>
+      <Tag bordered={false} color={cg.DizhiCanggan[2][2] ? getCangGanColor(cg.DizhiCanggan[2][2]) : ''} style={{ fontSize: '10px', width: '48px', visibility: cg.DizhiCanggan[2][2] ? 'visible' : 'hidden' }}>{cg.DizhiCanggan[2][2]} {cg.DizhiShishen[2][2]}</Tag>
+      <Tag bordered={false} color={cg.DizhiCanggan[3][2] ? getCangGanColor(cg.DizhiCanggan[3][2]) : ''} style={{ fontSize: '10px', width: '48px', visibility: cg.DizhiCanggan[3][2] ? 'visible' : 'hidden' }}>{cg.DizhiCanggan[3][2]} {cg.DizhiShishen[3][2]}</Tag>
       </Row>
     </Space>
   )

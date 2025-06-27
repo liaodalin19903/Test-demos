@@ -6,6 +6,33 @@ import { Divider, Flex, Tag } from 'antd';
 import { TianGanDizhiColor } from '@renderer/common/utils'
 import { CheckboxGroupProps } from 'antd/es/checkbox';
 
+/*
+
+getM1Ge
+getM2Ge
+getM3Ge
+getM4Ge
+
+getM5GeZhuanwang
+getM5GeCongruoCongshi
+getM5GeCongruoCongqi
+getM5GeHuaqi
+getM5GeQita
+*/
+
+import { getM1Ge } from '@renderer/layout/EightChars/FateTell/hooks/needJudge/geJu/m1'
+import { getM2Ge } from '@renderer/layout/EightChars/FateTell/hooks/needJudge/geJu/m2'
+import { getM3Ge } from '@renderer/layout/EightChars/FateTell/hooks/needJudge/geJu/m3'
+import { getM4Ge } from '@renderer/layout/EightChars/FateTell/hooks/needJudge/geJu/m4'
+import {
+  getM5GeZhuanwang,
+  getM5GeCongruoCongshi,
+  getM5GeCongruoCongqi,
+  getM5GeHuaqi,
+  getM5GeQita
+ } from '@renderer/layout/EightChars/FateTell/hooks/needJudge/geJu/m5'
+
+
 import { Typography } from 'antd';
 
 const { Title, Paragraph, Text, Link } = Typography;
@@ -15,7 +42,7 @@ import {
   genDizhiCangGanShishenNode,
 
   genCangGan,
-  CangGan,
+  CangGanShishen,
 
   getSolarsFromEightChar
  } from '../hooks/eightcharHooks';
@@ -39,6 +66,7 @@ import { DaYunItem, EightCharInfo } from '@shared/@types/eightChar/eightCharInfo
 import { Solar } from 'lunar-typescript';
 import { DayunLiunianNode } from '../components/DayunLiunianNode';
 import { getShenqiangruoScore, getShenqiangruoTitle } from '../hooks/needJudge/shenqiangruo';
+import { GeType } from '@shared/@types/eightChar/geju';
 
 export default function index() {
 
@@ -61,6 +89,7 @@ export default function index() {
       7: '子',
       8: '子'
     },
+    canggan:[], // 地支藏干
     shishen: {
       tianGanShiShen: [],
       dizhiShiShen: []
@@ -69,6 +98,20 @@ export default function index() {
     kongWang: ['空亡', '空亡', '空亡', '空亡'],
     dayunLiunians: [],
     shenqiangruo: undefined, // 身强身弱:1~5 从强~从弱
+    geju: {
+      recommend: {
+        m1: [],
+        m2: [],
+        m3: [],
+        m4: [],
+        m5_1: [],
+        m5_2: [],
+        m5_3: [],
+        m5_4: [],
+        m5_5: []
+      },
+      selected: []
+    }
   })
 
   const [tianGanShishenNode, setTianGanShishenNode] = useState(
@@ -135,6 +178,13 @@ export default function index() {
     }));
   };
 
+  const updateDizhiCangGan = (canggan: string[][]) => {
+    setEightCharInfo(prev => ({
+      ...prev,
+      canggan: canggan
+    }));
+  }
+
   const updateDiZhiShishen = (dizhiShishen: string[][]) => {
     setEightCharInfo(prev => ({
       ...prev,
@@ -164,6 +214,53 @@ export default function index() {
       ...prev,
       shenqiangruo: shenqiangruo
     }));
+  };
+
+  const updateGejuRecommend = (
+    m1: GeType[],
+    m2: GeType[],
+    m3: GeType[],
+    m4: GeType[],
+    m5_1: GeType[],
+    m5_2: GeType[],
+    m5_3: GeType[],
+    m5_4: GeType[],
+    m5_5: GeType[],
+  ) => {
+    setEightCharInfo(prev => ({
+      ...prev,
+      geju: {
+        recommend: {
+          m1,
+          m2,
+          m3,
+          m4,
+          m5_1,
+          m5_2,
+          m5_3,
+          m5_4,
+          m5_5
+        },
+        selected: []
+      }
+    }));
+  }
+
+  const updateGejuSelected = (selectedGeju: GeType) => {
+    setEightCharInfo(prev => {
+      const { selected } = prev.geju;
+      const isSelected = selected.includes(selectedGeju);
+
+      return {
+        ...prev,
+        geju: {
+          ...prev.geju,
+          selected: isSelected
+            ? selected.filter(item => item !== selectedGeju)
+            : [...selected, selectedGeju]
+        }
+      };
+    });
   };
 
   const onBrithYearChange = (birthdaySolar: string | null) => {
@@ -204,9 +301,10 @@ export default function index() {
       showSelectSolarModal(solars)
 
       // 1.更新天干地支十神
-      const cg: CangGan = genCangGan(eightCharInfo.eightChar)
-      updateTianGanShishen(cg.TianGanCangGan)
-      updateDiZhiShishen(cg.DizhiCangGan)
+      const cg: CangGanShishen = genCangGan(eightCharInfo.eightChar)
+      updateTianGanShishen(cg.TianganShishen)
+      updateDizhiCangGan(cg.DizhiCanggan)
+      updateDiZhiShishen(cg.DizhiShishen)
 
       // 2.更新天干地支十神的Node
       const tianGanShiShenNode = genTianGanShishenNode(eightCharInfo.eightChar)
@@ -275,6 +373,32 @@ export default function index() {
         updateBirthdaySolar(solars.at(-1)?.toYmdHms() as string)
       }
     })
+  }
+
+  // 点击推荐格局按钮
+  const handleClickRecommandGeju = () => {
+    console.log('点击推荐格局按钮', eightCharInfo.shishen )
+
+    if(eightCharInfo.shishen.dizhiShiShen.length === 0) {
+      return
+    }
+
+    const m1 = getM1Ge(eightCharInfo.shishen)
+    const m2 = getM2Ge(eightCharInfo.eightChar, eightCharInfo.shishen)
+    const m3 = getM3Ge(eightCharInfo.eightChar, eightCharInfo.shishen)
+    const m4 = getM4Ge(eightCharInfo.eightChar, eightCharInfo.shishen)
+    const m5_1 = getM5GeZhuanwang(eightCharInfo.eightChar)
+    const m5_2 = getM5GeCongruoCongshi(eightCharInfo.eightChar, eightCharInfo.shishen)
+    const m5_3 = getM5GeCongruoCongqi(eightCharInfo.eightChar, eightCharInfo.shishen)
+    const m5_4 = getM5GeHuaqi(eightCharInfo.eightChar, eightCharInfo.shishen)
+    const m5_5 = getM5GeQita(eightCharInfo.eightChar, eightCharInfo.shishen)
+
+    updateGejuRecommend(m1, m2, m3, m4, m5_1, m5_2, m5_3, m5_4, m5_5)
+  }
+
+  // 点击每个格局按钮
+  const handleClickGejuButton = (ge: GeType) => {
+    updateGejuSelected(ge)
   }
 
   const zhangShengNode = (
@@ -426,7 +550,140 @@ export default function index() {
               <Row>
                 <Col span={24}>
                   <Card title="格局" variant="borderless">
-                    <Descriptions layout="vertical" column={4} />
+                    <Descriptions layout="vertical" column={1} >
+                      <Descriptions.Item label="">
+                        <Button color="primary" variant="solid" onClick={() => {
+                          handleClickRecommandGeju()
+                        }}>点击推荐</Button>
+                      </Descriptions.Item>
+
+                      {/*  */}
+                      <Descriptions.Item label="M1推荐格局(天透地藏)">
+                        <Space size='small' direction='horizontal'>
+
+                        {eightCharInfo.geju.recommend.m1.map((gejuItem: GeType) => (
+                          <Button
+                            size='small'
+                            key={gejuItem}
+                            variant='filled'
+                            color={eightCharInfo.geju.selected.includes(gejuItem) ? 'primary' : 'default'}
+                            onClick={() => updateGejuSelected(gejuItem)}
+                          >
+                            {gejuItem}
+                          </Button>
+                        ))}
+                        </Space>
+                      </Descriptions.Item>
+
+                      {/*  */}
+                      <Descriptions.Item label="M2推荐格局(四见)">
+                        {eightCharInfo.geju.recommend.m2.map((gejuItem: GeType) => (
+                          <Button
+                            size='small'
+                            key={gejuItem}
+                            variant='filled'
+                            color={eightCharInfo.geju.selected.includes(gejuItem) ? 'primary' : 'default'}
+                            onClick={() => updateGejuSelected(gejuItem)}
+                          >
+                            {gejuItem}
+                          </Button>
+                        ))}
+                      </Descriptions.Item>
+
+                      {/*  */}
+                      <Descriptions.Item label="M3推荐格局(阴阳相见)">
+                        {eightCharInfo.geju.recommend.m3.map((gejuItem: GeType) => (
+                          <Button
+                            size='small'
+                            key={gejuItem}
+                            variant='filled'
+                            color={eightCharInfo.geju.selected.includes(gejuItem) ? 'primary' : 'default'}
+                            onClick={() => updateGejuSelected(gejuItem)}
+                          >
+                            {gejuItem}
+                          </Button>
+                        ))}
+                      </Descriptions.Item>
+
+                      {/*  */}
+                      <Descriptions.Item label="M4推荐格局(三合三会)">
+                        {eightCharInfo.geju.recommend.m4.map((gejuItem: GeType) => (
+                          <Button
+                            size='small'
+                            key={gejuItem}
+                            variant='filled'
+                            color={eightCharInfo.geju.selected.includes(gejuItem) ? 'primary' : 'default'}
+                            onClick={() => updateGejuSelected(gejuItem)}
+                          >
+                            {gejuItem}
+                          </Button>
+                        ))}
+                      </Descriptions.Item>
+
+                      {/*  */}
+                      <Descriptions.Item label="M5推荐格局(特殊格局)">
+                        {eightCharInfo.geju.recommend.m5_1.map((gejuItem: GeType) => (
+                          <Button
+                            size='small'
+                            key={gejuItem}
+                            variant='filled'
+                            color={eightCharInfo.geju.selected.includes(gejuItem) ? 'primary' : 'default'}
+                            onClick={() => updateGejuSelected(gejuItem)}
+                          >
+                            {gejuItem}
+                          </Button>
+                        ))}
+
+                        {eightCharInfo.geju.recommend.m5_2.map((gejuItem: GeType) => (
+                          <Button
+                            size='small'
+                            key={gejuItem}
+                            variant='filled'
+                            color={eightCharInfo.geju.selected.includes(gejuItem) ? 'primary' : 'default'}
+                            onClick={() => updateGejuSelected(gejuItem)}
+                          >
+                            {gejuItem}
+                          </Button>
+                        ))}
+
+                        {eightCharInfo.geju.recommend.m5_3.map((gejuItem: GeType) => (
+                          <Button
+                            size='small'
+                            key={gejuItem}
+                            variant='filled'
+                            color={eightCharInfo.geju.selected.includes(gejuItem) ? 'primary' : 'default'}
+                            onClick={() => updateGejuSelected(gejuItem)}
+                          >
+                            {gejuItem}
+                          </Button>
+                        ))}
+
+                        {eightCharInfo.geju.recommend.m5_4.map((gejuItem: GeType) => (
+                          <Button
+                            size='small'
+                            key={gejuItem}
+                            variant='filled'
+                            color={eightCharInfo.geju.selected.includes(gejuItem) ? 'primary' : 'default'}
+                            onClick={() => updateGejuSelected(gejuItem)}
+                          >
+                            {gejuItem}
+                          </Button>
+                        ))}
+
+                        {eightCharInfo.geju.recommend.m5_5.map((gejuItem: GeType) => (
+                          <Button
+                            size='small'
+                            key={gejuItem}
+                            variant='filled'
+                            color={eightCharInfo.geju.selected.includes(gejuItem) ? 'primary' : 'default'}
+                            onClick={() => updateGejuSelected(gejuItem)}
+                          >
+                            {gejuItem}
+                          </Button>
+                        ))}
+                      </Descriptions.Item>
+
+                    </Descriptions>
                   </Card>
                 </Col>
               </Row>
@@ -440,7 +697,6 @@ export default function index() {
               </Row>
             </Card>
           </Col>
-
 
         </Row>
         <Row gutter={16}>

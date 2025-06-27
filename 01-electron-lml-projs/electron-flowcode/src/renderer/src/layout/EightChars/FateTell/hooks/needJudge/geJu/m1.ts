@@ -4,8 +4,14 @@ import { EightCharInfo, Shishen } from "@shared/@types/eightChar/eightCharInfo";
 import { GeType } from "@shared/@types/eightChar/geju";
 
 export const getM1Ge = (shishen: Shishen): GeType[] => {
+
+  if (shishen.dizhiShiShen.length === 0) {
+    return []
+  }
+
   const tianganShishen = shishen.tianGanShiShen;
   const yuezhiShishen = shishen.dizhiShiShen[1]; // 获取月支十神数组
+
 
   const geSet = new Set<GeType>(); // 使用Set避免重复格局
 
