@@ -20,6 +20,24 @@ export type Role2XingChongHeHui = {
   }
 }
 
+/**
+ * 天干：
+ *  天干五合
+ *  天干相冲
+ *
+ * 地支：
+ *  地支相冲
+    地支相害
+    地支三会
+    地支三合
+    地支半三合
+    地支暗合
+    地支六合
+    地支相刑
+    地支相破
+ * @param eightChar
+ * @returns
+ */
 export const getRole2XingChongHeHui = (eightChar: EightChar): Role2XingChongHeHui => {
 
   const tianganWuhe = getTianganWuhe(eightChar)
@@ -55,6 +73,11 @@ export const getRole2XingChongHeHui = (eightChar: EightChar): Role2XingChongHeHu
   return role2XingChongHeHui
 }
 
+/**
+ * 天干五合
+ * @param eightChar
+ * @returns ['甲己合', '乙庚合']
+ */
 export const getTianganWuhe = (eightChar: EightChar): string[] => {
   // 定义天干五合组合
   const wuheCombinations: Record<string, string> = {
@@ -104,6 +127,11 @@ export const getTianganWuhe = (eightChar: EightChar): string[] => {
   return results;
 };
 
+/**
+ * 天干相冲
+ * @param eightChar
+ * @returns ['甲庚冲', '乙辛冲']
+ */
 export const getTianganXiangchong = (eightChar: EightChar): string[] => {
   // 定义天干相冲组合
   const xiangchongMap: Record<string, string> = {
@@ -151,6 +179,11 @@ export const getTianganXiangchong = (eightChar: EightChar): string[] => {
   return results;
 };
 
+/**
+ * 地支三会
+ * @param eightChar
+ * @returns ['巳午未']
+ */
 export const getDizhiSanhui = (eightChar: EightChar): string[] => {
   // 定义三会局组合
   const sanhuiGroups = [
@@ -183,6 +216,11 @@ export const getDizhiSanhui = (eightChar: EightChar): string[] => {
   return results;
 };
 
+/**
+ * 地支三合
+ * @param eightChar
+ * @returns ['申子辰']
+ */
 export const getDizhiSanhe = (eightChar: EightChar): string[] => {
   // 定义三合局组合
   const sanheGroups = [
@@ -216,7 +254,7 @@ export const getDizhiSanhe = (eightChar: EightChar): string[] => {
 };
 
 /**
- *
+ * 地支半合
  * @param eightChar
  *
  * @returns
@@ -278,6 +316,11 @@ export const getDizhiBanhe = (eightChar: EightChar): string[] => {
   return results;
 };
 
+/**
+ * 地支暗合
+ * @param eightChar
+ * @returns ['寅丑']
+ */
 export const getDizhiAnhe = (eightChar: EightChar): string[] => {
   // 定义暗合组合映射表（包含所有可能的组合顺序）
   const anheMap: Record<string, string> = {
@@ -338,6 +381,11 @@ export const getDizhiAnhe = (eightChar: EightChar): string[] => {
   return results;
 };
 
+/**
+ * 地支六合
+ * @param eightChar
+ * @returns ['子丑']
+ */
 export const getDizhiLiuhe = (eightChar: EightChar): string[] => {
   // 定义六合组合映射表（包含所有可能的组合顺序）
   const liuheMap: Record<string, string> = {
@@ -398,6 +446,11 @@ export const getDizhiLiuhe = (eightChar: EightChar): string[] => {
   return results;
 };
 
+/**
+ * 地支相冲
+ * @param eightChar
+ * @returns ['子午', '丑未']
+ */
 export const getDizhiXiangchong = (eightChar: EightChar): string[] => {
   // 定义相冲组合映射表（包含所有可能的组合顺序）
   const xiangchongMap: Record<string, string> = {
@@ -458,6 +511,11 @@ export const getDizhiXiangchong = (eightChar: EightChar): string[] => {
   return results;
 };
 
+/**
+ * 地支相害
+ * @param eightChar
+ * @returns ['寅巳', '子未']
+ */
 export const getDizhiXianghai = (eightChar: EightChar): string[] => {
   // 定义相害组合映射表（包含所有可能的组合顺序）
   const xianghaiMap: Record<string, string> = {
@@ -518,6 +576,11 @@ export const getDizhiXianghai = (eightChar: EightChar): string[] => {
   return results;
 };
 
+/**
+ * 地支相刑
+ * @param eightChar
+ * @returns ['子卯相刑', '寅刑巳', '巳刑申']
+ */
 export const getDizhiXiangxing = (eightChar: EightChar): string[] => {
   // 定义相刑组合映射表
   const xiangxingMap: Record<string, string> = {
@@ -606,6 +669,11 @@ export const getDizhiXiangxing = (eightChar: EightChar): string[] => {
   return results;
 };
 
+/**
+ * 地支相破
+ * @param eightChar
+ * @returns ['子酉', '丑辰']
+ */
 export const getDizhiXiangpo = (eightChar: EightChar): string[] => {
   // 定义相破组合映射表（包含所有可能的组合顺序）
   const xiangpoMap: Record<string, string> = {

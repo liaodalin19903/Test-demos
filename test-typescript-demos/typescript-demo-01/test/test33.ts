@@ -170,3 +170,6 @@ const shishen2 = {
 const c2 = getM5GeCongruoHuaqi(eightChar2, shishen2) // 返回 []（时干辛金妒合）
 
 console.log(c1, c2)
+
+
+const aaa: boolean = true
