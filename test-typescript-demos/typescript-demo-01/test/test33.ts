@@ -173,3 +173,6 @@ console.log(c1, c2)
 
 
 const aaa: boolean = true
+
+console.log(aaa)
+
