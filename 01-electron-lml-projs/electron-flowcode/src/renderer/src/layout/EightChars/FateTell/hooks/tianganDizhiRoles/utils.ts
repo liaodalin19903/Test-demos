@@ -1,4 +1,3 @@
-import { TianGan } from './../../../../../../../shared/@types/eightChar/eightCharInfo';
 // 工具
 
 import { DiZhiChar, EightChar, TianGanChar, TianGanDizhiChar } from "@shared/@types/eightChar/eightCharInfo"
@@ -223,6 +222,19 @@ export const getAdjacentCongHaiXingIndex = (
 };
 
 
+/**
+ * @returns
+ * {
+ *  "tiangan": {
+ *     "cong":[["甲","庚"], ["乙", "辛"]] // 代表天干有：甲庚冲，乙辛冲
+ *   },
+ *   "dizhi": {
+ *     "cong":[["子","午"]], // 代表地支有：子午冲
+ *     "hai":[["丑","午"]],  // 代表地支有：丑午相害
+ *     "xing":[]
+ *   }
+ * }
+ */
 export type AdjacentCongHaiXing = {
   tiangan: {
     cong: string[][]
@@ -235,7 +247,7 @@ export type AdjacentCongHaiXing = {
 }
 
 /**
- * 获取相邻的冲、害、刑
+ * 获取相邻的：冲、害、刑
  * @param eightChar 八字
  * @returns
  */
@@ -277,4 +289,5 @@ export const getAdjacentCongHaiXing = (eightChar: EightChar): AdjacentCongHaiXin
       xing: dizhiXing
     }
   };
-};  
+};
+

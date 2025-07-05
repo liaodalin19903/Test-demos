@@ -169,3 +169,41 @@ export type WuxingPercentage = {
   '火': number;
   '土': number;
 };
+
+
+/**
+ * 天干地支作用
+ */
+// 天干作用
+export type TianganXiangchong = '甲庚冲' | '乙辛冲' | '丙壬冲' | '丁癸冲'
+
+export type TianganWuhe = '甲己合' | '乙庚合' | '丙辛合' | '丁壬合' | '戊癸合'
+
+// 地支作用
+export type DizhiSanhui = '寅卯辰三会木' | '巳午未三会火' | '申酉戌三会金' | '亥子丑三会水'
+
+export type DizhiSanhe = '申子辰三合水' | '亥卯未三合木' | '寅午戌三合火' | '巳酉丑三合金'
+
+export type DizhiBanhe = DizhiBanheShui | DizhiBanheMu | DizhiBanheHuo | DizhiBanheJin
+
+export type DizhiBanheShui = '申子半合水' | '子辰半合水' | '申辰半合水'
+
+export type DizhiBanheMu = '亥卯半合木' | '卯未半合木' | '亥未半合木'
+
+export type DizhiBanheHuo = '寅午半合火' | '午戌半合火' | '寅戌半合火'
+
+export type DizhiBanheJin = '巳酉半合金' | '酉丑半合金' | '巳丑半合金'
+
+export type DizhiAnhe = '寅丑暗合' | '亥午暗合' | '卯申暗合' | '巳酉暗合' | '子巳暗合' | '寅午暗合'
+
+export type DizhiLiuhe = '子丑合化土' | '寅亥合化木' | '卯戌合化火' | '辰酉合化金' | '巳申合化水' | '午未合化火/土' // 天干透出的是火：就合化为火 天干透出的是土：就合化为土
+
+export type DizhiXiangcong = '子午冲' | '丑未冲' | '寅申冲' | '卯酉冲' | '辰戌冲' | '巳亥冲'
+
+export type DizhiXianghai = '子未相害' | '丑午相害' | '寅巳相害' | '卯辰相害' | '申亥相害' | '酉戌相害'
+
+export type DizhiXing = '子卯相刑' | '寅巳申三刑' | '丑戌未三刑' | '辰辰自刑' | '午午自刑' | '酉酉自刑' | '亥亥自刑'
+
+export type DizhiXiangpo = '子酉相破' | '丑辰相破' | '寅亥相破' | '卯午相破' | '巳申相破' | '未戌相破'
+
+

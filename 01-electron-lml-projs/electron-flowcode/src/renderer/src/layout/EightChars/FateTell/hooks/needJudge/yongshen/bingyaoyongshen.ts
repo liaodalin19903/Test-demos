@@ -10,6 +10,8 @@
 import { DiZhiChar, TianGanChar, TianGanDizhiChar } from "@shared/@types/eightChar/eightCharInfo";
 
 import { dizhiCanggan, EightChar, monthCoefficients, wuxingMap, Wuxing, WuxingPercentage } from "@shared/@types/eightChar/eightCharInfo";
+import { getRole2XingChongHeHui } from "../../tianganDizhiRoles/role2xingchonghehui";
+import { AdjacentCongHaiXing, getAdjacentCongHaiXing } from "../../tianganDizhiRoles/utils";
 
 
 /**
@@ -161,6 +163,107 @@ export const getWuxingWangshuaiYongshen = (
 };
 
 
+export type CongXingHaiYongshenType = {
+  tianganCong: {
+    cong1: TianGanChar,  // 需要抑制的字. eg. 甲庚冲的 甲
+    cong1Solve: {
+      tongguan: TianGanChar[],
+      he: TianGanChar[], // 天干五合
+      ke: TianGanChar[], // 天干克
+    },
+    cong2: TianGanChar, // 需要抑制的字. eg. 甲庚冲的 庚
+    cong2Solve: {
+      tongguan: TianGanChar[],
+      he: TianGanChar[], // 天干五合
+      ke: TianGanChar[], // 天干克
+    },
+  }[] | {}[],
+  dizhiCong: {
+    cong1: DiZhiChar,
+    cong1Solve: {
+      tongguan: DiZhiChar[],
+      liuhe: DiZhiChar[],
+      sanhe: DiZhiChar[],
+      banhe: DiZhiChar[],
+      ke: DiZhiChar[],
+    },
+    cong2: DiZhiChar,
+    cong2Solve: {
+      tongguan: DiZhiChar[],
+      liuhe: DiZhiChar[],
+      sanhe: DiZhiChar[],
+      banhe: DiZhiChar[],
+      ke: DiZhiChar[],
+    }
+
+  }[] | {}[],
+  dizhiHai: {
+    hai1: DiZhiChar,
+    hai1Solve: {
+      tongguan: DiZhiChar[],
+      liuhe: DiZhiChar[],
+      sanhe: DiZhiChar[],
+      banhe: DiZhiChar[],
+      ke: DiZhiChar[],
+    },
+    hai2: DiZhiChar,
+    hai2Solve: {
+      tongguan: DiZhiChar[],
+      liuhe: DiZhiChar[],
+      sanhe: DiZhiChar[],
+      banhe: DiZhiChar[],
+      ke: DiZhiChar[],
+    }
+  }[] | {}[],
+  dizhiXing: {
+    type: '子卯相刑' | '三刑' | '自刑',
+    xing1: DiZhiChar,
+    xing1Solve: {
+      tongguan: DiZhiChar[],
+      liuhe: DiZhiChar[],
+      sanhe: DiZhiChar[],
+      banhe: DiZhiChar[],
+      ke: DiZhiChar[],
+      cong: DiZhiChar[],
+    },
+    xing2: DiZhiChar,
+    xing2Solve: {
+      tongguan: DiZhiChar[],
+      liuhe: DiZhiChar[],
+      sanhe: DiZhiChar[],
+      banhe: DiZhiChar[],
+      ke: DiZhiChar[],
+      cong: DiZhiChar[],
+    },
+    xing3: DiZhiChar | undefined,
+    xing3Solve: {
+      tongguan: DiZhiChar[],
+      liuhe: DiZhiChar[],
+      sanhe: DiZhiChar[],
+      banhe: DiZhiChar[],
+      ke: DiZhiChar[],
+      cong: DiZhiChar[],
+    },
+  }[] | {}[]
+}
+export const getCongXingHaiYongshen = (
+  eightchar: EightChar
+): CongXingHaiYongshenType => {
+  // 步骤1：获取八字原局的所有天干地支的作用关系
+  // 步骤2：获取相邻的刑冲害
+  const adjacentCongHaiXing: AdjacentCongHaiXing = getAdjacentCongHaiXing(eightchar);
+  // 步骤3：获取相邻的刑冲害的解决办法（通关、合(三合/六合/半合)、克）
+
+
+  let congXingHaiYongshen: CongXingHaiYongshenType = {
+    tianganCong: [],
+    dizhiCong: [],
+    dizhiXing: [],
+    dizhiHai: [],
+  };
+
+  return congXingHaiYongshen;
+};
 
 
 
