@@ -88,12 +88,12 @@ export type EightChar = {
 
 export type AdjacentCongHaiXing = {
   tiangan: {
-    cong: string[][]
+    cong: TianGanChar[][]
   },
   dizhi: {
-    cong: string[][],
-    hai: string[][],
-    xing: string[][],
+    cong: DiZhiChar[][],
+    hai: DiZhiChar[][],
+    xing: DiZhiChar[][],
   }
 }
 

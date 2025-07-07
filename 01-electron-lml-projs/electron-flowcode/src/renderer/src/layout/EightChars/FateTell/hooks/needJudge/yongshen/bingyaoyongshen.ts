@@ -177,7 +177,7 @@ export type CongXingHaiYongshenType = {
       he: TianGanChar[], // 天干五合
       ke: TianGanChar[], // 天干克
     },
-  }[] | {}[],
+  }[],
   dizhiCong: {
     cong1: DiZhiChar,
     cong1Solve: {
@@ -196,7 +196,7 @@ export type CongXingHaiYongshenType = {
       ke: DiZhiChar[],
     }
 
-  }[] | {}[],
+  }[],
   dizhiHai: {
     hai1: DiZhiChar,
     hai1Solve: {
@@ -214,7 +214,7 @@ export type CongXingHaiYongshenType = {
       banhe: DiZhiChar[],
       ke: DiZhiChar[],
     }
-  }[] | {}[],
+  }[],
   dizhiXing: {
     type: '子卯相刑' | '三刑' | '自刑',
     xing1: DiZhiChar,
@@ -244,15 +244,16 @@ export type CongXingHaiYongshenType = {
       ke: DiZhiChar[],
       cong: DiZhiChar[],
     },
-  }[] | {}[]
+  }[]
 }
+
+
 export const getCongXingHaiYongshen = (
   eightchar: EightChar
 ): CongXingHaiYongshenType => {
-  // 步骤1：获取八字原局的所有天干地支的作用关系
-  // 步骤2：获取相邻的刑冲害
+  // 步骤1：获取八字原局的所有天干地支的作用关系 以及 获取相邻的刑冲害
   const adjacentCongHaiXing: AdjacentCongHaiXing = getAdjacentCongHaiXing(eightchar);
-  // 步骤3：获取相邻的刑冲害的解决办法（通关、合(三合/六合/半合)、克）
+  // 步骤2：获取相邻的刑冲害的解决办法（通关、合(三合/六合/半合)、克）
 
 
   let congXingHaiYongshen: CongXingHaiYongshenType = {

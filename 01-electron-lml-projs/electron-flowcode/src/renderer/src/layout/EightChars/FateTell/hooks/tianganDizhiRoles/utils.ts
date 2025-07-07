@@ -1,6 +1,10 @@
 // 工具
 
-import { DiZhiChar, EightChar, TianGanChar, TianGanDizhiChar } from "@shared/@types/eightChar/eightCharInfo"
+import {
+  DiZhiChar, dizhiWuxing, EightChar, liuHeMap, sanHeMap, SolveType, TianGanChar, TianGanDizhiChar,
+  tianganWuxing,
+  wuHeMap
+} from "@shared/@types/eightChar/eightCharInfo"
 import { getRole2XingChongHeHui, Role2XingChongHeHui } from "./role2xingchonghehui";
 
 /**
@@ -223,7 +227,6 @@ export const getAdjacentCongHaiXingIndex = (
 
 
 /**
- * @returns
  * {
  *  "tiangan": {
  *     "cong":[["甲","庚"], ["乙", "辛"]] // 代表天干有：甲庚冲，乙辛冲
@@ -237,12 +240,12 @@ export const getAdjacentCongHaiXingIndex = (
  */
 export type AdjacentCongHaiXing = {
   tiangan: {
-    cong: string[][]
+    cong: TianGanChar[][]
   },
   dizhi: {
-    cong: string[][],
-    hai: string[][],
-    xing: string[][],
+    cong: DiZhiChar[][],
+    hai: DiZhiChar[][],
+    xing: DiZhiChar[][],
   }
 }
 
@@ -290,4 +293,93 @@ export const getAdjacentCongHaiXing = (eightChar: EightChar): AdjacentCongHaiXin
     }
   };
 };
+
+
+/**
+ * 获取天干、地支的解决类型 （抑制）
+ * @param relations eg. ['甲', '庚']
+ * @param char eg. ['甲']
+ * @param typeStr  eg. ['天干通关']
+ * @returns eg. ['壬', '癸']
+ */
+export const getCharSolve = (
+    relations: TianGanDizhiChar[],
+    char: TianGanDizhiChar,
+    typeStr: SolveType
+): TianGanDizhiChar[] => {
+    // 1. 判断relations类型（天干或地支）
+    const isTianGan = relations.length > 0 && relations[0] in tianganWuxing;
+    const isDiZhi = relations.length > 0 && relations[0] in dizhiWuxing;
+
+    // 处理天干相关解决类型
+    if (isTianGan) {
+        const tianGanChar = char as TianGanChar;
+
+        switch (typeStr) {
+            case '天干通关':
+                { if (relations.length !== 2) return [];
+                const [a, b] = relations as [TianGanChar, TianGanChar];
+                const wxA = tianganWuxing[a];
+                const wxB = tianganWuxing[b];
+
+                // 金木相冲用水通关，水火相冲用木通关
+                if ((wxA === '金' && wxB === '木') || (wxA === '木' && wxB === '金')) {
+                    return ['壬', '癸'];
+                }
+                if ((wxA === '水' && wxB === '火') || (wxA === '火' && wxB === '水')) {
+                    return ['甲', '乙'];
+                }
+                return []; }
+
+            case '天干五合':
+                return wuHeMap[tianGanChar] ? [wuHeMap[tianGanChar]] : [];
+
+            case '天干克':
+                { const wx = tianganWuxing[tianGanChar];
+                let keWx = '';
+
+                // 根据五行相克关系确定克制五行
+                if (wx === '木') keWx = '金';
+                else if (wx === '土') keWx = '木';
+                else if (wx === '水') keWx = '土';
+                else if (wx === '火') keWx = '水';
+                else if (wx === '金') keWx = '火';
+
+                // 返回克制五行的所有天干
+                return (Object.entries(tianganWuxing) as [TianGanChar, string][])
+                    .filter(([_, w]) => w === keWx)
+                    .map(([tg]) => tg); }
+        }
+    }
+
+    // 处理地支相关解决类型
+    if (isDiZhi) {
+        const diZhiChar = char as DiZhiChar;
+
+        switch (typeStr) {
+            case '地支六合':
+                return liuHeMap[diZhiChar] ? [liuHeMap[diZhiChar]] : [];
+
+            case '地支三合':
+                return sanHeMap[diZhiChar] ? [...sanHeMap[diZhiChar]!] : [];
+
+            case '地支半合':
+                return sanHeMap[diZhiChar] ? [...sanHeMap[diZhiChar]!] : [];
+
+            case '地支克':
+                { const wx = dizhiWuxing[diZhiChar];
+
+                // 根据五行和地支特性返回克制字符
+                if (wx === '水') return ['未', '戌']; // 燥土克水
+                if (wx === '火') return ['子', '亥']; // 水克火
+                if (wx === '金') return ['巳', '午']; // 火克金
+                if (wx === '木') return ['申', '酉']; // 金克木
+                if (wx === '土') return ['寅', '卯']; // 木克土
+                return []; }
+        }
+    }
+
+    return []; // 不匹配的类型或空relations
+};
+
 
