@@ -247,4 +247,4 @@ export const sanHeMap: Record<DiZhiChar, [DiZhiChar, DiZhiChar] | null> = {
 };
 
 export type SolveType = '天干通关' | '天干五合' | '天干克' |
-'地支六合' | '地支三合' | '地支半合' | '地支克'
+'地支通关' | '地支六合' | '地支三合' | '地支半合' | '地支克'

@@ -1,3 +1,4 @@
+import { TianGanDizhiChar } from './test36';
 import { getAdjacentCongHaiXing } from './test35'
 
 
@@ -154,7 +155,7 @@ const typeStr: SolveType = '天干克'
 
 const solves = getCharSolve(relations, char, typeStr)
 
-console.log(solves);
+console.log('solves: ', solves);
 
 export type CongXingHaiYongshenType = {
   tianganCong: {
@@ -243,12 +244,12 @@ export type CongXingHaiYongshenType = {
 
 export type AdjacentCongHaiXing = {
   tiangan: {
-    cong: TianGanChar[][]
+    cong: TianGanDizhiChar[][]
   },
   dizhi: {
-    cong: DiZhiChar[][],
-    hai: DiZhiChar[][],
-    xing: DiZhiChar[][],
+    cong: TianGanDizhiChar[][],
+    hai: TianGanDizhiChar[][],
+    xing: TianGanDizhiChar[][],
   }
 }
 
@@ -291,15 +292,15 @@ export const getCongXingHaiYongshen = (
         // 获取第一个相冲字的解决方法
         const cong1Solve = {
           tongguan: getCharSolve([cong1, cong2], cong1, '天干通关'),
-          he: getCharSolve([], cong1, '天干五合'),
-          ke: getCharSolve([], cong1, '天干克'),
+          he: getCharSolve([cong1, cong2], cong1, '天干五合'),
+          ke: getCharSolve([cong1, cong2], cong1, '天干克'),
         };
         
         // 获取第二个相冲字的解决方法
         const cong2Solve = {
           tongguan: getCharSolve([cong1, cong2], cong2, '天干通关'),
-          he: getCharSolve([], cong2, '天干五合'),
-          ke: getCharSolve([], cong2, '天干克'),
+          he: getCharSolve([cong1, cong2], cong2, '天干五合'),
+          ke: getCharSolve([cong1, cong2], cong2, '天干克'),
         };
         
         congXingHaiYongshen.tianganCong.push({
@@ -321,19 +322,19 @@ export const getCongXingHaiYongshen = (
         // 获取第一个相冲地支的解决方法
         const cong1Solve = {
           tongguan: getCharSolve([cong1, cong2], cong1, '地支通关'),
-          liuhe: getCharSolve([], cong1, '地支六合'),
-          sanhe: getCharSolve([], cong1, '地支三合'),
-          banhe: getCharSolve([], cong1, '地支半合'),
-          ke: getCharSolve([], cong1, '地支克'),
+          liuhe: getCharSolve([cong1, cong2], cong1, '地支六合'),
+          sanhe: getCharSolve([cong1, cong2], cong1, '地支三合'),
+          banhe: getCharSolve([cong1, cong2], cong1, '地支半合'),
+          ke: getCharSolve([cong1, cong2], cong1, '地支克'),
         };
         
         // 获取第二个相冲地支的解决方法
         const cong2Solve = {
           tongguan: getCharSolve([cong1, cong2], cong2, '地支通关'),
-          liuhe: getCharSolve([], cong2, '地支六合'),
-          sanhe: getCharSolve([], cong2, '地支三合'),
-          banhe: getCharSolve([], cong2, '地支半合'),
-          ke: getCharSolve([], cong2, '地支克'),
+          liuhe: getCharSolve([cong1, cong2], cong2, '地支六合'),
+          sanhe: getCharSolve([cong1, cong2], cong2, '地支三合'),
+          banhe: getCharSolve([cong1, cong2], cong2, '地支半合'),
+          ke: getCharSolve([cong1, cong2], cong2, '地支克'),
         };
         
         congXingHaiYongshen.dizhiCong.push({
@@ -355,19 +356,19 @@ export const getCongXingHaiYongshen = (
         // 获取第一个相害地支的解决方法
         const hai1Solve = {
           tongguan: getCharSolve([hai1, hai2], hai1, '地支通关'),
-          liuhe: getCharSolve([], hai1, '地支六合'),
-          sanhe: getCharSolve([], hai1, '地支三合'),
-          banhe: getCharSolve([], hai1, '地支半合'),
-          ke: getCharSolve([], hai1, '地支克'),
+          liuhe: getCharSolve([hai1, hai2], hai1, '地支六合'),
+          sanhe: getCharSolve([hai1, hai2], hai1, '地支三合'),
+          banhe: getCharSolve([hai1, hai2], hai1, '地支半合'),
+          ke: getCharSolve([hai1, hai2], hai1, '地支克'),
         };
         
         // 获取第二个相害地支的解决方法
         const hai2Solve = {
           tongguan: getCharSolve([hai1, hai2], hai2, '地支通关'),
-          liuhe: getCharSolve([], hai2, '地支六合'),
-          sanhe: getCharSolve([], hai2, '地支三合'),
-          banhe: getCharSolve([], hai2, '地支半合'),
-          ke: getCharSolve([], hai2, '地支克'),
+          liuhe: getCharSolve([hai1, hai2], hai2, '地支六合'),
+          sanhe: getCharSolve([hai1, hai2], hai2, '地支三合'),
+          banhe: getCharSolve([hai1, hai2], hai2, '地支半合'),
+          ke: getCharSolve([hai1, hai2], hai2, '地支克'),
         };
         
         congXingHaiYongshen.dizhiHai.push({
@@ -380,18 +381,30 @@ export const getCongXingHaiYongshen = (
     });
   }
 
-  // 处理地支相刑
+  // 修改处理地支相刑的部分
+
+  console.log('adjacentCongHaiXing.dizhi.xing:', adjacentCongHaiXing.dizhi.xing)
+
+  // 修改处理地支相刑的部分
   if (adjacentCongHaiXing.dizhi.xing && adjacentCongHaiXing.dizhi.xing.length > 0) {
-    adjacentCongHaiXing.dizhi.xing.forEach((diZhiGroup, index) => {
-      // 假设这里已经知道相刑的类型
-      let type: '子卯相刑' | '三刑' | '自刑' = '子卯相刑';
+    adjacentCongHaiXing.dizhi.xing.forEach((diZhiGroup) => {
+      // 判断相刑类型
+      let type: '子卯相刑' | '三刑' | '自刑' = '自刑';
       
-      // 简单判断相刑类型（实际应用中需要更复杂的逻辑）
-      if (diZhiGroup.length === 2 && (diZhiGroup.includes('子') && diZhiGroup.includes('卯'))) {
+      // 三刑判断：丑戌未 或 寅巳申
+      if (diZhiGroup.length === 3) {
+        if (diZhiGroup.includes('丑') && diZhiGroup.includes('戌') && diZhiGroup.includes('未')) {
+          type = '三刑';
+        } else if (diZhiGroup.includes('寅') && diZhiGroup.includes('巳') && diZhiGroup.includes('申')) {
+          type = '三刑';
+        }
+      }
+      // 子卯相刑：两个地支且是子和卯
+      else if (diZhiGroup.length === 2 && diZhiGroup.includes('子') && diZhiGroup.includes('卯')) {
         type = '子卯相刑';
-      } else if (diZhiGroup.length === 3 && (diZhiGroup.includes('寅') && diZhiGroup.includes('巳') && diZhiGroup.includes('申'))) {
-        type = '三刑';
-      } else if (diZhiGroup.length === 2 && (diZhiGroup.includes('辰') && diZhiGroup.includes('辰'))) {
+      }
+      // 自刑：两个相同的地支，且属于自刑类型（辰、午、酉、亥）
+      else if (diZhiGroup.length === 2 && diZhiGroup[0] === diZhiGroup[1] && ['辰', '午', '酉', '亥'].includes(diZhiGroup[0])) {
         type = '自刑';
       }
       
@@ -399,58 +412,47 @@ export const getCongXingHaiYongshen = (
       const xing2 = diZhiGroup[1] as DiZhiChar;
       const xing3 = diZhiGroup.length > 2 ? diZhiGroup[2] as DiZhiChar : undefined;
       
-      // 获取第一个相刑地支的解决方法
-      const xing1Solve = {
-        tongguan: getCharSolve(diZhiGroup, xing1, '地支通关'),
-        liuhe: getCharSolve([], xing1, '地支六合'),
-        sanhe: getCharSolve([], xing1, '地支三合'),
-        banhe: getCharSolve([], xing1, '地支半合'),
-        ke: getCharSolve([], xing1, '地支克'),
-        cong: xing3 ? [getDiZhiChong(xing1)] : [],
-      };
+      // 获取解决方案的辅助函数
+      const getSolutions = (char: DiZhiChar) => ({
+        tongguan: getCharSolve(diZhiGroup, char, '地支通关'),
+        liuhe: getCharSolve(diZhiGroup, char, '地支六合'),
+        sanhe: getCharSolve(diZhiGroup, char, '地支三合'),
+        banhe: getCharSolve(diZhiGroup, char, '地支半合'),
+        ke: getCharSolve(diZhiGroup, char, '地支克'),
+        cong: [getDiZhiChong(char)],
+      });
       
-      // 获取第二个相刑地支的解决方法
-      const xing2Solve = {
-        tongguan: getCharSolve(diZhiGroup, xing2, '地支通关'),
-        liuhe: getCharSolve([], xing2, '地支六合'),
-        sanhe: getCharSolve([], xing2, '地支三合'),
-        banhe: getCharSolve([], xing2, '地支半合'),
-        ke: getCharSolve([], xing2, '地支克'),
-        cong: xing3 ? [getDiZhiChong(xing2)] : [],
-      };
-      
-      // 获取第三个相刑地支的解决方法（如果有）
-      const xing3Solve = xing3 ? {
-        tongguan: getCharSolve(diZhiGroup, xing3, '地支通关'),
-        liuhe: getCharSolve([], xing3, '地支六合'),
-        sanhe: getCharSolve([], xing3, '地支三合'),
-        banhe: getCharSolve([], xing3, '地支半合'),
-        ke: getCharSolve([], xing3, '地支克'),
-        cong: [getDiZhiChong(xing3)],
-      } : {
-        tongguan: [],
-        liuhe: [],
-        sanhe: [],
-        banhe: [],
-        ke: [],
-        cong: [],
-      };
-      
-      congXingHaiYongshen.dizhiXing.push({
+      // 创建条目
+      const entry = {
         type,
         xing1,
-        xing1Solve,
+        xing1Solve: getSolutions(xing1),
         xing2,
-        xing2Solve,
-        xing3,
-        xing3Solve,
-      });
+        xing2Solve: getSolutions(xing2),
+        xing3: undefined as DiZhiChar | undefined,
+        xing3Solve: {
+          tongguan: [], 
+          liuhe: [], 
+          sanhe: [], 
+          banhe: [], 
+          ke: [], 
+          cong: []
+        }
+      };
+      
+      // 如果是三刑，设置第三个地支及其解决方法
+      if (type === '三刑' && xing3) {
+        entry.xing3 = xing3;
+        // @ts-ignore
+        entry.xing3Solve = getSolutions(xing3);
+      }
+      
+      congXingHaiYongshen.dizhiXing.push(entry);
     });
   }
 
-  return congXingHaiYongshen;
-};
-
+  return congXingHaiYongshen
+}
 
 const ec: EightChar = {
   1: '己',
@@ -459,8 +461,8 @@ const ec: EightChar = {
   4: '甲',
   5: '巳',
   6: '丑',
-  7: '午',
-  8: '子',
+  7: '戌',
+  8: '未',
 }
 
 const res = getCongXingHaiYongshen(ec)

@@ -234,18 +234,18 @@ export const getAdjacentCongHaiXingIndex = (
  *   "dizhi": {
  *     "cong":[["子","午"]], // 代表地支有：子午冲
  *     "hai":[["丑","午"]],  // 代表地支有：丑午相害
- *     "xing":[]
+ *     "xing":[["丑", "戌", "未"]]  // 代表丑戌未三刑
  *   }
  * }
  */
 export type AdjacentCongHaiXing = {
   tiangan: {
-    cong: TianGanChar[][]
+    cong: TianGanDizhiChar[][]
   },
   dizhi: {
-    cong: DiZhiChar[][],
-    hai: DiZhiChar[][],
-    xing: DiZhiChar[][],
+    cong: TianGanDizhiChar[][],
+    hai: TianGanDizhiChar[][],
+    xing: TianGanDizhiChar[][],
   }
 }
 
@@ -269,7 +269,7 @@ export const getAdjacentCongHaiXing = (eightChar: EightChar): AdjacentCongHaiXin
     .filter(relation => charIsAdjacency(eightChar, relation))
     .map(relation => extractCharsToArray(relation));
 
-  // 处理地支相冲、相害、相刑
+  // 处理地支相冲、相害
   const dizhiCong = role2XingChongHeHui.role2Dizhi.dizhiXiangchong
     .filter(relation => charIsAdjacency(eightChar, relation))
     .map(relation => extractCharsToArray(relation));
@@ -278,9 +278,54 @@ export const getAdjacentCongHaiXing = (eightChar: EightChar): AdjacentCongHaiXin
     .filter(relation => charIsAdjacency(eightChar, relation))
     .map(relation => extractCharsToArray(relation));
 
-  const dizhiXing = role2XingChongHeHui.role2Dizhi.dizhiXiangxing
+  // 处理地支相刑 - 特殊处理
+  const dizhiXing: TianGanDizhiChar[][] = [];
+
+  // 提取所有地支
+  const diZhi = [
+    eightChar[5], // 年支
+    eightChar[6], // 月支
+    eightChar[7], // 日支
+    eightChar[8]  // 时支
+  ] as DiZhiChar[];
+
+  // 检查三刑（丑戌未或寅巳申）
+  const checkSanXing = (group: DiZhiChar[]) => {
+    return (
+      group.includes('丑') &&
+      group.includes('戌') &&
+      group.includes('未')
+    ) || (
+      group.includes('寅') &&
+      group.includes('巳') &&
+      group.includes('申')
+    );
+  };
+
+  // 检查三刑组合
+  if (checkSanXing(diZhi)) {
+    if (diZhi.includes('丑') && diZhi.includes('戌') && diZhi.includes('未')) {
+      dizhiXing.push(['丑', '戌', '未']);
+    }
+    if (diZhi.includes('寅') && diZhi.includes('巳') && diZhi.includes('申')) {
+      dizhiXing.push(['寅', '巳', '申']);
+    }
+  }
+
+  // 检查子卯相刑（需要相邻）
+  const zimaoXing = role2XingChongHeHui.role2Dizhi.dizhiXiangxing
+    .filter(relation => relation.includes('子卯相刑'))
     .filter(relation => charIsAdjacency(eightChar, relation))
     .map(relation => extractCharsToArray(relation));
+
+  // 检查自刑（需要相邻）
+  const zixing = role2XingChongHeHui.role2Dizhi.dizhiXiangxing
+    .filter(relation => relation.includes('自刑'))
+    .filter(relation => charIsAdjacency(eightChar, relation))
+    .map(relation => extractCharsToArray(relation));
+
+  // 合并所有相刑类型
+  dizhiXing.push(...zimaoXing, ...zixing);
 
   return {
     tiangan: {
@@ -289,11 +334,10 @@ export const getAdjacentCongHaiXing = (eightChar: EightChar): AdjacentCongHaiXin
     dizhi: {
       cong: dizhiCong,
       hai: dizhiHai,
-      xing: dizhiXing
+      xing: dizhiXing  // [['丑', '戌', '未']] 代表丑戌未三刑
     }
   };
 };
-
 
 /**
  * 获取天干、地支的解决类型 （抑制）
