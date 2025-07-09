@@ -36,6 +36,10 @@ export type EightChar = {
 }
 
 
+// 身强身弱
+export type ShenqiangruoType = '从强' | '身强' | '均衡' | '身弱' | '从弱'
+
+
 /**
  * eg.
  * {
@@ -259,3 +263,41 @@ export type TiaohouYongshenJishenType = {
   secondYongshen: TianganDizhiChar[],
   jishen: TianganDizhiChar[],
 }
+
+// 定义五行与天干地支的映射
+export const tianganDizhiWuxingMap: Record<Wuxing, TianganDizhiChar[]> = {
+  '木': ['甲', '乙', '寅', '卯'],
+  '火': ['丙', '丁', '巳', '午'],
+  '土': ['戊', '己', '辰', '戌', '丑', '未'],
+  '金': ['庚', '辛', '申', '酉'],
+  '水': ['壬', '癸', '亥', '子']
+};
+
+// 定义五行相生关系
+export const shengMap: Record<Wuxing, Wuxing> = {
+  '木': '火', // 木生火
+  '火': '土', // 火生土
+  '土': '金', // 土生金
+  '金': '水', // 金生水
+  '水': '木'  // 水生木
+};
+
+// 定义五行相克关系
+export const keMap: Record<Wuxing, Wuxing> = {
+  '木': '土', // 木克土
+  '火': '金', // 火克金
+  '土': '水', // 土克水
+  '金': '木', // 金克木
+  '水': '火'  // 水克火
+};
+
+// 获取天干的五行属性
+export const getTianganWuxing = (char: TianGanChar): Wuxing => {
+  switch(char) {
+    case '甲': case '乙': return '木';
+    case '丙': case '丁': return '火';
+    case '戊': case '己': return '土';
+    case '庚': case '辛': return '金';
+    case '壬': case '癸': return '水';
+  }
+};

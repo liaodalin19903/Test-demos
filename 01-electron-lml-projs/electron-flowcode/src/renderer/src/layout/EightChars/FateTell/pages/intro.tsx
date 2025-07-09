@@ -396,6 +396,9 @@ export default function index() {
     updateGejuRecommend(m1, m2, m3, m4, m5_1, m5_2, m5_3, m5_4, m5_5)
   }
 
+  // 点击推荐用神
+  const handleClickRecommandYongshen = () => {}
+
   // 点击每个格局按钮
   const handleClickGejuButton = (ge: GeType) => {
     updateGejuSelected(ge)
@@ -691,7 +694,29 @@ export default function index() {
               <Row>
                 <Col span={24}>
                   <Card title="取喜用神" variant="borderless">
-                    <Descriptions layout="vertical" column={4} />
+                    <Descriptions layout="vertical" column={1} >
+
+                      <Descriptions.Item label="">
+                        <Button color="primary" variant="solid" onClick={() => {
+                          handleClickRecommandYongshen()
+                        }}>点击推荐</Button>
+                      </Descriptions.Item>
+
+                      <Descriptions.Item label="扶抑用神">
+                      111
+                      </Descriptions.Item>
+
+                      <Descriptions.Item label="病药用神">
+                      111
+                      </Descriptions.Item>
+                      <Descriptions.Item label="调候用神">
+                      111
+                      </Descriptions.Item>
+
+                      <Descriptions.Item label="通关用神">
+                      111
+                      </Descriptions.Item>
+                    </Descriptions>
                   </Card>
                 </Col>
               </Row>

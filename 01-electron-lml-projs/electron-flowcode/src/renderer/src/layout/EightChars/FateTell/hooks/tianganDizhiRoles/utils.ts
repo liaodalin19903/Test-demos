@@ -1,6 +1,6 @@
 // 工具
 
-import { dizhiCanggan, monthCoefficients, Wuxing, wuxingMap, WuxingPercentage } from "@shared/@types/eightChar/eightCharInfo";
+import { dizhiCanggan, getTianganWuxing, keMap, monthCoefficients, shengMap, Wuxing, tianganDizhiWuxingMap, WuxingPercentage } from "@shared/@types/eightChar/eightCharInfo";
 
 
 import {
@@ -125,7 +125,7 @@ export const getWuxingPercentage = (eightChar: EightChar): WuxingPercentage => {
   // 处理天干部分（位置1-4）
   for (let i = 1; i <= 4; i++) {
     const gan = eightChar[i as keyof EightChar] as string;
-    const element = wuxingMap[gan];
+    const element = tianganDizhiWuxingMap[gan];
     if (element) {
       rawScores[element] += 100;
     }
@@ -137,7 +137,7 @@ export const getWuxingPercentage = (eightChar: EightChar): WuxingPercentage => {
     const canggan = dizhiCanggan[zhi];
     if (canggan) {
       for (const [gan, score] of canggan) {
-        const element = wuxingMap[gan];
+        const element = tianganDizhiWuxingMap[gan];
         if (element) {
           rawScores[element] += score;
         }
@@ -646,3 +646,32 @@ export const getEightCharHanReZaoShi = (eightChar: EightChar): TiaohouReasonType
 };
 
 
+
+// 给一个天干的字，返回所有能生助此字的其他字符
+export const getFuTianganDizhiChar = (char: TianGanChar): TianganDizhiChar[] => {
+  const wuxing = getTianganWuxing(char);
+
+  // 1. 同五行（比肩、劫财）的字符
+  const sameWuxing = tianganDizhiWuxingMap[wuxing].filter(c => c !== char); // 排除自身
+
+  // 2. 生此五行（正印、偏印）的字符
+  const shengWuxing = tianganDizhiWuxingMap[shengMap[shengMap[wuxing]]] || []; // 生我的五行（隔位相生）
+
+  return [...sameWuxing, ...shengWuxing];
+};
+
+// 给一个天干的字，返回所有能抑制（克泄耗）此字的其他字符
+export const getYiTianganDizhiChar = (char: TianGanChar): TianganDizhiChar[] => {
+  const wuxing = getTianganWuxing(char);
+
+  // 1. 克此五行（官杀）的字符
+  const keWuxing = tianganDizhiWuxingMap[keMap[keMap[wuxing]]] || []; // 克我的五行（隔位相克）
+
+  // 2. 此五行所克（财）的字符
+  const beKeWuxing = tianganDizhiWuxingMap[keMap[wuxing]] || []; // 我克的五行
+
+  // 3. 此五行所生（食伤）的字符
+  const shengWuxing = tianganDizhiWuxingMap[shengMap[wuxing]] || []; // 我生的五行
+
+  return [...keWuxing, ...beKeWuxing, ...shengWuxing];
+};
