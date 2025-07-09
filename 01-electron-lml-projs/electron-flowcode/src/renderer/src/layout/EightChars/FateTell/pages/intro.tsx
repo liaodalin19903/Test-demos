@@ -549,7 +549,7 @@ export default function index() {
 
               <Row>
                 <Col span={24}>
-                  <Card title="格局" variant="borderless">
+                  <Card title="取格局" variant="borderless">
                     <Descriptions layout="vertical" column={1} >
                       <Descriptions.Item label="">
                         <Button color="primary" variant="solid" onClick={() => {
@@ -690,7 +690,7 @@ export default function index() {
 
               <Row>
                 <Col span={24}>
-                  <Card title="喜用神" variant="borderless">
+                  <Card title="取喜用神" variant="borderless">
                     <Descriptions layout="vertical" column={4} />
                   </Card>
                 </Col>

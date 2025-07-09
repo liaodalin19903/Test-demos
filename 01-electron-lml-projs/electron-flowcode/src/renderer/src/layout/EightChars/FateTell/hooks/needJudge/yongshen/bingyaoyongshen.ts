@@ -7,74 +7,14 @@
  * 5、日主过弱或过强【x】
  */
 
-import { DiZhiChar, TianGanChar, TianGanDizhiChar } from "@shared/@types/eightChar/eightCharInfo";
+import { DiZhiChar, TianGanChar, TianganDizhiChar } from "@shared/@types/eightChar/eightCharInfo";
 
 import { dizhiCanggan, EightChar, monthCoefficients, wuxingMap, Wuxing, WuxingPercentage } from "@shared/@types/eightChar/eightCharInfo";
 
-import { AdjacentCongHaiXing, getAdjacentCongHaiXing, getCharSolve } from "../../tianganDizhiRoles/utils";
+import { AdjacentCongHaiXing, getAdjacentCongHaiXing, getCharSolve, getWuxingPercentage } from "../../tianganDizhiRoles/utils";
 
 
-/**
- * 获取五行占比
- * @param eightChar 八字信息
- * @returns 五行占比
- */
-export const getWuxingPercentage = (eightChar: EightChar): WuxingPercentage => {
-  // 初始化五行原始分数
-  const rawScores: Record<string, number> = {
-    '金': 0, '木': 0, '水': 0, '火': 0, '土': 0
-  };
 
-  // 处理天干部分（位置1-4）
-  for (let i = 1; i <= 4; i++) {
-    const gan = eightChar[i as keyof EightChar] as string;
-    const element = wuxingMap[gan];
-    if (element) {
-      rawScores[element] += 100;
-    }
-  }
-
-  // 处理地支部分（位置5-8）
-  for (let i = 5; i <= 8; i++) {
-    const zhi = eightChar[i as keyof EightChar] as string;
-    const canggan = dizhiCanggan[zhi];
-    if (canggan) {
-      for (const [gan, score] of canggan) {
-        const element = wuxingMap[gan];
-        if (element) {
-          rawScores[element] += score;
-        }
-      }
-    }
-  }
-
-  // 获取月支对应的旺度系数
-  const yuezhi = eightChar[6];
-  const coefficients = monthCoefficients[yuezhi] || {
-    '木': 1, '火': 1, '土': 1, '金': 1, '水': 1
-  };
-
-  // 应用旺度系数计算加权分数
-  const weightedScores: Record<string, number> = {
-    '金': rawScores['金'] * coefficients['金'],
-    '木': rawScores['木'] * coefficients['木'],
-    '水': rawScores['水'] * coefficients['水'],
-    '火': rawScores['火'] * coefficients['火'],
-    '土': rawScores['土'] * coefficients['土']
-  };
-
-  // 计算总分
-  const totalScore = Object.values(weightedScores).reduce((sum, score) => sum + score, 0);
-
-  // 计算各五行占比
-  return {
-    '金': weightedScores['金'] / totalScore,
-    '木': weightedScores['木'] / totalScore,
-    '水': weightedScores['水'] / totalScore,
-    '火': weightedScores['火'] / totalScore,
-    '土': weightedScores['土'] / totalScore
-  };
-};
 
 /**
  * 方式1：某种五行过旺或过衰
@@ -91,7 +31,7 @@ export const getWuxingPercentage = (eightChar: EightChar): WuxingPercentage => {
 export const getWuxingWangshuaiYongshen = (
   eightchar: EightChar,
   congWuxing: boolean
-): TianGanDizhiChar[] => {
+): TianganDizhiChar[] => {
   // 1. 获取五行占比并找到最旺的五行
   const wuxingPercentage = getWuxingPercentage(eightchar);
   let maxElement: keyof WuxingPercentage = '木';
@@ -134,7 +74,7 @@ export const getWuxingWangshuaiYongshen = (
     : wuxingRelations[maxElement].kexiehao;
 
   // 4. 遍历八字，找出符合目标五行的字
-  const result: TianGanDizhiChar[] = [];
+  const result: TianganDizhiChar[] = [];
 
   // 处理天干（位置1-4）
   for (let i = 1; i <= 4; i++) {

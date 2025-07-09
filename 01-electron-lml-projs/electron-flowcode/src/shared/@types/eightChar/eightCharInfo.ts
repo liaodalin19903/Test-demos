@@ -9,7 +9,7 @@ export type DiZhiChar =
   | '巳' | '午' | '未' | '申' | '酉'
   | '戌' | '亥';
 
-export type TianGanDizhiChar = TianGanChar | DiZhiChar;
+export type TianganDizhiChar = TianGanChar | DiZhiChar;
 export type Wuxing = '木' | '火' | '土' | '金' | '水';
 
 export type NaYin = {
@@ -248,3 +248,14 @@ export const sanHeMap: Record<DiZhiChar, [DiZhiChar, DiZhiChar] | null> = {
 
 export type SolveType = '天干通关' | '天干五合' | '天干克' |
 '地支通关' | '地支六合' | '地支三合' | '地支半合' | '地支克'
+
+
+// 调候依据原因
+export type TiaohouReasonType = '寒' | '热' | '燥' | '湿'
+
+// 调候用神和忌神
+export type TiaohouYongshenJishenType = {
+  firstYongshen: TianganDizhiChar[],
+  secondYongshen: TianganDizhiChar[],
+  jishen: TianganDizhiChar[],
+}

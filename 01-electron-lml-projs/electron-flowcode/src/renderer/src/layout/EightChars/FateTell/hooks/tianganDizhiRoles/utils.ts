@@ -1,11 +1,18 @@
 // 工具
 
+import { dizhiCanggan, monthCoefficients, Wuxing, wuxingMap, WuxingPercentage } from "@shared/@types/eightChar/eightCharInfo";
+
+
 import {
-  DiZhiChar, dizhiWuxing, EightChar, liuHeMap, sanHeMap, SolveType, TianGanChar, TianGanDizhiChar,
+  DiZhiChar, dizhiWuxing, EightChar, liuHeMap, sanHeMap, SolveType, TianGanChar, TianganDizhiChar,
   tianganWuxing,
   wuHeMap
 } from "@shared/@types/eightChar/eightCharInfo"
-import { getRole2XingChongHeHui, Role2XingChongHeHui } from "./role2xingchonghehui";
+import { getDizhiSanhe, getRole2XingChongHeHui } from "./role2xingchonghehui";
+
+import { TiaohouReasonType } from "@shared/@types/eightChar/eightCharInfo";
+
+import { getTianganXiangchong, getDizhiXiangchong, getDizhiSanhui } from "./role2xingchonghehui";
 
 /**
  * 判断字符串内的2个八字是否相邻
@@ -21,7 +28,7 @@ import { getRole2XingChongHeHui, Role2XingChongHeHui } from "./role2xingchongheh
 export const charIsAdjacency = (eightChar: EightChar, chars: string): boolean => {
   // 1. 提取字符串中的天干地支字符
   const regex = /[甲乙丙丁戊己庚辛壬癸子丑寅卯辰巳午未申酉戌亥]/g;
-  const extractedChars = chars.match(regex) as TianGanDizhiChar[] | null;
+  const extractedChars = chars.match(regex) as TianganDizhiChar[] | null;
 
   // 如果没有提取到足够字符，返回 false
   if (!extractedChars || extractedChars.length < 2 || extractedChars.length > 3) {
@@ -36,7 +43,7 @@ export const charIsAdjacency = (eightChar: EightChar, chars: string): boolean =>
 
   // 填充位置映射
   positions.forEach(pos => {
-    const char = eightChar[pos] as TianGanDizhiChar;
+    const char = eightChar[pos] as TianganDizhiChar;
     if (!positionMap[char]) {
       positionMap[char] = [];
     }
@@ -94,6 +101,79 @@ export type AdjacentCongHaiXingIndex = {
 };
 
 /**
+ * 获取五行占比
+ * @param eightChar 八字信息
+ * @returns 五行占比
+ *
+ *
+ * {
+    '金': 0.02,
+    '木': 0.72,
+    '水': 0.04,
+    '火': 0.12,
+    '土': 0.xx
+  };
+ *
+ * 功能：可以用于判定五行是否缺失、五行的旺衰程度
+ */
+export const getWuxingPercentage = (eightChar: EightChar): WuxingPercentage => {
+  // 初始化五行原始分数
+  const rawScores: Record<string, number> = {
+    '金': 0, '木': 0, '水': 0, '火': 0, '土': 0
+  };
+
+  // 处理天干部分（位置1-4）
+  for (let i = 1; i <= 4; i++) {
+    const gan = eightChar[i as keyof EightChar] as string;
+    const element = wuxingMap[gan];
+    if (element) {
+      rawScores[element] += 100;
+    }
+  }
+
+  // 处理地支部分（位置5-8）
+  for (let i = 5; i <= 8; i++) {
+    const zhi = eightChar[i as keyof EightChar] as string;
+    const canggan = dizhiCanggan[zhi];
+    if (canggan) {
+      for (const [gan, score] of canggan) {
+        const element = wuxingMap[gan];
+        if (element) {
+          rawScores[element] += score;
+        }
+      }
+    }
+  }
+
+  // 获取月支对应的旺度系数
+  const yuezhi = eightChar[6];
+  const coefficients = monthCoefficients[yuezhi] || {
+    '木': 1, '火': 1, '土': 1, '金': 1, '水': 1
+  };
+
+  // 应用旺度系数计算加权分数
+  const weightedScores: Record<string, number> = {
+    '金': rawScores['金'] * coefficients['金'],
+    '木': rawScores['木'] * coefficients['木'],
+    '水': rawScores['水'] * coefficients['水'],
+    '火': rawScores['火'] * coefficients['火'],
+    '土': rawScores['土'] * coefficients['土']
+  };
+
+  // 计算总分
+  const totalScore = Object.values(weightedScores).reduce((sum, score) => sum + score, 0);
+
+  // 计算各五行占比
+  return {
+    '金': weightedScores['金'] / totalScore,
+    '木': weightedScores['木'] / totalScore,
+    '水': weightedScores['水'] / totalScore,
+    '火': weightedScores['火'] / totalScore,
+    '土': weightedScores['土'] / totalScore
+  };
+};
+
+/**
  * 获取相邻的相冲（天干相冲、地支相冲）、相害、相刑的相邻位置对
  * @param eightChar
  * @returns
@@ -116,7 +196,7 @@ export const getAdjacentCongHaiXingIndex = (
   };
 
   // 3. 定义位置映射表（字符->位置）
-  const positionMap: Record<TianGanDizhiChar, number[]> = {
+  const positionMap: Record<TianganDizhiChar, number[]> = {
     甲: [],
     乙: [],
     丙: [],
@@ -141,7 +221,7 @@ export const getAdjacentCongHaiXingIndex = (
     亥: []
   };
   for (let i = 1; i <= 8; i++) {
-    const char = eightChar[i as keyof EightChar] as TianGanDizhiChar;
+    const char = eightChar[i as keyof EightChar] as TianganDizhiChar;
     if (!positionMap[char]) positionMap[char] = [];
     positionMap[char].push(i);
   }
@@ -240,12 +320,12 @@ export const getAdjacentCongHaiXingIndex = (
  */
 export type AdjacentCongHaiXing = {
   tiangan: {
-    cong: TianGanDizhiChar[][]
+    cong: TianganDizhiChar[][]
   },
   dizhi: {
-    cong: TianGanDizhiChar[][],
-    hai: TianGanDizhiChar[][],
-    xing: TianGanDizhiChar[][],
+    cong: TianganDizhiChar[][],
+    hai: TianganDizhiChar[][],
+    xing: TianganDizhiChar[][],
   }
 }
 
@@ -261,7 +341,7 @@ export const getAdjacentCongHaiXing = (eightChar: EightChar): AdjacentCongHaiXin
   // 辅助函数：从字符串中提取天干地支字符并转换为数组
   const extractCharsToArray = (str: string) => {
     const regex = /[甲乙丙丁戊己庚辛壬癸子丑寅卯辰巳午未申酉戌亥]/g;
-    return (str.match(regex) || []) as TianGanDizhiChar[];
+    return (str.match(regex) || []) as TianganDizhiChar[];
   };
 
   // 处理天干相冲
@@ -279,7 +359,7 @@ export const getAdjacentCongHaiXing = (eightChar: EightChar): AdjacentCongHaiXin
     .map(relation => extractCharsToArray(relation));
 
   // 处理地支相刑 - 特殊处理
-  const dizhiXing: TianGanDizhiChar[][] = [];
+  const dizhiXing: TianganDizhiChar[][] = [];
 
   // 提取所有地支
   const diZhi = [
@@ -347,10 +427,10 @@ export const getAdjacentCongHaiXing = (eightChar: EightChar): AdjacentCongHaiXin
  * @returns eg. ['壬', '癸']
  */
 export const getCharSolve = (
-    relations: TianGanDizhiChar[],
-    char: TianGanDizhiChar,
+    relations: TianganDizhiChar[],
+    char: TianganDizhiChar,
     typeStr: SolveType
-): TianGanDizhiChar[] => {
+): TianganDizhiChar[] => {
     // 1. 判断relations类型（天干或地支）
     const isTianGan = relations.length > 0 && relations[0] in tianganWuxing;
     const isDiZhi = relations.length > 0 && relations[0] in dizhiWuxing;
@@ -424,6 +504,145 @@ export const getCharSolve = (
     }
 
     return []; // 不匹配的类型或空relations
+};
+
+/**
+ * 通过两种五行，获取到通关用神
+ * 原理：
+ * 水克火，用木通关
+ * 火克金，用土通关
+ * 金克木，用水通关
+ * 木克土，用火通关
+ */
+export const getWuxingTongguanChar = (
+  char1: Wuxing,
+  char2: Wuxing
+): TianganDizhiChar[] => {
+  // 定义通关规则映射
+  const tongguanRules: Record<string, Wuxing> = {
+    '水火': '木', // 水克火 → 用木通关
+    '火水': '木', // 反方向同样适用
+    '火金': '土', // 火克金 → 用土通关
+    '金火': '土',
+    '金木': '水', // 金克木 → 用水通关
+    '木金': '水',
+    '木土': '火', // 木克土 → 用火通关
+    '土木': '火',
+    '土水': '金', // 土克水 → 用金通关
+    '水土': '金'
+  };
+
+  // 检查是否有直接匹配的通关规则
+  const directKey = `${char1}${char2}`;
+  const reverseKey = `${char2}${char1}`;
+
+  // 获取通关五行
+  let tongguanWuxing: Wuxing | null = null;
+
+  if (tongguanRules[directKey]) {
+    tongguanWuxing = tongguanRules[directKey];
+  } else if (tongguanRules[reverseKey]) {
+    tongguanWuxing = tongguanRules[reverseKey];
+  }
+
+  // 如果没有匹配的规则，返回空数组
+  if (!tongguanWuxing) return [];
+
+  // 五行对应的天干地支字符映射
+  const wuxingCharsMap: Record<Wuxing, TianganDizhiChar[]> = {
+    '木': ['甲', '乙', '寅', '卯'],        // 木
+    '火': ['丙', '丁', '巳', '午'],        // 火
+    '土': ['戊', '己', '辰', '戌', '丑', '未'], // 土（含四土支）
+    '金': ['庚', '辛', '申', '酉'],        // 金
+    '水': ['壬', '癸', '亥', '子']         // 水
+  };
+
+  // 返回通关五行对应的字符
+  return wuxingCharsMap[tongguanWuxing] || [];
+};
+
+/**
+ * 判断八字的寒热燥湿
+ *
+  逻辑说明：
+  五行比例阈值（0.1/0.15等）可根据实际需求调整
+  三合局/相冲的优先级低于月令判断，仅作属性加强/减弱用
+
+  1、寒热判断：
+  冬季月（亥、子、丑）且火弱（<0.1）→ 寒
+  夏季月（巳、午、未）且水弱（<0.1）→ 热
+
+  2、燥湿判断：
+  燥土月（戌、未）且水弱（<0.1）→ 燥
+  湿土月（辰、丑）且火弱（<0.1）→ 湿
+  水月（亥、子）且土弱（<0.1）+ 水旺（>0.3）→ 湿
+
+  3、特殊局加强：
+  三合水局（申子辰）加强寒/湿属性
+  三合火局（寅午戌）加强热/燥属性
+  水火冲（子午、巳亥）可缓解寒热属性
+ *
+ */
+export const getEightCharHanReZaoShi = (eightChar: EightChar): TiaohouReasonType[] => {
+  const results: TiaohouReasonType[] = [];
+  const yuezhi = eightChar[6]; // 月支
+  const wuxing: WuxingPercentage = getWuxingPercentage(eightChar);
+
+  // 1. 判断寒热（基于月令和五行比例）
+  const winterMonths = ['亥', '子', '丑']; // 冬季月份
+  const summerMonths = ['巳', '午', '未']; // 夏季月份
+
+  if (winterMonths.includes(yuezhi)) {
+    if (wuxing['火'] < 0.1) results.push('寒'); // 冬季火弱则寒
+  } else if (summerMonths.includes(yuezhi)) {
+    if (wuxing['水'] < 0.1) results.push('热'); // 夏季水弱则热
+  }
+
+  // 2. 判断燥湿（基于月令和五行比例）
+  const dryEarthMonths = ['戌', '未']; // 燥土月
+  const wetEarthMonths = ['辰', '丑']; // 湿土月
+  const waterMonths = ['亥', '子'];   // 水月
+
+  // 燥土月且水弱 -> 燥
+  if (dryEarthMonths.includes(yuezhi) && wuxing['水'] < 0.1) {
+    results.push('燥');
+  }
+  // 湿土月且火弱 -> 湿
+  else if (wetEarthMonths.includes(yuezhi) && wuxing['火'] < 0.1) {
+    results.push('湿');
+  }
+
+  // 水月且土弱水旺 -> 湿
+  if (waterMonths.includes(yuezhi) && wuxing['土'] < 0.1 && wuxing['水'] > 0.3) {
+    results.push('湿');
+  }
+
+  // 3. 特殊局判断（三合局/相冲）
+  const sanhe = getDizhiSanhe(eightChar);
+  const dizhiChong = getDizhiXiangchong(eightChar);
+
+  // 三合水局加强寒/湿
+  if (sanhe.includes('申子辰')) {
+    if (wuxing['火'] < 0.15 && !results.includes('寒')) results.push('寒');
+    if (wuxing['土'] < 0.15 && !results.includes('湿')) results.push('湿');
+  }
+  // 三合火局加强热/燥
+  if (sanhe.includes('寅午戌')) {
+    if (wuxing['水'] < 0.15 && !results.includes('热')) results.push('热');
+    if (wuxing['水'] < 0.15 && !results.includes('燥')) results.push('燥');
+  }
+
+  // 水火冲缓解寒热
+  if (dizhiChong.some(chong => ['子午', '巳亥'].includes(chong))) {
+    if (results.includes('寒') && wuxing['火'] > 0.15) {
+      results.splice(results.indexOf('寒'), 1);
+    }
+    if (results.includes('热') && wuxing['水'] > 0.15) {
+      results.splice(results.indexOf('热'), 1);
+    }
+  }
+
+  return Array.from(new Set(results)); // 去重后返回
 };
 
 
