@@ -1,4 +1,4 @@
-import { Button, Card, Col, Descriptions, Empty, Modal, Radio, RadioChangeEvent, Row } from 'antd'
+import { Button, Card, Col, Descriptions, Empty, Modal, Radio, RadioChangeEvent, Row, Select } from 'antd'
 import React, { useState } from 'react'
 import { InputNumber, Space } from 'antd';
 import { Input, Image } from 'antd';
@@ -62,7 +62,7 @@ import {
 
 // 1. 导入图片
 import shierchangshengImg from '@renderer/assets/images/12长生.jpeg'; // 调整相对路径
-import { DaYunItem, EightCharInfo } from '@shared/@types/eightChar/eightCharInfo'
+import { DaYunItem, EightCharInfo, TianganDizhiChar } from '@shared/@types/eightChar/eightCharInfo'
 import { Solar } from 'lunar-typescript';
 import { DayunLiunianNode } from '../components/DayunLiunianNode';
 import { getShenqiangruoScore, getShenqiangruoTitle } from '../hooks/needJudge/shenqiangruo';
@@ -110,8 +110,10 @@ export default function index() {
         m5_4: [],
         m5_5: []
       },
-      selected: []
-    }
+      selected: [],
+      choosen: undefined,
+    },
+    yongshen: [], // 用神
   })
 
   const [tianGanShishenNode, setTianGanShishenNode] = useState(
@@ -241,11 +243,13 @@ export default function index() {
           m5_4,
           m5_5
         },
-        selected: []
+        selected: [],
+        choosen: prev.geju.choosen
       }
     }));
   }
 
+  // 选择格局
   const updateGejuSelected = (selectedGeju: GeType) => {
     setEightCharInfo(prev => {
       const { selected } = prev.geju;
@@ -261,6 +265,24 @@ export default function index() {
         }
       };
     });
+  };
+
+  // 最终确定格局
+  const updateGejuChoosen = (choosenGeju: GeType) => {
+    setEightCharInfo(prev => ({
+      ...prev,
+      geju: {
+        ...prev.geju,
+        choosen: choosenGeju
+      }
+    }));
+  }
+
+  const updateYongshen = (yongshen: TianganDizhiChar[]) => {
+    setEightCharInfo(prev => ({
+      ...prev,
+      yongshen: yongshen
+    }));
   };
 
   const onBrithYearChange = (birthdaySolar: string | null) => {
@@ -399,10 +421,144 @@ export default function index() {
   // 点击推荐用神
   const handleClickRecommandYongshen = () => {}
 
-  // 点击每个格局按钮
+  // 点击每个格局按钮 (我觉得没有必要设定：因为选取时候是一个实验估计)
   const handleClickGejuButton = (ge: GeType) => {
     updateGejuSelected(ge)
   }
+
+  // 设定格局
+  const handleChangeGejuChoosen = (geju: GeType[]) => {
+
+    updateGejuChoosen(geju[0])
+  }
+
+  const gejuSelectOptions = [
+    {
+      label: <span>正八格</span>,
+      title: '正八格',
+      options: [
+        { label: <span>正官格</span>, value: '正官格' },
+        { label: <span>七杀格</span>, value: '七杀格' },
+        { label: <span>正财格</span>, value: '正财格' },
+        { label: <span>偏财格</span>, value: '偏财格' },
+        { label: <span>正印格</span>, value: '正印格' },
+        { label: <span>偏印格</span>, value: '偏印格' },
+        { label: <span>食神格</span>, value: '食神格' },
+        { label: <span>伤官格</span>, value: '伤官格' },
+      ],
+    },
+    {
+      label: <span>禄刃格</span>,
+      title: '禄刃格',
+      options: [
+        { label: <span>建禄格</span>, value: '建禄格' },
+        { label: <span>阳刃格</span>, value: '阳刃格' },
+      ],
+    },
+    {
+      label: <span>专旺格</span>,
+      title: '专旺格',
+      options: [
+        { label: <span>曲直格</span>, value: '曲直格' },
+        { label: <span>炎上格</span>, value: '炎上格' },
+        { label: <span>稼穑格</span>, value: '稼穑格' },
+        { label: <span>从革格</span>, value: '从革格' },
+        { label: <span>润下格</span>, value: '润下格' },
+      ],
+    },
+    {
+      label: <span>从神格</span>,
+      title: '从神格',
+      options: [
+        { label: <span>从财格</span>, value: '从财格' },
+        { label: <span>从官格</span>, value: '从官格' },
+        { label: <span>从煞格</span>, value: '从煞格' },
+        { label: <span>从儿格</span>, value: '从儿格' },
+        { label: <span>财官食伤均势格</span>, value: '财官食伤均势格' }
+      ],
+    },
+    {
+      label: <span>从气格</span>,
+      title: '从气格',
+      options: [
+        { label: <span>从火气格</span>, value: '从火气格' },
+        { label: <span>从木气格</span>, value: '从木气格' },
+        { label: <span>从土气格</span>, value: '从土气格' },
+        { label: <span>从金气格</span>, value: '从金气格' },
+        { label: <span>从水气格</span>, value: '从水气格' },
+      ],
+    },
+    {
+      label: <span>化格</span>,
+      title: '化格',
+      options: [
+        { label: <span>化土格</span>, value: '化土格' },
+        { label: <span>化木格</span>, value: '化木格' },
+        { label: <span>化金格</span>, value: '化金格' },
+        { label: <span>化水格</span>, value: '化水格' },
+        { label: <span>化火格</span>, value: '化火格' },
+      ],
+    },
+    {
+      label: <span>魁罡格</span>,
+      title: '魁罡格',
+      options: [
+        { label: <span>土魁罡格</span>, value: '土魁罡格' },
+        { label: <span>庚辰金魁罡格</span>, value: '庚辰金魁罡格' },
+        { label: <span>庚戌金魁罡格</span>, value: '庚戌金魁罡格' },
+        { label: <span>水魁罡格</span>, value: '水魁罡格' },
+      ],
+    },
+    {
+      label: <span>其他格</span>,
+      title: '其他格',
+      options: [
+        { label: <span>金神格</span>, value: '金神格' },
+      ],
+    },
+  ]
+
+  // 设定用神
+  const handleChangeYongshenSelect = (yongshen: TianganDizhiChar[]) => {
+    updateYongshen(yongshen)
+  }
+
+  const yongshenSelectOptions = [
+     {
+      label: <span>天干</span>,
+      title: '天干',
+      options: [
+        { label: <span>甲</span>, value: '甲' },
+        { label: <span>乙</span>, value: '乙' },
+        { label: <span>丙</span>, value: '丙' },
+        { label: <span>丁</span>, value: '丁' },
+        { label: <span>戊</span>, value: '戊' },
+        { label: <span>己</span>, value: '己' },
+        { label: <span>庚</span>, value: '庚' },
+        { label: <span>辛</span>, value: '辛' },
+        { label: <span>壬</span>, value: '壬' },
+        { label: <span>癸</span>, value: '癸' },
+      ],
+    },
+     {
+      label: <span>地支</span>,
+      title: '地支',
+      options: [
+        { label: <span>子</span>, value: '子' },
+        { label: <span>丑</span>, value: '丑' },
+        { label: <span>寅</span>, value: '寅' },
+        { label: <span>卯</span>, value: '卯' },
+        { label: <span>辰</span>, value: '辰' },
+        { label: <span>巳</span>, value: '巳' },
+        { label: <span>午</span>, value: '午' },
+        { label: <span>未</span>, value: '未' },
+        { label: <span>申</span>, value: '申' },
+        { label: <span>酉</span>, value: '酉' },
+        { label: <span>戌</span>, value: '戌' },
+        { label: <span>亥</span>, value: '亥' },
+      ],
+    },
+  ]
 
   const zhangShengNode = (
     <Row>
@@ -552,8 +708,22 @@ export default function index() {
 
               <Row>
                 <Col span={24}>
-                  <Card title="取格局" variant="borderless">
+                  <Card title={
+                    <>
+                    取格局: <span style={{ color: 'red' }}>{eightCharInfo.geju.choosen ?? '' }</span>
+                    </>
+                  } variant="borderless">
                     <Descriptions layout="vertical" column={1} >
+                      <Descriptions.Item label="格局选择">
+                          <Select
+                            mode="multiple"
+                            maxCount={1}
+                            style={{ width: 200 }}
+                            onChange={handleChangeGejuChoosen}
+                            options={gejuSelectOptions}
+                          />
+                      </Descriptions.Item>
+
                       <Descriptions.Item label="">
                         <Button color="primary" variant="solid" onClick={() => {
                           handleClickRecommandGeju()
@@ -693,9 +863,25 @@ export default function index() {
 
               <Row>
                 <Col span={24}>
-                  <Card title="取喜用神" variant="borderless">
+                  <Card
+                    title={
+                      <>
+                        取用神: <span style={{ color: 'red' }}>{eightCharInfo.yongshen?.join('、') ?? ''}</span>
+                      </>
+                    }
+                    variant="borderless"
+                  >
                     <Descriptions layout="vertical" column={1} >
 
+                      <Descriptions.Item label="用神选择">
+                        <Select
+                          mode="multiple"
+                          maxCount={3}
+                          style={{ width: 200 }}
+                          onChange={handleChangeYongshenSelect}
+                          options={yongshenSelectOptions}
+                        />
+                      </Descriptions.Item>
                       <Descriptions.Item label="">
                         <Button color="primary" variant="solid" onClick={() => {
                           handleClickRecommandYongshen()

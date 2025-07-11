@@ -76,8 +76,10 @@ export type EightCharInfo = {
       m5_4: GeType[]; // 从化
       m5_5: GeType[]; // 特殊格局
     }
-    selected: GeType[]  // 我们选择的格局
+    selected: GeType[]  // 我们点击按钮预选的格局
+    choosen: GeType | undefined // 最终选择的格局
   };
+  yongshen: TianganDizhiChar[];  // 用神
 };
 
   // 定义大运流年数据结构
