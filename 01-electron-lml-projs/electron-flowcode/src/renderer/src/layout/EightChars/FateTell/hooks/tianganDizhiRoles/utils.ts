@@ -1,6 +1,6 @@
 // 工具
 
-import { dizhiCanggan, getTianganWuxing, keMap, monthCoefficients, shengMap, Wuxing, tianganDizhiWuxingMap, WuxingPercentage } from "@shared/@types/eightChar/eightCharInfo";
+import { dizhiCanggan, getTianganWuxing, keMap, monthCoefficients, shengMap, Wuxing, tianganDizhiWuxingMap, WuxingPercentage, charToWuxingMap } from "@shared/@types/eightChar/eightCharInfo";
 
 
 import {
@@ -13,6 +13,7 @@ import { getDizhiSanhe, getRole2XingChongHeHui } from "./role2xingchonghehui";
 import { TiaohouReasonType } from "@shared/@types/eightChar/eightCharInfo";
 
 import { getTianganXiangchong, getDizhiXiangchong, getDizhiSanhui } from "./role2xingchonghehui";
+
 
 /**
  * 判断字符串内的2个八字是否相邻
@@ -118,41 +119,41 @@ export type AdjacentCongHaiXingIndex = {
  */
 export const getWuxingPercentage = (eightChar: EightChar): WuxingPercentage => {
   // 初始化五行原始分数
-  const rawScores: Record<string, number> = {
+  const rawScores: Record<Wuxing, number> = {
     '金': 0, '木': 0, '水': 0, '火': 0, '土': 0
   };
 
   // 处理天干部分（位置1-4）
   for (let i = 1; i <= 4; i++) {
-    const gan = eightChar[i as keyof EightChar] as string;
-    const element = tianganDizhiWuxingMap[gan];
-    if (element) {
-      rawScores[element] += 100;
+    const gan = eightChar[i as keyof EightChar] as TianganChar;
+    const wuxing = charToWuxingMap[gan];
+    if (wuxing) {
+      rawScores[wuxing] += 100;
     }
   }
 
   // 处理地支部分（位置5-8）
   for (let i = 5; i <= 8; i++) {
-    const zhi = eightChar[i as keyof EightChar] as string;
+    const zhi = eightChar[i as keyof EightChar] as DizhiChar;
     const canggan = dizhiCanggan[zhi];
     if (canggan) {
       for (const [gan, score] of canggan) {
-        const element = tianganDizhiWuxingMap[gan];
-        if (element) {
-          rawScores[element] += score;
+        const wuxing = charToWuxingMap[gan as TianganChar];
+        if (wuxing) {
+          rawScores[wuxing] += score;
         }
       }
     }
   }
 
   // 获取月支对应的旺度系数
-  const yuezhi = eightChar[6];
+  const yuezhi = eightChar[6] as DizhiChar;
   const coefficients = monthCoefficients[yuezhi] || {
     '木': 1, '火': 1, '土': 1, '金': 1, '水': 1
   };
 
   // 应用旺度系数计算加权分数
-  const weightedScores: Record<string, number> = {
+  const weightedScores: Record<Wuxing, number> = {
     '金': rawScores['金'] * coefficients['金'],
     '木': rawScores['木'] * coefficients['木'],
     '水': rawScores['水'] * coefficients['水'],
@@ -163,13 +164,13 @@ export const getWuxingPercentage = (eightChar: EightChar): WuxingPercentage => {
   // 计算总分
   const totalScore = Object.values(weightedScores).reduce((sum, score) => sum + score, 0);
 
-  // 计算各五行占比
+  // 计算各五行占比（四舍五入保留4位小数）
   return {
-    '金': weightedScores['金'] / totalScore,
-    '木': weightedScores['木'] / totalScore,
-    '水': weightedScores['水'] / totalScore,
-    '火': weightedScores['火'] / totalScore,
-    '土': weightedScores['土'] / totalScore
+    '金': totalScore > 0 ? parseFloat((weightedScores['金'] / totalScore).toFixed(4)) : 0,
+    '木': totalScore > 0 ? parseFloat((weightedScores['木'] / totalScore).toFixed(4)) : 0,
+    '水': totalScore > 0 ? parseFloat((weightedScores['水'] / totalScore).toFixed(4)) : 0,
+    '火': totalScore > 0 ? parseFloat((weightedScores['火'] / totalScore).toFixed(4)) : 0,
+    '土': totalScore > 0 ? parseFloat((weightedScores['土'] / totalScore).toFixed(4)) : 0
   };
 };
 

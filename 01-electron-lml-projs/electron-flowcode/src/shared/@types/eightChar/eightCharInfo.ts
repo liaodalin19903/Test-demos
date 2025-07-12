@@ -136,8 +136,24 @@ export const wuxingMap: Record<string, string> = {
   '壬': '水', '癸': '水'
 };
 
+// 修复1: 创建从字符到五行的映射
+export const charToWuxingMap: Record<TianganDizhiChar, Wuxing> = {
+  // 天干
+  '甲': '木', '乙': '木',
+  '丙': '火', '丁': '火',
+  '戊': '土', '己': '土',
+  '庚': '金', '辛': '金',
+  '壬': '水', '癸': '水',
+  // 地支
+  '寅': '木', '卯': '木',
+  '巳': '火', '午': '火',
+  '辰': '土', '戌': '土', '丑': '土', '未': '土',
+  '申': '金', '酉': '金',
+  '亥': '水', '子': '水'
+};
+
 // 地支藏干分数表
-export const dizhiCanggan: Record<string, [string, number][]> = {
+export const dizhiCanggan: Record<DizhiChar, [TianganChar, number][]> = {
   '子': [['癸', 100]],
   '丑': [['己', 60], ['癸', 30], ['辛', 10]],
   '寅': [['甲', 60], ['丙', 30], ['戊', 10]],
@@ -153,7 +169,7 @@ export const dizhiCanggan: Record<string, [string, number][]> = {
 };
 
 // 月支对应的五行旺度系数表
-export const monthCoefficients: Record<string, Record<string, number>> = {
+export const monthCoefficients: Record<DizhiChar, Record<Wuxing, number>> = {
   '寅': { '木': 1.571, '火': 1.548, '土': 0.924, '金': 0.716, '水': 0.862 },
   '卯': { '木': 2.000, '火': 1.414, '土': 0.500, '金': 0.707, '水': 1.000 },
   '辰': { '木': 1.166, '火': 1.074, '土': 1.421, '金': 1.161, '水': 0.800 },

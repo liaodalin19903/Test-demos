@@ -70,6 +70,8 @@ import { GeType } from '@shared/@types/eightChar/geju';
 import { genFuYiYongshenNode } from '../hooks/needJudge/yongshen/fuyiyongshen';
 import useObservableState from '@renderer/common/utils/useObservableState';
 import { genBingyaoYongshenNode } from '../hooks/needJudge/yongshen/bingyaoyongshen';
+import { genTiaohouYongshenNode } from '../hooks/needJudge/yongshen/tiaohouyongshen';
+import { genTongguanYongshenNode } from '../hooks/needJudge/yongshen/tongguanyongshen';
 
 export default function index() {
 
@@ -913,11 +915,11 @@ export default function index() {
                       {genBingyaoYongshenNode(eightCharInfo.eightChar)}
                       </Descriptions.Item>
                       <Descriptions.Item label="调候用神">
-                      111
+                      {genTiaohouYongshenNode(eightCharInfo.eightChar)}
                       </Descriptions.Item>
 
                       <Descriptions.Item label="通关用神">
-                      111
+                      {genTongguanYongshenNode()}
                       </Descriptions.Item>
                     </Descriptions>
                   </Card>

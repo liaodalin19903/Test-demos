@@ -29,6 +29,23 @@ export type WuxingPercentage = {
   '土': number;
 };
 
+// 修复1: 创建从字符到五行的映射
+export const charToWuxingMap: Record<TianganDizhiChar, Wuxing> = {
+  // 天干
+  '甲': '木', '乙': '木',
+  '丙': '火', '丁': '火',
+  '戊': '土', '己': '土',
+  '庚': '金', '辛': '金',
+  '壬': '水', '癸': '水',
+  // 地支
+  '寅': '木', '卯': '木',
+  '巳': '火', '午': '火',
+  '辰': '土', '戌': '土', '丑': '土', '未': '土',
+  '申': '金', '酉': '金',
+  '亥': '水', '子': '水'
+};
+
+
 
 export type EightChar = {
   1: string; // 年干
@@ -43,7 +60,7 @@ export type EightChar = {
 
 
 // 地支藏干分数表
-export const dizhiCanggan: Record<string, [string, number][]> = {
+export const dizhiCanggan: Record<DizhiChar, [TianganChar, number][]> = {
   '子': [['癸', 100]],
   '丑': [['己', 60], ['癸', 30], ['辛', 10]],
   '寅': [['甲', 60], ['丙', 30], ['戊', 10]],
@@ -59,7 +76,7 @@ export const dizhiCanggan: Record<string, [string, number][]> = {
 };
 
 // 月支对应的五行旺度系数表
-export const monthCoefficients: Record<string, Record<string, number>> = {
+export const monthCoefficients: Record<DizhiChar, Record<Wuxing, number>> = {
   '寅': { '木': 1.571, '火': 1.548, '土': 0.924, '金': 0.716, '水': 0.862 },
   '卯': { '木': 2.000, '火': 1.414, '土': 0.500, '金': 0.707, '水': 1.000 },
   '辰': { '木': 1.166, '火': 1.074, '土': 1.421, '金': 1.161, '水': 0.800 },
@@ -94,41 +111,41 @@ export const monthCoefficients: Record<string, Record<string, number>> = {
  */
 export const getWuxingPercentage = (eightChar: EightChar): WuxingPercentage => {
   // 初始化五行原始分数
-  const rawScores: Record<string, number> = {
+  const rawScores: Record<Wuxing, number> = {
     '金': 0, '木': 0, '水': 0, '火': 0, '土': 0
   };
 
   // 处理天干部分（位置1-4）
   for (let i = 1; i <= 4; i++) {
-    const gan = eightChar[i as keyof EightChar] as string;
-    const element = tianganDizhiWuxingMap[gan];
-    if (element) {
-      rawScores[element] += 100;
+    const gan = eightChar[i as keyof EightChar] as TianganChar;
+    const wuxing = charToWuxingMap[gan];
+    if (wuxing) {
+      rawScores[wuxing] += 100;
     }
   }
 
   // 处理地支部分（位置5-8）
   for (let i = 5; i <= 8; i++) {
-    const zhi = eightChar[i as keyof EightChar] as string;
+    const zhi = eightChar[i as keyof EightChar] as DizhiChar;
     const canggan = dizhiCanggan[zhi];
     if (canggan) {
       for (const [gan, score] of canggan) {
-        const element = tianganDizhiWuxingMap[gan];
-        if (element) {
-          rawScores[element] += score;
+        const wuxing = charToWuxingMap[gan as TianganChar];
+        if (wuxing) {
+          rawScores[wuxing] += score;
         }
       }
     }
   }
 
   // 获取月支对应的旺度系数
-  const yuezhi = eightChar[6];
+  const yuezhi = eightChar[6] as DizhiChar;
   const coefficients = monthCoefficients[yuezhi] || {
     '木': 1, '火': 1, '土': 1, '金': 1, '水': 1
   };
 
   // 应用旺度系数计算加权分数
-  const weightedScores: Record<string, number> = {
+  const weightedScores: Record<Wuxing, number> = {
     '金': rawScores['金'] * coefficients['金'],
     '木': rawScores['木'] * coefficients['木'],
     '水': rawScores['水'] * coefficients['水'],
@@ -139,16 +156,13 @@ export const getWuxingPercentage = (eightChar: EightChar): WuxingPercentage => {
   // 计算总分
   const totalScore = Object.values(weightedScores).reduce((sum, score) => sum + score, 0);
 
-  console.log('weightedScores: ', weightedScores)
-  console.log('totalScore: ', totalScore)
-
-  // 计算各五行占比
+  // 计算各五行占比（四舍五入保留4位小数）
   return {
-    '金': weightedScores['金'] / totalScore,
-    '木': weightedScores['木'] / totalScore,
-    '水': weightedScores['水'] / totalScore,
-    '火': weightedScores['火'] / totalScore,
-    '土': weightedScores['土'] / totalScore
+    '金': totalScore > 0 ? parseFloat((weightedScores['金'] / totalScore).toFixed(4)) : 0,
+    '木': totalScore > 0 ? parseFloat((weightedScores['木'] / totalScore).toFixed(4)) : 0,
+    '水': totalScore > 0 ? parseFloat((weightedScores['水'] / totalScore).toFixed(4)) : 0,
+    '火': totalScore > 0 ? parseFloat((weightedScores['火'] / totalScore).toFixed(4)) : 0,
+    '土': totalScore > 0 ? parseFloat((weightedScores['土'] / totalScore).toFixed(4)) : 0
   };
 };
 
@@ -167,3 +181,5 @@ const ec: EightChar = {
 const res = getWuxingPercentage(ec)
 
 console.log(res)
+
+// 得到的结果： { '金': NaN, '木': NaN, '水': NaN, '火': NaN, '土': NaN } 
