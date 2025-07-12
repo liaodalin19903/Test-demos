@@ -1,6 +1,6 @@
 // 身强身弱
 
-import { EightCharInfo, EightChar } from "@shared/@types/eightChar/eightCharInfo";
+import { EightCharInfo, EightChar, ShenqiangruoType } from "@shared/@types/eightChar/eightCharInfo";
 import { shengMap, wuXingMap } from "@shared/@types/eightChar/wuxing";
 
 /**
@@ -60,16 +60,16 @@ export const getShenqiangruoScore = (eightChar: EightChar): number => {
 };
 
 
-export const getShenqiangruoTitle = (shengqiangruo: number | undefined) => {
-  if (shengqiangruo === 1) {
+export const getShenqiangruoTitle = (shengqiangruo: ShenqiangruoType | undefined) => {
+  if (shengqiangruo === '从强') {
     return '身强身弱'+'(从强)';
-  } else if (shengqiangruo === 2) {
+  } else if (shengqiangruo === '身强') {
     return '身强身弱'+'(身强)';
-  } else if (shengqiangruo === 3) {
+  } else if (shengqiangruo === '均衡') {
     return '身强身弱'+'(均衡)';
-  } else if (shengqiangruo === 4) {
+  } else if (shengqiangruo === '身弱') {
     return '身强身弱'+'(身弱)';
-  } else if (shengqiangruo === 4) {
+  } else if (shengqiangruo === '从弱') {
     return '身强身弱'+'(从弱)';
   }else {
     return '身强身弱';

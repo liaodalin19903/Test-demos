@@ -4,7 +4,7 @@ import { dizhiCanggan, getTianganWuxing, keMap, monthCoefficients, shengMap, Wux
 
 
 import {
-  DiZhiChar, dizhiWuxing, EightChar, liuHeMap, sanHeMap, SolveType, TianGanChar, TianganDizhiChar,
+  DizhiChar, dizhiWuxing, EightChar, liuHeMap, sanHeMap, SolveType, TianganChar, TianganDizhiChar,
   tianganWuxing,
   wuHeMap
 } from "@shared/@types/eightChar/eightCharInfo"
@@ -242,7 +242,7 @@ export const getAdjacentCongHaiXingIndex = (
   // 6. 处理天干相冲
   for (const relation of relations.role2Tiangan.tianganXiangchong) {
     // 提取天干字符 (如 "甲庚冲" -> ["甲", "庚"])
-    const ganPair = relation.match(/[甲乙丙丁戊己庚辛壬癸]/g) as TianGanChar[];
+    const ganPair = relation.match(/[甲乙丙丁戊己庚辛壬癸]/g) as TianganChar[];
     if (ganPair?.length === 2) {
       const [gan1, gan2] = ganPair;
 
@@ -259,7 +259,7 @@ export const getAdjacentCongHaiXingIndex = (
 
   // 7. 处理地支相冲
   for (const relation of relations.role2Dizhi.dizhiXiangchong) {
-    const zhiPair = relation.match(/[子丑寅卯辰巳午未申酉戌亥]/g) as DiZhiChar[];
+    const zhiPair = relation.match(/[子丑寅卯辰巳午未申酉戌亥]/g) as DizhiChar[];
     if (zhiPair?.length === 2) {
       const [zhi1, zhi2] = zhiPair;
       for (const pos1 of positionMap[zhi1] || []) {
@@ -274,7 +274,7 @@ export const getAdjacentCongHaiXingIndex = (
 
   // 8. 处理地支相害
   for (const relation of relations.role2Dizhi.dizhiXianghai) {
-    const zhiPair = relation.match(/[子丑寅卯辰巳午未申酉戌亥]/g) as DiZhiChar[];
+    const zhiPair = relation.match(/[子丑寅卯辰巳午未申酉戌亥]/g) as DizhiChar[];
     if (zhiPair?.length === 2) {
       const [zhi1, zhi2] = zhiPair;
       for (const pos1 of positionMap[zhi1] || []) {
@@ -289,7 +289,7 @@ export const getAdjacentCongHaiXingIndex = (
 
   // 9. 处理地支相刑
   for (const relation of relations.role2Dizhi.dizhiXiangxing) {
-    const zhiPair = relation.match(/[子丑寅卯辰巳午未申酉戌亥]/g) as DiZhiChar[];
+    const zhiPair = relation.match(/[子丑寅卯辰巳午未申酉戌亥]/g) as DizhiChar[];
     if (zhiPair?.length === 2) {
       const [zhi1, zhi2] = zhiPair;
       for (const pos1 of positionMap[zhi1] || []) {
@@ -367,10 +367,10 @@ export const getAdjacentCongHaiXing = (eightChar: EightChar): AdjacentCongHaiXin
     eightChar[6], // 月支
     eightChar[7], // 日支
     eightChar[8]  // 时支
-  ] as DiZhiChar[];
+  ] as DizhiChar[];
 
   // 检查三刑（丑戌未或寅巳申）
-  const checkSanXing = (group: DiZhiChar[]) => {
+  const checkSanXing = (group: DizhiChar[]) => {
     return (
       group.includes('丑') &&
       group.includes('戌') &&
@@ -437,12 +437,12 @@ export const getCharSolve = (
 
     // 处理天干相关解决类型
     if (isTianGan) {
-        const tianGanChar = char as TianGanChar;
+        const tianGanChar = char as TianganChar;
 
         switch (typeStr) {
             case '天干通关':
                 { if (relations.length !== 2) return [];
-                const [a, b] = relations as [TianGanChar, TianGanChar];
+                const [a, b] = relations as [TianganChar, TianganChar];
                 const wxA = tianganWuxing[a];
                 const wxB = tianganWuxing[b];
 
@@ -470,7 +470,7 @@ export const getCharSolve = (
                 else if (wx === '金') keWx = '火';
 
                 // 返回克制五行的所有天干
-                return (Object.entries(tianganWuxing) as [TianGanChar, string][])
+                return (Object.entries(tianganWuxing) as [TianganChar, string][])
                     .filter(([_, w]) => w === keWx)
                     .map(([tg]) => tg); }
         }
@@ -478,7 +478,7 @@ export const getCharSolve = (
 
     // 处理地支相关解决类型
     if (isDiZhi) {
-        const diZhiChar = char as DiZhiChar;
+        const diZhiChar = char as DizhiChar;
 
         switch (typeStr) {
             case '地支六合':
@@ -648,7 +648,7 @@ export const getEightCharHanReZaoShi = (eightChar: EightChar): TiaohouReasonType
 
 
 // 给一个天干的字，返回所有能生助此字的其他字符
-export const getFuTianganDizhiChar = (char: TianGanChar): TianganDizhiChar[] => {
+export const getFuTianganDizhiChar = (char: TianganChar): TianganDizhiChar[] => {
   const wuxing = getTianganWuxing(char);
 
   // 1. 同五行（比肩、劫财）的字符
@@ -661,7 +661,7 @@ export const getFuTianganDizhiChar = (char: TianGanChar): TianganDizhiChar[] => 
 };
 
 // 给一个天干的字，返回所有能抑制（克泄耗）此字的其他字符
-export const getYiTianganDizhiChar = (char: TianGanChar): TianganDizhiChar[] => {
+export const getYiTianganDizhiChar = (char: TianganChar): TianganDizhiChar[] => {
   const wuxing = getTianganWuxing(char);
 
   // 1. 克此五行（官杀）的字符

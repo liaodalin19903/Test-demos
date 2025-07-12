@@ -1,15 +1,15 @@
 import { GeType } from "./geju";
 
-export type TianGanChar =
+export type TianganChar =
   | '甲' | '乙' | '丙' | '丁' | '戊'
   | '己' | '庚' | '辛' | '壬' | '癸';
 
-export type DiZhiChar =
+export type DizhiChar =
   | '子' | '丑' | '寅' | '卯' | '辰'
   | '巳' | '午' | '未' | '申' | '酉'
   | '戌' | '亥';
 
-export type TianganDizhiChar = TianGanChar | DiZhiChar;
+export type TianganDizhiChar = TianganChar | DizhiChar;
 export type Wuxing = '木' | '火' | '土' | '金' | '水';
 
 export type NaYin = {
@@ -63,7 +63,7 @@ export type EightCharInfo = {
   zhangSheng: string[],  // 地支的十二长生
   kongWang: string[],  // 空亡
   dayunLiunians: DaYunItem[],  // 大运流年
-  shenqiangruo: number | undefined,  // 身强身弱
+  shenqiangruo: ShenqiangruoType | undefined,  // 身强身弱
   geju: {
     recommend: {  // 程序推荐格局
       m1: GeType[];
@@ -214,30 +214,50 @@ export type DizhiXiangpo = '子酉相破' | '丑辰相破' | '寅亥相破' | '�
 
 
 // 定义五行映射
-export const tianganWuxing: Record<TianGanChar, string> = {
+export const tianganWuxing: Record<TianganChar, string> = {
     '甲': '木', '乙': '木', '丙': '火', '丁': '火', '戊': '土',
     '己': '土', '庚': '金', '辛': '金', '壬': '水', '癸': '水'
 };
 
-export const dizhiWuxing: Record<DiZhiChar, string> = {
+export const dizhiWuxing: Record<DizhiChar, string> = {
     '子': '水', '丑': '土', '寅': '木', '卯': '木', '辰': '土',
     '巳': '火', '午': '火', '未': '土', '申': '金', '酉': '金', '戌': '土', '亥': '水'
 };
 
+// 定义五行到天干地支的映射
+export const wuxingTiangan: Record<Wuxing, TianganChar[]> = {
+  '木': ['甲', '乙'],
+  '火': ['丙', '丁'],
+  '土': ['戊', '己'],
+  '金': ['庚', '辛'],
+  '水': ['壬', '癸']
+};
+
+export const wuxingDizhi: Record<Wuxing, DizhiChar[]> = {
+  '木': ['寅', '卯'],
+  '火': ['巳', '午'],
+  '土': ['辰', '戌', '丑', '未'],
+  '金': ['申', '酉'],
+  '水': ['亥', '子']
+};
+
+// 特殊湿土处理（丑、辰可以生木，但未、戌不能）
+export const wetEarthDizhi: DizhiChar[] = ['丑', '辰'];
+
 // 定义天干五合映射
-export const wuHeMap: Record<TianGanChar, TianGanChar> = {
+export const wuHeMap: Record<TianganChar, TianganChar> = {
     '甲': '己', '乙': '庚', '丙': '辛', '丁': '壬', '戊': '癸',
     '己': '甲', '庚': '乙', '辛': '丙', '壬': '丁', '癸': '戊'
 };
 
 // 定义地支六合映射
-export const liuHeMap: Record<DiZhiChar, DiZhiChar> = {
+export const liuHeMap: Record<DizhiChar, DizhiChar> = {
     '子': '丑', '丑': '子', '寅': '亥', '卯': '戌', '辰': '酉', '巳': '申',
     '午': '未', '未': '午', '申': '巳', '酉': '辰', '戌': '卯', '亥': '寅'
 };
 
 // 定义地支三合映射
-export const sanHeMap: Record<DiZhiChar, [DiZhiChar, DiZhiChar] | null> = {
+export const sanHeMap: Record<DizhiChar, [DizhiChar, DizhiChar] | null> = {
     '子': ['申', '辰'],
     '丑': ['巳', '酉'],
     '寅': ['午', '戌'],
@@ -294,7 +314,7 @@ export const keMap: Record<Wuxing, Wuxing> = {
 };
 
 // 获取天干的五行属性
-export const getTianganWuxing = (char: TianGanChar): Wuxing => {
+export const getTianganWuxing = (char: TianganChar): Wuxing => {
   switch(char) {
     case '甲': case '乙': return '木';
     case '丙': case '丁': return '火';

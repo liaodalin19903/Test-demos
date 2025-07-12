@@ -7,7 +7,7 @@
  * 5、日主过弱或过强【x】
  */
 
-import { DiZhiChar, TianGanChar, TianganDizhiChar } from "@shared/@types/eightChar/eightCharInfo";
+import { DizhiChar, TianganChar, TianganDizhiChar } from "@shared/@types/eightChar/eightCharInfo";
 
 import { dizhiCanggan, EightChar, monthCoefficients, wuxingMap, Wuxing, WuxingPercentage } from "@shared/@types/eightChar/eightCharInfo";
 
@@ -81,7 +81,7 @@ export const getWuxingWangshuaiYongshen = (
     const gan = eightchar[i as keyof EightChar] as string;
     const element = wuxingMap[gan];
     if (element && targetElements.includes(element)) {
-      result.push(gan as TianGanChar);
+      result.push(gan as TianganChar);
     }
   }
 
@@ -94,7 +94,7 @@ export const getWuxingWangshuaiYongshen = (
       const mainGan = canggan[0][0]; // 取第一个藏干作为本气
       const element = wuxingMap[mainGan];
       if (element && targetElements.includes(element)) {
-        result.push(zhi as DiZhiChar);
+        result.push(zhi as DizhiChar);
       }
     }
   }
@@ -105,90 +105,90 @@ export const getWuxingWangshuaiYongshen = (
 
 export type CongXingHaiYongshenType = {
   tianganCong: {
-    cong1: TianGanChar,  // 需要抑制的字. eg. 甲庚冲的 甲
+    cong1: TianganChar,  // 需要抑制的字. eg. 甲庚冲的 甲
     cong1Solve: {
-      tongguan: TianGanChar[],
-      he: TianGanChar[], // 天干五合
-      ke: TianGanChar[], // 天干克
+      tongguan: TianganChar[],
+      he: TianganChar[], // 天干五合
+      ke: TianganChar[], // 天干克
     },
-    cong2: TianGanChar, // 需要抑制的字. eg. 甲庚冲的 庚
+    cong2: TianganChar, // 需要抑制的字. eg. 甲庚冲的 庚
     cong2Solve: {
-      tongguan: TianGanChar[],
-      he: TianGanChar[], // 天干五合
-      ke: TianGanChar[], // 天干克
+      tongguan: TianganChar[],
+      he: TianganChar[], // 天干五合
+      ke: TianganChar[], // 天干克
     },
   }[],
   dizhiCong: {
-    cong1: DiZhiChar,
+    cong1: DizhiChar,
     cong1Solve: {
-      tongguan: DiZhiChar[],
-      liuhe: DiZhiChar[],
-      sanhe: DiZhiChar[],
-      banhe: DiZhiChar[],
-      ke: DiZhiChar[],
+      tongguan: DizhiChar[],
+      liuhe: DizhiChar[],
+      sanhe: DizhiChar[],
+      banhe: DizhiChar[],
+      ke: DizhiChar[],
     },
-    cong2: DiZhiChar,
+    cong2: DizhiChar,
     cong2Solve: {
-      tongguan: DiZhiChar[],
-      liuhe: DiZhiChar[],
-      sanhe: DiZhiChar[],
-      banhe: DiZhiChar[],
-      ke: DiZhiChar[],
+      tongguan: DizhiChar[],
+      liuhe: DizhiChar[],
+      sanhe: DizhiChar[],
+      banhe: DizhiChar[],
+      ke: DizhiChar[],
     }
 
   }[],
   dizhiHai: {
-    hai1: DiZhiChar,
+    hai1: DizhiChar,
     hai1Solve: {
-      tongguan: DiZhiChar[],
-      liuhe: DiZhiChar[],
-      sanhe: DiZhiChar[],
-      banhe: DiZhiChar[],
-      ke: DiZhiChar[],
+      tongguan: DizhiChar[],
+      liuhe: DizhiChar[],
+      sanhe: DizhiChar[],
+      banhe: DizhiChar[],
+      ke: DizhiChar[],
     },
-    hai2: DiZhiChar,
+    hai2: DizhiChar,
     hai2Solve: {
-      tongguan: DiZhiChar[],
-      liuhe: DiZhiChar[],
-      sanhe: DiZhiChar[],
-      banhe: DiZhiChar[],
-      ke: DiZhiChar[],
+      tongguan: DizhiChar[],
+      liuhe: DizhiChar[],
+      sanhe: DizhiChar[],
+      banhe: DizhiChar[],
+      ke: DizhiChar[],
     }
   }[],
   dizhiXing: {
     type: '子卯相刑' | '三刑' | '自刑',
-    xing1: DiZhiChar,
+    xing1: DizhiChar,
     xing1Solve: {
-      tongguan: DiZhiChar[],
-      liuhe: DiZhiChar[],
-      sanhe: DiZhiChar[],
-      banhe: DiZhiChar[],
-      ke: DiZhiChar[],
-      cong: DiZhiChar[],
+      tongguan: DizhiChar[],
+      liuhe: DizhiChar[],
+      sanhe: DizhiChar[],
+      banhe: DizhiChar[],
+      ke: DizhiChar[],
+      cong: DizhiChar[],
     },
-    xing2: DiZhiChar,
+    xing2: DizhiChar,
     xing2Solve: {
-      tongguan: DiZhiChar[],
-      liuhe: DiZhiChar[],
-      sanhe: DiZhiChar[],
-      banhe: DiZhiChar[],
-      ke: DiZhiChar[],
-      cong: DiZhiChar[],
+      tongguan: DizhiChar[],
+      liuhe: DizhiChar[],
+      sanhe: DizhiChar[],
+      banhe: DizhiChar[],
+      ke: DizhiChar[],
+      cong: DizhiChar[],
     },
-    xing3: DiZhiChar | undefined,
+    xing3: DizhiChar | undefined,
     xing3Solve: {
-      tongguan: DiZhiChar[],
-      liuhe: DiZhiChar[],
-      sanhe: DiZhiChar[],
-      banhe: DiZhiChar[],
-      ke: DiZhiChar[],
-      cong: DiZhiChar[],
+      tongguan: DizhiChar[],
+      liuhe: DizhiChar[],
+      sanhe: DizhiChar[],
+      banhe: DizhiChar[],
+      ke: DizhiChar[],
+      cong: DizhiChar[],
     },
   }[]
 }
 
 // 预定义地支六冲关系
-const diZhiChongMap: Record<DiZhiChar, DiZhiChar> = {
+const diZhiChongMap: Record<DizhiChar, DizhiChar> = {
   '子': '午', '午': '子',
   '丑': '未', '未': '丑',
   '寅': '申', '申': '寅',
@@ -198,7 +198,7 @@ const diZhiChongMap: Record<DiZhiChar, DiZhiChar> = {
 };
 
 // 获取与指定地支相冲的地支
-const getDiZhiChong = (dizhi: DiZhiChar): DiZhiChar => {
+const getDiZhiChong = (dizhi: DizhiChar): DizhiChar => {
   return diZhiChongMap[dizhi];
 };
 
@@ -221,7 +221,7 @@ export const getCongXingHaiYongshen = (
   if (adjacentCongHaiXing.tiangan.cong && adjacentCongHaiXing.tiangan.cong.length > 0) {
     adjacentCongHaiXing.tiangan.cong.forEach((tianGanPair) => {
       if (tianGanPair.length === 2) {
-        const [cong1, cong2] = tianGanPair as [TianGanChar, TianGanChar];
+        const [cong1, cong2] = tianGanPair as [TianganChar, TianganChar];
 
         // 获取第一个相冲字的解决方法
         const cong1Solve = {
@@ -253,7 +253,7 @@ export const getCongXingHaiYongshen = (
   if (adjacentCongHaiXing.dizhi.cong && adjacentCongHaiXing.dizhi.cong.length > 0) {
     adjacentCongHaiXing.dizhi.cong.forEach((diZhiPair) => {
       if (diZhiPair.length === 2) {
-        const [cong1, cong2] = diZhiPair as [DiZhiChar, DiZhiChar];
+        const [cong1, cong2] = diZhiPair as [DizhiChar, DizhiChar];
 
         // 获取第一个相冲地支的解决方法
         const cong1Solve = {
@@ -289,7 +289,7 @@ export const getCongXingHaiYongshen = (
   if (adjacentCongHaiXing.dizhi.hai && adjacentCongHaiXing.dizhi.hai.length > 0) {
     adjacentCongHaiXing.dizhi.hai.forEach((diZhiPair) => {
       if (diZhiPair.length === 2) {
-        const [hai1, hai2] = diZhiPair as [DiZhiChar, DiZhiChar];
+        const [hai1, hai2] = diZhiPair as [DizhiChar, DizhiChar];
 
         // 获取第一个相害地支的解决方法
         const hai1Solve = {
@@ -345,12 +345,12 @@ export const getCongXingHaiYongshen = (
         type = '自刑';
       }
 
-      const xing1 = diZhiGroup[0] as DiZhiChar;
-      const xing2 = diZhiGroup[1] as DiZhiChar;
-      const xing3 = diZhiGroup.length > 2 ? diZhiGroup[2] as DiZhiChar : undefined;
+      const xing1 = diZhiGroup[0] as DizhiChar;
+      const xing2 = diZhiGroup[1] as DizhiChar;
+      const xing3 = diZhiGroup.length > 2 ? diZhiGroup[2] as DizhiChar : undefined;
 
       // 获取解决方案的辅助函数
-      const getSolutions = (char: DiZhiChar) => ({
+      const getSolutions = (char: DizhiChar) => ({
         tongguan: getCharSolve(diZhiGroup, char, '地支通关'),
         liuhe: getCharSolve(diZhiGroup, char, '地支六合'),
         sanhe: getCharSolve(diZhiGroup, char, '地支三合'),
@@ -366,7 +366,7 @@ export const getCongXingHaiYongshen = (
         xing1Solve: getSolutions(xing1),
         xing2,
         xing2Solve: getSolutions(xing2),
-        xing3: undefined as DiZhiChar | undefined,
+        xing3: undefined as DizhiChar | undefined,
         xing3Solve: {
           tongguan: [],
           liuhe: [],

@@ -67,6 +67,7 @@ import { Solar } from 'lunar-typescript';
 import { DayunLiunianNode } from '../components/DayunLiunianNode';
 import { getShenqiangruoScore, getShenqiangruoTitle } from '../hooks/needJudge/shenqiangruo';
 import { GeType } from '@shared/@types/eightChar/geju';
+import { genFuYiYongshenNode } from '../hooks/needJudge/yongshen/fuyiyongshen';
 
 export default function index() {
 
@@ -419,7 +420,9 @@ export default function index() {
   }
 
   // 点击推荐用神
-  const handleClickRecommandYongshen = () => {}
+  const handleClickRecommandYongshen = () => {
+
+  }
 
   // 点击每个格局按钮 (我觉得没有必要设定：因为选取时候是一个实验估计)
   const handleClickGejuButton = (ge: GeType) => {
@@ -692,11 +695,11 @@ export default function index() {
                       <Radio.Group
                         value={eightCharInfo.shenqiangruo}
                         options={[
-                          { value: 1, label: '从强' },
-                          { value: 2, label: '身强' },
-                          { value: 3, label: '均衡' },
-                          { value: 4, label: '身弱' },
-                          { value: 5, label: '从弱' },
+                          { value: '从强', label: '从强' },
+                          { value: '身强', label: '身强' },
+                          { value: '均衡', label: '均衡' },
+                          { value: '身弱', label: '身弱' },
+                          { value: '从弱', label: '从弱' },
                         ]}
                         onChange={(e) => {updateShenqiangruo(e.target.value)}}
                       />
@@ -889,7 +892,7 @@ export default function index() {
                       </Descriptions.Item>
 
                       <Descriptions.Item label="扶抑用神">
-                      111
+                      {genFuYiYongshenNode(eightCharInfo.eightChar, eightCharInfo.shenqiangruo!)}
                       </Descriptions.Item>
 
                       <Descriptions.Item label="病药用神">
