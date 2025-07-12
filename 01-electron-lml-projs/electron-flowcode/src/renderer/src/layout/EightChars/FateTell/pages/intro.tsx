@@ -1,5 +1,5 @@
 import { Button, Card, Col, Descriptions, Empty, Modal, Radio, RadioChangeEvent, Row, Select } from 'antd'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { InputNumber, Space } from 'antd';
 import { Input, Image } from 'antd';
 import { Divider, Flex, Tag } from 'antd';
@@ -68,6 +68,8 @@ import { DayunLiunianNode } from '../components/DayunLiunianNode';
 import { getShenqiangruoScore, getShenqiangruoTitle } from '../hooks/needJudge/shenqiangruo';
 import { GeType } from '@shared/@types/eightChar/geju';
 import { genFuYiYongshenNode } from '../hooks/needJudge/yongshen/fuyiyongshen';
+import useObservableState from '@renderer/common/utils/useObservableState';
+import { genBingyaoYongshenNode } from '../hooks/needJudge/yongshen/bingyaoyongshen';
 
 export default function index() {
 
@@ -76,46 +78,58 @@ export default function index() {
   const [isModalOpenTianGan, setIsModalOpenTianGan] = useState(false);
   const [isModalOpenDizhi, setIsModalOpenDizhi] = useState(false);
 
-  const [eightCharInfo, setEightCharInfo] = useState<EightCharInfo>({
-    gender: '男',
-    birthdaySolar: '', // 阳历生日
-    editingIndex: 0,
-    eightChar: {
-      1: '甲',
-      2: '甲',
-      3: '甲',
-      4: '甲',
-      5: '子',
-      6: '子',
-      7: '子',
-      8: '子'
-    },
-    canggan:[], // 地支藏干
-    shishen: {
-      tianGanShiShen: [],
-      dizhiShiShen: []
-    },
-    zhangSheng: ['长生', '长生', '长生', '长生'],
-    kongWang: ['空亡', '空亡', '空亡', '空亡'],
-    dayunLiunians: [],
-    shenqiangruo: undefined, // 身强身弱:1~5 从强~从弱
-    geju: {
-      recommend: {
-        m1: [],
-        m2: [],
-        m3: [],
-        m4: [],
-        m5_1: [],
-        m5_2: [],
-        m5_3: [],
-        m5_4: [],
-        m5_5: []
+  // 替换原来的 eightCharInfo useState
+  const { state: eightCharInfo, setState: setEightCharInfo, subscribe } =
+    useObservableState<EightCharInfo>({
+      gender: '男',
+      birthdaySolar: '', // 阳历生日
+      editingIndex: 0,
+      eightChar: {
+        1: '甲',
+        2: '甲',
+        3: '甲',
+        4: '甲',
+        5: '子',
+        6: '子',
+        7: '子',
+        8: '子'
       },
-      selected: [],
-      choosen: undefined,
-    },
-    yongshen: [], // 用神
-  })
+      canggan:[], // 地支藏干
+      shishen: {
+        tianGanShiShen: [],
+        dizhiShiShen: []
+      },
+      zhangSheng: ['长生', '长生', '长生', '长生'],
+      kongWang: ['空亡', '空亡', '空亡', '空亡'],
+      dayunLiunians: [],
+      shenqiangruo: undefined, // 身强身弱:1~5 从强~从弱
+      geju: {
+        recommend: {
+          m1: [],
+          m2: [],
+          m3: [],
+          m4: [],
+          m5_1: [],
+          m5_2: [],
+          m5_3: [],
+          m5_4: [],
+          m5_5: []
+        },
+        selected: [],
+        choosen: undefined,
+      },
+      yongshen: [], // 用神
+    });
+
+    // 添加监听器（只要有更新状态就触发）
+    useEffect(() => {
+      const unsubscribe = subscribe((newValue, oldValue) => {
+        // 触发方法A
+        //methodA(newValue);
+      });
+
+    return unsubscribe; // 组件卸载时移除监听器
+  }, []);
 
   const [tianGanShishenNode, setTianGanShishenNode] = useState(
     <Row>
@@ -896,7 +910,7 @@ export default function index() {
                       </Descriptions.Item>
 
                       <Descriptions.Item label="病药用神">
-                      111
+                      {genBingyaoYongshenNode(eightCharInfo.eightChar)}
                       </Descriptions.Item>
                       <Descriptions.Item label="调候用神">
                       111
