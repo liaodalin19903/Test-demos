@@ -331,23 +331,22 @@ export default function index() {
     updateEditingIndex(0)
   }
 
-  // 排盘
-  const handleClickPaiPan = () => {
-
-    try {
-      // 0.反推阳历时间，弹出modal让选择的出生的时间
-      const solars = getSolarsFromEightChar(eightCharInfo.eightChar)
-      showSelectSolarModal(solars)
-
+  // 生成天干地支的十神
+  const genTianganDizhiShishenNode = () => {
       // 1.更新天干地支十神
       const cg: CangGanShishen = genCangGan(eightCharInfo.eightChar)
       updateTianGanShishen(cg.TianganShishen)
       updateDizhiCangGan(cg.DizhiCanggan)
       updateDiZhiShishen(cg.DizhiShishen)
 
+      //console.log('cg: ', cg.TianganShishen, cg.DizhiCanggan, cg.DizhiShishen)
+
       // 2.更新天干地支十神的Node
       const tianGanShiShenNode = genTianGanShishenNode(eightCharInfo.eightChar)
       const diZhiShiShenNode = genDizhiCangGanShishenNode(eightCharInfo.eightChar)
+
+      console.log("tianGanShiShenNode: ", tianGanShiShenNode)
+      console.log("diZhiShiShenNode: ", diZhiShiShenNode)
 
       setTianGanShishenNode(tianGanShiShenNode)
       setDizhiShishenNode(diZhiShiShenNode)
@@ -359,6 +358,17 @@ export default function index() {
       // 4.大运流年
       const dayunLiunian = getDayunLiunian(eightCharInfo)
       updateDayunLiunian(dayunLiunian)
+  }
+
+  // 排盘
+  const handleClickPaiPan = () => {
+
+    try {
+      // 0.反推阳历时间，弹出modal让选择的出生的时间
+      const solars = getSolarsFromEightChar(eightCharInfo.eightChar)
+      showSelectSolarModal(solars)
+
+      genTianganDizhiShishenNode()
 
     } catch (error) {
       /*
@@ -391,9 +401,14 @@ export default function index() {
     })
 
     const onChangeSolar = (e: RadioChangeEvent) => {
-      console.log('选中阳历:', e.target.value)
+      //console.log('选中阳历:', e.target.value)
       updateBirthdaySolar(e.target.value)
       modalInstance.destroy()
+
+      setTimeout(() => {
+        genTianganDizhiShishenNode()
+      }, 100)
+
     }
 
     const modalInstance = modal.confirm({
@@ -416,7 +431,6 @@ export default function index() {
 
   // 点击推荐格局按钮
   const handleClickRecommandGeju = () => {
-    console.log('点击推荐格局按钮', eightCharInfo.shishen )
 
     if(eightCharInfo.shishen.dizhiShiShen.length === 0) {
       return

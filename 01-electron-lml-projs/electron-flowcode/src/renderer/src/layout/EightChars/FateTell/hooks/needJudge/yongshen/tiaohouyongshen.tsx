@@ -1,6 +1,6 @@
 // 调候用神
 
-import { Checkbox, CheckboxOptionType, Collapse } from 'antd';
+import { Checkbox, CheckboxOptionType } from 'antd';
 
 import { EightChar, TianganDizhiChar, TiaohouReasonType, TiaohouYongshenJishenType, WuxingPercentage } from "@shared/@types/eightChar/eightCharInfo";
 import { getDizhiSanhe, getDizhiXiangchong } from "../../tianganDizhiRoles/role2xingchonghehui";
@@ -13,9 +13,6 @@ export const getEightCharHanReZaoShi = (eightChar: EightChar): TiaohouReasonType
   const results: TiaohouReasonType[] = [];
   const yuezhi = eightChar[6]; // 月支
   const wuxing: WuxingPercentage = getWuxingPercentage(eightChar);
-
-  console.log('yuezhi: ', yuezhi)
-  console.log('wuxing: ', wuxing)
 
   // 1. 判断寒热（基于月令和五行比例）
   const winterMonths = ['亥', '子', '丑']; // 冬季月份
@@ -47,8 +44,6 @@ export const getEightCharHanReZaoShi = (eightChar: EightChar): TiaohouReasonType
   if (waterMonths.includes(yuezhi) && wuxing['水'] > 0.15) {
     results.push('湿');
   }
-
-  console.log('results: ', results)
 
   // 3. 特殊局判断（三合局/相冲）
   const sanhe = getDizhiSanhe(eightChar);
@@ -181,8 +176,6 @@ export const genTiaohouYongshenNode = (
 ): JSX.Element => {
   // 获取调候用神信息
   const tiaohouYongshen = getEightCharHanReZaoShiYongshen(eightChar);
-
-  console.log('tiaohouYongshen: ',eightChar, tiaohouYongshen)
 
   // 获取所有存在的调候原因
   const reasons = Object.keys(tiaohouYongshen) as TiaohouReasonType[];
