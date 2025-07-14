@@ -339,14 +339,9 @@ export default function index() {
       updateDizhiCangGan(cg.DizhiCanggan)
       updateDiZhiShishen(cg.DizhiShishen)
 
-      //console.log('cg: ', cg.TianganShishen, cg.DizhiCanggan, cg.DizhiShishen)
-
       // 2.更新天干地支十神的Node
       const tianGanShiShenNode = genTianGanShishenNode(eightCharInfo.eightChar)
       const diZhiShiShenNode = genDizhiCangGanShishenNode(eightCharInfo.eightChar)
-
-      console.log("tianGanShiShenNode: ", tianGanShiShenNode)
-      console.log("diZhiShiShenNode: ", diZhiShiShenNode)
 
       setTianGanShishenNode(tianGanShiShenNode)
       setDizhiShishenNode(diZhiShiShenNode)
