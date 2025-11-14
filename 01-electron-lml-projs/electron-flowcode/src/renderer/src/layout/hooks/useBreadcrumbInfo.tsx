@@ -6,6 +6,8 @@ import FuncString from '@renderer/layout/Funcs/FuncString'
 import FateTell from '@renderer/layout/EightChars/FateTell'
 import EightCharsCase from '@renderer/layout/EightChars/EightCharsCase'
 
+import Scriptor from '@renderer/layout/ScriptorDirector/Scriptor'
+import Director from '@renderer/layout/ScriptorDirector/Director'
 
 
 export type BreadcrumbPathInfo = string[]
@@ -25,6 +27,10 @@ export const useBreadcrumbPathInfo = (key: string | undefined) => {
     return ['八字', '八字案例']
   } else if (key === '11') {
     return ['函数', '函数<=>字符串']
+  } else if (key === '14') {
+    return ['编导', '编剧']
+  } else if (key === '15') {
+    return ['编导', '导演']
   } else {
     return ['项目', '项目管理']
   }
@@ -34,7 +40,7 @@ export const useBreadcrumbPathInfo = (key: string | undefined) => {
  * 获取内容组件
  * @param key 传入的左侧栏的选项的id
  */
-export const useBreadcrumbContetInfo = (key: string | undefined): JSX.Element => {
+export const useBreadcrumbContentInfo = (key: string | undefined): JSX.Element => {
   if (key === '1') {
     return <Projs></Projs>
   } else if (key === '2') {
@@ -45,6 +51,10 @@ export const useBreadcrumbContetInfo = (key: string | undefined): JSX.Element =>
     return <EightCharsCase></EightCharsCase>
   } else if (key === '11') {
     return <FuncString></FuncString>
+  } else if (key === '14') {
+    return <Scriptor></Scriptor>
+  } else if (key === '15') {
+    return <Director></Director>
   } else {
     return <></>
   }

@@ -6,12 +6,13 @@ import {
   FunctionOutlined,
   PieChartOutlined,
   TeamOutlined,
-  UserOutlined
+  UserOutlined,
+  VideoCameraOutlined
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 
-import { useBreadcrumbContetInfo, useBreadcrumbPathInfo } from './hooks/useBreadcrumbInfo';
+import { useBreadcrumbContentInfo, useBreadcrumbPathInfo } from './hooks/useBreadcrumbInfo';
 
 import { db } from '@renderer/common/dexieDB';
 import { useLiveQuery } from 'dexie-react-hooks';
@@ -52,7 +53,11 @@ const items: MenuItem[] = [
     getItem('函数<=>字符串', '11'),
     getItem('Bill', '12'),
     getItem('Alex', '13')
-  ])
+  ]),
+  getItem('编导工具', 'sub4', <VideoCameraOutlined />, [
+    getItem('编剧', '14'),
+    getItem('导演', '15'),
+  ]),
 ];
 
 const Main: React.FC = () => {
@@ -97,7 +102,7 @@ const Main: React.FC = () => {
     settings ? settings?.selectedNavMenuKey : undefined
   );
 
-  const ContentComp = useBreadcrumbContetInfo(settings ? settings?.selectedNavMenuKey : undefined);
+  const ContentComp = useBreadcrumbContentInfo(settings ? settings?.selectedNavMenuKey : undefined);
 
   // 将 breadcrumbPathInfo 转换为 items 格式
   const breadcrumbItems = breadcrumbPathInfo.map((path, index) => ({

@@ -1,38 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="x-ua-compatible" content="IE=edge" >
-  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"/>
-  <title>Aliplayer Functions</title>
-  <link rel="stylesheet" href="https://g.alicdn.com/apsara-media-box/imp-web-player/2.29.1/skins/default/aliplayer-min.css" />
-  <script type="text/javascript" charset="utf-8" src="https://g.alicdn.com/apsara-media-box/imp-web-player/2.29.1/aliplayer-min.js"></script>
-  <!-- 请下载之后使用 -->
-  <script type="text/javascript" charset="utf-8" src="./aliplayercomponents-1.1.4.min.js"></script>
-</head>
-<body>
-<div id="player-con"></div>
-<script>
-  var player = new Aliplayer({
-    id: "player-con",
-    source: "./回音.mp4",
-    width: "100%",
-    height: "500px",
-    autoplay: true,
-    isLive: false,
-    components: [{
-      name: 'BulletScreenComponent',
-      type: AliPlayerComponent.BulletScreenComponent,
-      /** Descriptions of the scrolling text component parameters: text, style, bulletPosition 
-       * text: The scrolling text
-       * style: The style of the scrolling text
-       * bulletPosition: The position of the scrolling text. Valid values: 'top', 'bottom', and 'random'. The default is 'random'.
-       */
-      args: ['廖马林 廖马林 ...', {fontSize: '16px', color: '#00c1de'}, 'random']
-    }]
-  }, function (player) {
-    console.log("The player is created");
-  });
-</script>
-</body>
-</html>
+<div>
+asdasdasd
+</div>
+
+
+<button onclick="alert(1122)">点击按钮</button>
